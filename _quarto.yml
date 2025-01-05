@@ -53,10 +53,10 @@ website:
       #   href: "w13/index.qmd"
       # - text: "Week 14: {{< var w14.date-md >}}"
       #   href: "w14/index.qmd"
-      - "---"
-      - text: "Anonymous Suggestions<i class='bi bi-box-arrow-up-right ps-1'></i>"
-        href: "https://forms.gle/s35xJBf8Dj6XR5pr8"
-        target: "_blank"
+      # - "---"
+      # - text: "Anonymous Suggestions<i class='bi bi-box-arrow-up-right ps-1'></i>"
+      #   href: "https://forms.gle/s35xJBf8Dj6XR5pr8"
+      #   target: "_blank"
 
 format:
   html:

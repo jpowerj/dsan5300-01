@@ -18,7 +18,7 @@ listing:
 
 Welcome to the homepage for **Section 01** (Mondays 6:30-9pm in Car Barn 203) of ***DSAN 5300: Statistical Learning*** at Georgetown University, for the Spring 2025 semester!
 
-Check out the [**syllabus**](syllabus.qmd) (or any other link in the sidebar) for more info! Or, use the following links to view notes for individual weeks:
+Use the following links to view notes and lecture slides for individual weeks:
 
 ::: {#listing}
 :::
