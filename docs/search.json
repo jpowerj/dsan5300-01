@@ -1,0 +1,22 @@
+[
+  {
+    "objectID": "w01/index.html",
+    "href": "w01/index.html",
+    "title": "Week 1: Introduction to the Course",
+    "section": "",
+    "text": "Open slides in new window →",
+    "crumbs": [
+      "Week 1: {{< var w01.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "DSAN 5300-01: Statistical Learning",
+    "section": "",
+    "text": "Welcome to the homepage for Section 01 (Mondays 6:30-9pm in Car Barn 203) of DSAN 5300: Statistical Learning at Georgetown University, for the Spring 2025 semester!\nCheck out the syllabus (or any other link in the sidebar) for more info! Or, use the following links to view notes for individual weeks:\n\n\n\n\n\nTitle\n\n\nDate\n\n\n\n\n\n\nWeek 1: Introduction to the Course\n\n\nJanuary 13\n\n\n\n\n\nNo matching items",
+    "crumbs": [
+      "<i class='bi bi-house pe-1'></i> Home"
+    ]
+  }
+]
