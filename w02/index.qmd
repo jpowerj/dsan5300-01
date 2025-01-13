@@ -3,8 +3,9 @@ title: "Week 2: Linear Regression"
 subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
 author: "Jeff Jacobs"
 institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
-# bibliography: "../_DSAN5300.bib"
+bibliography: "../_DSAN5300.bib"
 date: 2025-01-13
+date-format: full
 lecnum: 2
 categories:
   - "Class Sessions"
@@ -19,6 +20,8 @@ format:
     slide-number: true
     echo: true
     code-fold: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'>"
     simplemenu:
       flat: true
       barhtml:
@@ -32,6 +35,8 @@ format:
     html-math-method: mathjax
     echo: true
     code-fold: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'>"
 ---
 
 ::: {.content-visible unless-format="revealjs"}
@@ -45,6 +50,13 @@ format:
 # Linear Regression {data-stack-name="Linear Regression"}
 
 * What happens to my **dependent variable** $Y$ when my **independent variable** $X$ changes by **1 unit**?
+* Whenever you carry out a regression, keep the **goal** in the front of your mind:
+
+  ::: {.callout-tip .r-fit-text title="<i class='bi bi-info-circle'></i> The Goal of Regression" icon="false"}
+
+  **Find a line $\widehat{y} = mx + b$ that best predicts $Y$ for given values of $X$**
+
+  :::
 
 ::: {.hidden}
 
@@ -58,7 +70,58 @@ set.seed(5300)
 
 {{< include ../dsan-globals/_tex.globals.qmd >}}
 
-## Running Example: Advertising Effects {.smaller}
+
+## How Do We Define "Best"? {.smaller}
+
+* Intuitively, two different ways to measure **how well a line fits the data**:
+
+::: {layout="[1,1]" layout-valign="center"}
+
+```{r}
+#| label: pc-line
+#| fig-width: 6
+library(tidyverse)
+set.seed(5321)
+N <- 11
+x <- seq(from = 0, to = 1, by = 1 / (N - 1))
+y <- x + rnorm(N, 0, 0.2)
+mean_y <- mean(y)
+spread <- y - mean_y
+df <- tibble(x = x, y = y, spread = spread)
+ggplot(df, aes(x=x, y=y)) +
+  geom_abline(slope=1, intercept=0, linetype="dashed", color=cbPalette[1], linewidth=g_linewidth*2) +
+  geom_segment(xend=(x+y)/2, yend=(x+y)/2, linewidth=g_linewidth*2, color=cbPalette[2]) +
+  geom_point(size=g_pointsize) +
+  coord_equal() +
+  xlim(0, 1) + ylim(0, 1) +
+  dsan_theme("half") +
+  labs(
+    title = "Principal Component Line"
+  )
+```
+
+```{r}
+#| label: reg-line
+#| fig-width: 6
+ggplot(df, aes(x=x, y=y)) +
+  geom_abline(slope=1, intercept=0, linetype="dashed", color=cbPalette[1], linewidth=g_linewidth*2) +
+  geom_segment(xend=x, yend=x, linewidth=g_linewidth*2, color=cbPalette[2]) +
+  geom_point(size=g_pointsize) +
+  coord_equal() +
+  xlim(0, 1) + ylim(0, 1) +
+  dsan_theme("half") +
+  labs(
+    title = "Regression Line"
+  )
+```
+
+:::
+
+::: {.aside}
+On the difference between these two lines, and why it matters, I cannot recommend @gelman_data_2007 enough!
+:::
+
+## Predictive Example: Advertising Effects {.smaller .title-12}
 
 * **Independent variable**: $ put into advertisements
 * **Dependent variable**: Sales
@@ -73,7 +136,29 @@ long_df |> ggplot(aes(x=allocation, y=sales)) +
   geom_point() +
   facet_wrap(vars(medium), scales="free_x") +
   geom_smooth(method='lm', formula="y ~ x") +
-  theme_dsan()
+  theme_dsan() +
+  labs(
+    x = "Allocation ($1K)",
+    y = "Sales (Units)"
+  )
+```
+
+## Explanatory Example: Industrialization Effects {.smaller}
+
+```{r}
+#| label: mil-plot-intro
+library(tidyverse)
+gdp_df <- read_csv("assets/gdp_pca.csv")
+mil_plot <- gdp_df |> ggplot(aes(x=industrial, y=military)) +
+  geom_point(size=0.5*g_pointsize) +
+  geom_smooth(method='lm', formula="y ~ x", linewidth=1) +
+  theme_dsan() +
+  labs(
+    title="Military Exports vs. Industrialization",
+    x="Industrial Production (% of GDP)",
+    y="Military Exports (% of All Exports)"
+  )
+mil_plot
 ```
 
 ## Simple Linear Regression {.smaller}
@@ -234,45 +319,7 @@ ggplot(data.frame(x=c(-4,4)), aes(x=x)) +
 
 ## Outliers Penalized Quadratically {.smaller}
 
-:::: {.columns}
-::: {.column width="50%"}
-
-```{r}
-#| label: abs-resid-plot
-sim_lg_df |> ggplot(aes(x=x, y=y)) +
-  geom_abline(slope=1, intercept=0, linetype="dashed", color=cbPalette[1], linewidth=g_linewidth) +
-  # geom_segment(xend=x, yend=x, linewidth=g_linewidth*2, color=cbPalette[2]) +
-  geom_segment(aes(xend=x, yend=x, color=ifelse(y>x,"Positive","Negative")), linewidth=1.5*g_linewidth) +
-  geom_point(size=g_pointsize) +
-  # coord_equal() +
-  theme_dsan("half") +
-  scale_color_manual("Spread", values=c("Positive"=cbPalette[3],"Negative"=cbPalette[6]), labels=c("Positive"="Positive","Negative"="Negative")) +
-  labs(
-    title = "Regression Line"
-  )
-```
-
-:::
-::: {.column width="50%"}
-
-```{r}
-#| label: square-resid-plot
-sim_lg_df |> ggplot(aes(x=x, y=y)) +
-  geom_abline(slope=1, intercept=0, linetype="dashed", color=cbPalette[1], linewidth=g_linewidth) +
-  # geom_segment(xend=x, yend=x, linewidth=g_linewidth*2, color=cbPalette[2]) +
-  geom_segment(aes(xend=x, yend=x, color=ifelse(y>x,"Positive","Negative")), linewidth=1.5*g_linewidth) +
-  geom_point(size=g_pointsize) +
-  # geom_rect() +
-  # coord_equal() +
-  theme_dsan("half") +
-  scale_color_manual("Spread", values=c("Positive"=cbPalette[3],"Negative"=cbPalette[6]), labels=c("Positive"="Positive","Negative"="Negative")) +
-  labs(
-    title = "Regression Line"
-  )
-```
-
-:::
-::::
+![[Image Source](https://gregorygundersen.com/blog/2020/01/04/ols/)](images/rss.png){fig-align="center"}
 
 ## Key Features of Regression Line {.crunch-math .math-90}
 
@@ -293,8 +340,9 @@ $$
 
 :::
 
-## Where Did That $\mathbb{E}[Y \mid X = x_i]$ Come From? {.smaller .title-10}
+## Where Did That $\mathbb{E}[Y \mid X = x_i]$ Come From? {.smaller .title-11}
 
+![[Image Source](https://digfir-published.macmillanusa.com/psbe4e/psbe4e_ch10_2.html)](images/regression_normal_dist.jpg){fig-align="center"}
 
 ## But... What About All the Other Types of Vars? {.title-08}
 
@@ -573,31 +621,30 @@ smf.ols(
 :::
 ::::
 
-## Interpreting Output {data-name="Interpreting"}
+## Interpreting Output {.smaller}
 
-<pre>
-Call:
-lm(formula = military ~ industrial, data = gdp_df)
+:::: {.columns}
+::: {.column width="50%"}
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--2.3354 -1.0997 -0.3870  0.6081  6.7508 
-</pre>
-<pre class="highlight-block">
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)  
-(Intercept)  0.61969    0.59526   1.041   0.3010  
-industrial   0.05253    0.02019   2.602   0.0111 *
-</pre>
-<pre class="highlight-below">---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-Residual standard error: 1.671 on 79 degrees of freedom
-  (8 observations deleted due to missingness)
-Multiple R-squared:  0.07895,   Adjusted R-squared:  0.06729 
-F-statistic: 6.771 on 1 and 79 DF,  p-value: 0.01106
-</pre>
+```{r}
+#| label: mil-plot
+#| fig-height: 8
+mil_plot + theme_dsan("quarter")
+```
 
-## Zooming In: Coefficients {.smaller-table}
+:::
+::: {.column width="50%"}
+
+```{r}
+#| label: mil-reg
+gdp_model <- lm(military ~ industrial, data=gdp_df)
+summary(gdp_model)
+```
+
+:::
+::::
+
+## Zooming In: Coefficients {.smaller-table .crunch-title}
 
 ::: {.coef-table}
 
@@ -656,8 +703,8 @@ funcShadedIntercept <- function(x) funcShaded(x, int_tstat, Inf)
 funcShadedSignif <- function(x) funcShaded(x, 1.96, Inf)
 ggplot(data=data.frame(x=c(-3,3)), aes(x=x)) +
   stat_function(fun=dnorm, linewidth=g_linewidth) +
-  geom_vline(aes(xintercept=int_tstat), linewidth=g_linewidth) +
-  geom_vline(aes(xintercept = 1.96), linewidth=g_linewidth, linetype="dashed") +
+  geom_vline(aes(xintercept=int_tstat), linewidth=g_linewidth, linetype="dashed") +
+  geom_vline(aes(xintercept = 1.96), linewidth=g_linewidth, linetype="solid") +
   stat_function(fun = funcShadedIntercept, geom = "area", fill = cbPalette[1], alpha = 0.5) +
   stat_function(fun = funcShadedSignif, geom = "area", fill = "grey", alpha = 0.333) +
   geom_text(label_df_int, mapping = aes(x = x, y = y, label = label), size = 10) +
@@ -694,8 +741,8 @@ label_df_signif_coef <- tribble(
 funcShadedCoef <- function(x) funcShaded(x, coef_tstat, Inf)
 ggplot(data=data.frame(x=c(-4,4)), aes(x=x)) +
   stat_function(fun=dnorm, linewidth=g_linewidth) +
-  geom_vline(aes(xintercept=coef_tstat), linetype="solid", linewidth=g_linewidth) +
-  geom_vline(aes(xintercept=1.96), linetype="dashed", linewidth=g_linewidth) +
+  geom_vline(aes(xintercept=coef_tstat), linetype="dashed", linewidth=g_linewidth) +
+  geom_vline(aes(xintercept=1.96), linetype="solid", linewidth=g_linewidth) +
   stat_function(fun = funcShadedCoef, geom = "area", fill = cbPalette[2], alpha = 0.5) +
   stat_function(fun = funcShadedSignif, geom = "area", fill = "grey", alpha = 0.333) +
   # Label shaded area
@@ -736,13 +783,13 @@ the errors $\varepsilon_i$ **should not vary systematically with $i$**
 ```{r}
 #| label: residual-plot
 library(broom)
-gdp_resid_df <- augment(lin_model)
-ggplot(gdp_resid_df, aes(x = .fitted, y = .resid)) +
+gdp_resid_df <- augment(gdp_model)
+ggplot(gdp_resid_df, aes(x = industrial, y = .resid)) +
     geom_point(size = g_pointsize/2) +
     geom_hline(yintercept=0, linetype="dashed") +
     dsan_theme("quarter") +
     labs(
-      title = "Residual Plot for Industrial ~ Military",
+      title = "Residual Plot for Military ~ Industrial",
       x = "Fitted Value",
       y = "Residual"
     )
@@ -815,3 +862,16 @@ $$
 $$
 
 * $\beta_j$ interpretation: a one-unit increase in $x_{i,j}$ is associated with a $\beta_j$ unit increase in $y_i$, **holding all other independent variables constant**
+
+## Visualizing Multiple Linear Regression
+
+![(ISLR, Fig 3.5): *A pronounced non-linear relationship. Positive residuals (visible above the surface) tend to lie along the 45-degree line, where budgets are split evenly. Negative residuals (most not visible) tend to be away from this line, where budgets are more lopsided.*](images/3_5.svg){fig-align="center"}
+
+<!-- ## Another Superpower of MLR: Incorporating Categorical Vars
+ -->
+
+
+## References
+
+::: {#refs}
+:::
