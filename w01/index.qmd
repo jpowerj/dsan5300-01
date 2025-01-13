@@ -4,7 +4,7 @@ subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring
 author: "Jeff Jacobs"
 institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
 # bibliography: "../_DSAN5300.bib"
-date: 2025-01-13
+date: 2025-01-08
 lecnum: 1
 categories:
   - "Class Sessions"
@@ -30,11 +30,5 @@ format:
     html-math-method: mathjax
 ---
 
-::: {.content-visible unless-format="revealjs"}
-
-<center>
-<a class="h2" href="./slides.html" target="_blank">Open slides in new window &rarr;</a>
-</center>
-
-:::
-
+* Week 1 was held on Zoom as a **combined session** of the three sections of DSAN 5300
+* The recording can be found [here](https://georgetown.zoom.us/rec/share/nkNzHSblgm8sesz-Zq5MyGGLRNAYLyoQomiQ36Kk76zCn2cmto5ta2UbGDzWL_2o.SZUEM4C11AOq8G0Q?startTime=1736454758000)

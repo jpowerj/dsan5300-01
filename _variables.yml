@@ -7,9 +7,9 @@ w01:
   date-md: "Jan 8"
 w02:
   weeknum: 2
-  title: "Machine Learning, Training Data, and Bias"
-  footer: "Machine Learning, Training Data, and Bias"
-  date-md: "Jan 15"
+  title: "Linear Regression"
+  footer: "Linear Regression"
+  date-md: "Jan 13"
 w03:
   weeknum: 3
   title: "(Descriptive) Fairness in AI"
