@@ -580,7 +580,7 @@ Jeff Jacobs
 <span id="cb3-8"><a></a>  <span class="fu">theme_dsan</span>() <span class="sc">+</span></span>
 <span id="cb3-9"><a></a>  <span class="fu">labs</span>(</span>
 <span id="cb3-10"><a></a>    <span class="at">x =</span> <span class="st">"Allocation ($1K)"</span>,</span>
-<span id="cb3-11"><a></a>    <span class="at">y =</span> <span class="st">"Sales (Units)"</span></span>
+<span id="cb3-11"><a></a>    <span class="at">y =</span> <span class="st">"Sales (1K Units)"</span></span>
 <span id="cb3-12"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 
@@ -1524,9 +1524,210 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <section id="visualizing-multiple-linear-regression" class="slide level2">
 <h2>Visualizing Multiple Linear Regression</h2>
 
-<!-- ## Another Superpower of MLR: Incorporating Categorical Vars
- -->
 <img data-src="images/3_5.svg" class="r-stretch quarto-figure-center"><p class="caption">(ISLR, Fig 3.5): <em>A pronounced non-linear relationship. Positive residuals (visible above the surface) tend to lie along the 45-degree line, where budgets are split evenly. Negative residuals (most not visible) tend to be away from this line, where budgets are more lopsided.</em></p></section>
+<section id="interpreting-mlr" class="slide level2 smaller">
+<h2>Interpreting MLR</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>mlr_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(sales <span class="sc">~</span> TV <span class="sc">+</span> radio <span class="sc">+</span> newspaper, <span class="at">data=</span>ad_df)</span>
+<span id="cb37-2"><a></a><span class="fu">print</span>(<span class="fu">summary</span>(mlr_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sales ~ TV + radio + newspaper, data = ad_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.8277 -0.8908  0.2418  1.1893  2.8292 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.938889   0.311908   9.422   &lt;2e-16 ***
+TV           0.045765   0.001395  32.809   &lt;2e-16 ***
+radio        0.188530   0.008611  21.893   &lt;2e-16 ***
+newspaper   -0.001037   0.005871  -0.177     0.86    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.686 on 196 degrees of freedom
+Multiple R-squared:  0.8972,    Adjusted R-squared:  0.8956 
+F-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><strong>Holding <code>radio</code> and <code>newspaper</code> spending constant</strong>…
+<ul>
+<li>An <strong>increase of $1K</strong> in spending on <code>TV</code> advertising is associated with</li>
+<li>An <strong>increase in sales of about 46 units</strong></li>
+</ul></li>
+<li><strong>Holding <code>TV</code> and <code>newspaper</code> spending constant</strong>…
+<ul>
+<li>An <strong>increase of $1K</strong> in spending on <code>radio</code> advertising is associated with</li>
+<li>An <strong>increase in sales of about 189 units</strong></li>
+</ul></li>
+</ul>
+</div></div>
+</section>
+<section id="but-wait" class="slide level2 smaller">
+<h2>But Wait…</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">print</span>(<span class="fu">summary</span>(mlr_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sales ~ TV + radio + newspaper, data = ad_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.8277 -0.8908  0.2418  1.1893  2.8292 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.938889   0.311908   9.422   &lt;2e-16 ***
+TV           0.045765   0.001395  32.809   &lt;2e-16 ***
+radio        0.188530   0.008611  21.893   &lt;2e-16 ***
+newspaper   -0.001037   0.005871  -0.177     0.86    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.686 on 196 degrees of freedom
+Multiple R-squared:  0.8972,    Adjusted R-squared:  0.8956 
+F-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>lr_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(sales <span class="sc">~</span> newspaper, <span class="at">data=</span>ad_df)</span>
+<span id="cb41-2"><a></a><span class="fu">print</span>(<span class="fu">summary</span>(lr_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sales ~ newspaper, data = ad_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-11.2272  -3.3873  -0.8392   3.5059  12.7751 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 12.35141    0.62142   19.88  &lt; 2e-16 ***
+newspaper    0.05469    0.01658    3.30  0.00115 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.092 on 198 degrees of freedom
+Multiple R-squared:  0.05212,   Adjusted R-squared:  0.04733 
+F-statistic: 10.89 on 1 and 198 DF,  p-value: 0.001148</code></pre>
+</div>
+</div>
+</div></div>
+<ul>
+<li>MLR results can be <strong>drastically different</strong> from SLR results, because of <strong>correlations</strong> (next slide)</li>
+<li>This is a good thing! It’s how we’re able to <strong>control for</strong> confounding variables!</li>
+</ul>
+</section>
+<section id="correlations-among-features" class="slide level2 smaller">
+<h2>Correlations Among Features</h2>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">cor</span>(ad_df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  TV      radio  newspaper     sales
+TV        1.00000000 0.05480866 0.05664787 0.7822244
+radio     0.05480866 1.00000000 0.35410375 0.5762226
+newspaper 0.05664787 0.35410375 1.00000000 0.2282990
+sales     0.78222442 0.57622257 0.22829903 1.0000000</code></pre>
+</div>
+</div>
+<ul>
+<li>Observe how <span class="math inline">\(\text{cor}(\texttt{radio}, \texttt{newspaper}) \approx 0.35\)</span></li>
+<li>In markets where we spend more on <code>radio</code> our sales will tend to be higher…</li>
+<li>Corr matrix <span class="math inline">\(\implies\)</span> we spend more on <code>newspaper</code> in those same markets…</li>
+<li>In SLR which only examines <code>sales</code> vs.&nbsp;<code>newspaper</code>, we (<strong>correctly!</strong>) observe that higher values of <code>newspaper</code> are associated with higher values of <code>sales</code>…</li>
+<li>In essence, <code>newspaper</code> advertising is a surrogate for <code>radio</code> advertising <span class="math inline">\(\implies\)</span> in our SLR, <code>newspaper</code> “gets credit” for the association between <code>radio</code> and <code>sales</code></li>
+</ul>
+</section>
+<section id="another-mlr-superpower-incorporating-categorical-vars" class="slide level2 smaller title-09 math-90">
+<h2>Another MLR Superpower: Incorporating Categorical Vars</h2>
+<p><em>(Preview for next week)</em></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 \times \texttt{income}
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>credit_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"assets/Credit.csv"</span>)</span>
+<span id="cb45-2"><a></a>credit_plot <span class="ot">&lt;-</span> credit_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Income, <span class="at">y=</span>Balance)) <span class="sc">+</span></span>
+<span id="cb45-3"><a></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.5</span><span class="sc">*</span>g_pointsize) <span class="sc">+</span></span>
+<span id="cb45-4"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>, <span class="at">formula=</span><span class="st">"y ~ x"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb45-5"><a></a>  <span class="fu">theme_dsan</span>() <span class="sc">+</span></span>
+<span id="cb45-6"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb45-7"><a></a>    <span class="at">title=</span><span class="st">"Credit Card Balance vs. Income Level"</span>,</span>
+<span id="cb45-8"><a></a>    <span class="at">x=</span><span class="st">"Income ($1K)"</span>,</span>
+<span id="cb45-9"><a></a>    <span class="at">y=</span><span class="st">"Credit Card Balance ($)"</span></span>
+<span id="cb45-10"><a></a>  )</span>
+<span id="cb45-11"><a></a>credit_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/credit-plot-slr-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<p><span class="math display">\[
+\begin{align*}
+Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Student} \\
+&amp;+ \beta_3 \times (\texttt{Student} \times \texttt{Income})
+\end{align*}
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>student_plot <span class="ot">&lt;-</span> credit_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Income, <span class="at">y=</span>Balance, <span class="at">color=</span>Student)) <span class="sc">+</span></span>
+<span id="cb46-2"><a></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.5</span><span class="sc">*</span>g_pointsize) <span class="sc">+</span></span>
+<span id="cb46-3"><a></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>, <span class="at">formula=</span><span class="st">"y ~ x"</span>, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb46-4"><a></a>  <span class="fu">theme_dsan</span>() <span class="sc">+</span></span>
+<span id="cb46-5"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb46-6"><a></a>    <span class="at">title=</span><span class="st">"Credit Card Balance vs. Income Level"</span>,</span>
+<span id="cb46-7"><a></a>    <span class="at">x=</span><span class="st">"Income ($1K)"</span>,</span>
+<span id="cb46-8"><a></a>    <span class="at">y=</span><span class="st">"Credit Card Balance ($)"</span></span>
+<span id="cb46-9"><a></a>  )</span>
+<span id="cb46-10"><a></a>student_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/credit-plot-students-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<ul>
+<li>Why do we need the <span class="math inline">\(\texttt{Student} \times \texttt{Income}\)</span> term?</li>
+<li>Understanding this setup will open up a <strong>vast</strong> array of possibilities for regression 😎</li>
+</ul>
+</section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
