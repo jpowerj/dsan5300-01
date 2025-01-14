@@ -57,6 +57,13 @@ website:
       # - text: "Anonymous Suggestions<i class='bi bi-box-arrow-up-right ps-1'></i>"
       #   href: "https://forms.gle/s35xJBf8Dj6XR5pr8"
       #   target: "_blank"
+      - "---"
+      - text: "Canvas <i class='bi bi-box-arrow-up-right ps-1'></i>"
+        href: "https://georgetown.instructure.com/courses/203361"
+        target: "_blank"
+      - text: "Office Hours <i class='bi bi-box-arrow-up-right ps-1'></i>"
+        href: "https://jjacobs.me/meet"
+        target: "_blank"
 
 format:
   html:
