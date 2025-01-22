@@ -2,6 +2,8 @@
 title: "Getting Started with Lab 1"
 subtitle: "DSAN 5300: Statistical Learning"
 sidebar: mainnav
+weeknum: 2
+assignment: "Lab 1"
 categories:
   - "Extra Writeups"
 format:

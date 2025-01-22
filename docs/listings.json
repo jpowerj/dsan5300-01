@@ -2,10 +2,10 @@
   {
     "listing": "/writeups/index.html",
     "items": [
-      "/writeups/lab-1/index.html",
-      "/writeups/machine-learning/index.html",
       "/writeups/regression-vs-pca/index.html",
-      "/writeups/optimization/index.html"
+      "/writeups/optimization/index.html",
+      "/writeups/lab-1/index.html",
+      "/writeups/machine-learning/index.html"
     ]
   },
   {
