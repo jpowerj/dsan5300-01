@@ -1,0 +1,53 @@
+---
+title: "Quiz 1 Study Guide"
+subtitle: "DSAN 5300: Statistical Learning"
+sidebar: mainnav
+weeknum: 2
+assignment: "Quiz 1"
+categories:
+  - "Extra Writeups"
+format:
+  html:
+    embed-resources: true
+    echo: true
+    code-fold: true
+    html-math-method: mathjax
+    df-print: kable
+    toc: true
+---
+
+Hello DSAN 5300 Section 01 friends!
+
+I apologize for the lack of info yall have going into the first Quiz for the course tomorrow. I should have sent out an announcement about it earlier, since we didn't have class this week, but I ended up getting bogged down trying to put together a full-on comprehensive study guide, which is still not ready, so instead I thought it'd be good to at least send out this more summary-level study guide.
+
+The key topics that the Quiz will cover are:
+
+## "Parametric" Modeling
+
+What does it mean to have a **"parametric"** model? For example, in a model such as regression, which we write as
+
+$$
+Y = \beta_0 + \beta1_ X + \varepsilon,
+$$
+
+which of the things in that equation are parameters of the model and which are not parameters (for example, which are just variables that we plug data into)?
+
+## Optimization in General
+
+Once we've identified the parameters in a model, how do we evaluate how "good" or "bad" a certain setting for the parameters is? (The answer being, a loss function)
+
+## Gradient Descent
+
+Once we have a loss function, how does the gradient (which is the vector equivalent of a derivative: i.e., in calculus we learn how f(x) = x^2 has a derivative df/dx = 2x, so if x is now a vector like x = (x1,x2) instead of just a single number, the vector-valued derivative is df/dx = (df/dx1, df/dx2)) allow us to choose a random value for the parameter and then "make our way" towards the optimal value? [That's the main content in [this previous writeup](../lab-1/)]
+
+## More Efficient Optimization Methods
+
+Here the idea (or, the way I see these "fancier" methods, at least) is, they use additional information about the loss function above and beyond just L(x) and its derivative L'(x). So, Newton's method for example uses the second derivative L''(x) as an additional piece of information about the curvature of the loss function, whereas the secant method is slower than Newton's method but doesn't require us to know this second derivative L''(x) (since it approximates it).
+
+## A Full-On Lecture Replacement
+
+To try and fully "fill in" the missing week here, I can just give you all the resource that is literally a recording of the class I learned this stuff from, and that I later TAed. That way if you have additional questions I'll be able to refer specifically to the examples/materials that Prof. Ng uses in the following video:
+
+{{< video https://www.youtube.com/watch?v=4b4MUYve_U8 >}}
+
+Sorry again for the lateness here, and, I will do my best to add more details to this guide tonight (Sunday night) and tomorrow (Monday morning), before the lecture time at 6:30pm!
