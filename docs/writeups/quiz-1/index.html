@@ -5269,7 +5269,7 @@ vertical-align: middle;
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-01-26, 03:27:20 PM</em></p>
+<p><em>Updated 2025-01-26, 03:46:03 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -5329,11 +5329,25 @@ Y = \beta_0 + \beta1_ X + \varepsilon,
 </section>
 <section id="gradient-descent" class="level2">
 <h2 class="anchored" data-anchor-id="gradient-descent">Gradient Descent</h2>
-<p>Once we have a loss function, how does the gradient (which is the vector equivalent of a derivative: i.e., in calculus we learn how f(x) = x^2 has a derivative df/dx = 2x, so if x is now a vector like x = (x1,x2) instead of just a single number, the vector-valued derivative is df/dx = (df/dx1, df/dx2)) allow us to choose a random value for the parameter and then “make our way” towards the optimal value? [That’s the main content in <a href="../lab-1/">this previous writeup</a>]</p>
+<p>Once we have a loss function, how does the gradient allow us to choose a random value for the parameter and then “make our way” towards the optimal value? The answer to this question is the main content in <a href="../lab-1/">this previous writeup</a></p>
+<p>As a refresher, a <strong>gradient</strong> is just the vector equivalent of a derivative. For example, in calculus we learn how</p>
+<p><span class="math display">\[
+f(x) = x^2
+\]</span></p>
+<p>has a derivative</p>
+<p><span class="math display">\[
+\frac{\partial f}{\partial x} = 2x.
+\]</span></p>
+<p>So in this class, if <span class="math inline">\(\mathbf{x}\)</span> is now a vector like <span class="math inline">\(\mathbf{x} = (x_1,x_2)\)</span> instead of just a single number, the <strong>gradient</strong> or <strong>vector-valued derivative</strong> of <span class="math inline">\(f\)</span> with respect to <span class="math inline">\(\mathbf{x}\)</span>, <span class="math inline">\(\nabla_{\mathbf{x}} f\)</span>, is</p>
+<p><span class="math display">\[
+\nabla_{\mathbf{x}} f = \frac{\partial f}{\partial \mathbf{x}} = \left( \frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2} \right)
+\]</span></p>
+<p>If it helps, try to notice/keep in mind how the <span class="math inline">\(\mathbf{x}\)</span> in <span class="math inline">\(\frac{\partial f}{\partial \mathbf{x}}\)</span> is a <strong>vector</strong>, whereas the <span class="math inline">\(x_1\)</span> in <span class="math inline">\(\frac{\partial f}{\partial x_1}\)</span> is a <strong>scalar</strong>. In other words, although the first and second terms in this expression may look scary, each entry within the parentheses on the RHS of that equality (the third term) is just the “regular” univariate derivative that you learn in calculus class!</p>
 </section>
 <section id="more-efficient-optimization-methods" class="level2">
 <h2 class="anchored" data-anchor-id="more-efficient-optimization-methods">More Efficient Optimization Methods</h2>
-<p>Here the idea (or, the way I see these “fancier” methods, at least) is, they use additional information about the loss function above and beyond just L(x) and its derivative L’(x). So, Newton’s method for example uses the second derivative L’‘(x) as an additional piece of information about the curvature of the loss function, whereas the secant method is slower than Newton’s method but doesn’t require us to know this second derivative L’’(x) (since it approximates it).</p>
+<p>Here the idea (or, the way I see these “fancier” methods, at least) is, they use additional information about the loss function above and beyond just <span class="math inline">\(L(x)\)</span> and its derivative <span class="math inline">\(L&#39;(x)\)</span>.</p>
+<p>So, <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton’s method</a> for example uses the second derivative <span class="math inline">\(L&#39;&#39;(x)\)</span> as an additional piece of information about the curvature of the loss function, whereas the <a href="https://en.wikipedia.org/wiki/Secant_method">secant method</a> is slower than Newton’s method but doesn’t require us to know this second derivative <span class="math inline">\(L&#39;&#39;(x)\)</span> (since it approximates it).</p>
 </section>
 <section id="a-full-on-lecture-replacement" class="level2">
 <h2 class="anchored" data-anchor-id="a-full-on-lecture-replacement">A Full-On Lecture Replacement</h2>

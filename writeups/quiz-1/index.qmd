@@ -38,11 +38,33 @@ Once we've identified the parameters in a model, how do we evaluate how "good" o
 
 ## Gradient Descent
 
-Once we have a loss function, how does the gradient (which is the vector equivalent of a derivative: i.e., in calculus we learn how f(x) = x^2 has a derivative df/dx = 2x, so if x is now a vector like x = (x1,x2) instead of just a single number, the vector-valued derivative is df/dx = (df/dx1, df/dx2)) allow us to choose a random value for the parameter and then "make our way" towards the optimal value? [That's the main content in [this previous writeup](../lab-1/)]
+Once we have a loss function, how does the gradient allow us to choose a random value for the parameter and then "make our way" towards the optimal value? The answer to this question is the main content in [this previous writeup](../lab-1/)
+
+As a refresher, a **gradient** is just the vector equivalent of a derivative. For example, in calculus we learn how
+
+$$
+f(x) = x^2
+$$
+
+has a derivative
+
+$$
+\frac{\partial f}{\partial x} = 2x.
+$$
+
+So in this class, if $\mathbf{x}$ is now a vector like $\mathbf{x} = (x_1,x_2)$ instead of just a single number, the **gradient** or **vector-valued derivative** of $f$ with respect to $\mathbf{x}$, $\nabla_{\mathbf{x}} f$, is
+
+$$
+\nabla_{\mathbf{x}} f = \frac{\partial f}{\partial \mathbf{x}} = \left( \frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2} \right)
+$$
+
+If it helps, try to notice/keep in mind how the $\mathbf{x}$ in $\frac{\partial f}{\partial \mathbf{x}}$ is a **vector**, whereas the $x_1$ in $\frac{\partial f}{\partial x_1}$ is a **scalar**. In other words, although the first and second terms in this expression may look scary, each entry within the parentheses on the RHS of that equality (the third term) is just the "regular" univariate derivative that you learn in calculus class!
 
 ## More Efficient Optimization Methods
 
-Here the idea (or, the way I see these "fancier" methods, at least) is, they use additional information about the loss function above and beyond just L(x) and its derivative L'(x). So, Newton's method for example uses the second derivative L''(x) as an additional piece of information about the curvature of the loss function, whereas the secant method is slower than Newton's method but doesn't require us to know this second derivative L''(x) (since it approximates it).
+Here the idea (or, the way I see these "fancier" methods, at least) is, they use additional information about the loss function above and beyond just $L(x)$ and its derivative $L'(x)$.
+
+So, [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) for example uses the second derivative $L''(x)$ as an additional piece of information about the curvature of the loss function, whereas the [secant method](https://en.wikipedia.org/wiki/Secant_method) is slower than Newton's method but doesn't require us to know this second derivative $L''(x)$ (since it approximates it).
 
 ## A Full-On Lecture Replacement
 
