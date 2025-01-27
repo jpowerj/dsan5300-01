@@ -68,7 +68,7 @@ set.seed(5300)
 
 :::
 
-{{< include ../dsan-globals/_tex.globals.qmd >}}
+{{< include ../dsan-globals/_globals-tex.qmd >}}
 
 
 ## How Do We Define "Best"? {.smaller}

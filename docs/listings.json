@@ -3,17 +3,18 @@
     "listing": "/writeups/index.html",
     "items": [
       "/writeups/regression-vs-pca/index.html",
-      "/writeups/optimization/index.html",
       "/writeups/quiz-1/index.html",
       "/writeups/lab-1/index.html",
-      "/writeups/machine-learning/index.html"
+      "/writeups/machine-learning/index.html",
+      "/writeups/optimization/index.html"
     ]
   },
   {
     "listing": "/index.html",
     "items": [
       "/w01/index.html",
-      "/w02/index.html"
+      "/w02/index.html",
+      "/w03/index.html"
     ]
   }
 ]

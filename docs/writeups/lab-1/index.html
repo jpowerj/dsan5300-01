@@ -4899,8 +4899,14 @@ color: gray;
 
 pointer-events: none;
 }
+.alg {
+font-variant-caps: small-caps !important;
+}
 .aside-80 aside {
 font-size: 1.3rem !important;
+}
+.blockquote-90 blockquote {
+font-size: 90% !important;
 }
 .border-all td {
 border: 1px solid black !important;
@@ -4964,9 +4970,15 @@ font-size: 90% !important;
 .code-80 code {
 font-size: 80% !important;
 }
+
+.cols-va .column {
+vertical-align: middle !important;
+}
 .crunch-blockquote blockquote {
 margin-top: 0px !important;
 margin-bottom: 0px !important;
+padding-top: 0px !important;
+padding-bottom: 0px !important;
 }
 .crunch-code-filename .code-with-filename {
 margin-left: 0px !important;
@@ -5002,6 +5014,10 @@ margin-bottom: 0px !important;
 margin-top: 2px !important;
 margin-bottom: 2px !important;
 }
+.crunch-li-4 li {
+margin-top: 4px !important;
+margin-bottom: 4px !important;
+}
 .crunch-li-5 li {
 margin-top: 5px !important;
 margin-bottom: 5px !important;
@@ -5014,12 +5030,31 @@ margin-bottom: 8px !important;
 margin-top: 10px !important;
 margin-bottom: 10px !important;
 }
+.crunch-math-15 mjx-container {
+margin-top: 15px !important;
+margin-bottom: 15px !important;
+}
 .crunch-p p {
 margin-top: 2px !important;
 margin-bottom: 2px !important;
 }
+.crunch-p-5 p {
+margin-top: 5px !important;
+margin-bottom: 5px !important;
+}
+.crunch-p-6 p {
+margin-top: 6px !important;
+margin-bottom: 6px !important;
+}
+.crunch-p-8 p {
+margin-top: 8px !important;
+margin-bottom: 8px !important;
+}
 .crunch-quarto-figure .quarto-figure {
 margin-top: 0px !important;
+margin-bottom: 0px !important;
+}
+.crop-quarto-figure .quarto-figure {
 margin-bottom: 0px !important;
 }
 .crunch-quarto-layout-cell .quarto-layout-cell {
@@ -5084,17 +5119,51 @@ border-top: 2px solid gray !important;
 display: block !important;
 top: 0px !important;
 }
+.output-center .cell-output pre {
+max-width: fit-content;
+margin-left: auto;
+margin-right: auto;
+}
+.output-nowrap .cell-output pre code {
+word-break: normal !important;
+white-space: pre-wrap !important;
+}
+.output-90 .cell-output {
+font-size: 80% !important;
+}
 .output-80 .cell-output {
 font-size: 80% !important;
 }
 .output-75 .cell-output {
 font-size: 75% !important;
 }
+.p-60 p {
+font-size: 60% !important;
+}
+.p-70 p {
+font-size: 70% !important;
+}
+.p-75 p {
+font-size: 75% !important;
+}
+.p-80 p {
+font-size: 80% !important;
+}
+.p-85 p {
+font-size: 85% !important;
+}
+.p-90 p {
+font-size: 90% !important;
+}
 .sidebar-footer-item {
 font-size: 80% !important;
 }
 .sidebar-menu-container {
 padding-top: 10px !important;
+}
+.sidebar-subtitle {
+font-size: 12pt !important;
+line-height: 0.7em !important;
 }
 .smaller-table td {
 font-size: 80% !important;
@@ -5120,10 +5189,6 @@ border-spacing: 0;
 .sticky-table tbody:nth-of-type(1) tr:nth-of-type(1) td {
 border-top: none !important;
 }
-.sidebar-subtitle {
-font-size: 12pt !important;
-line-height: 0.7em !important;
-}
 .small-tex-td {
 font-size: 2.0rem !important;
 }
@@ -5141,6 +5206,21 @@ font-size: 1.2rem !important;
 }
 .table-80 td {
 font-size: 80% !important;
+}
+.table-80 th {
+font-size: 80% !important;
+}
+.table-87 td {
+font-size: 87% !important;
+}
+.table-87 th {
+font-size: 87% !important;
+}
+.table-90 td {
+font-size: 90% !important;
+}
+.table-90 th {
+font-size: 90% !important;
 }
 
 table thead th {
@@ -5170,6 +5250,21 @@ vertical-align: middle !important;
 }
 .tdvt-all td {
 vertical-align: top !important;
+}
+.text-60 p {
+font-size: 60% !important;
+}
+.text-65 {
+font-size: 65% !important;
+}
+.text-70 {
+font-size: 70% !important;
+}
+.text-75 {
+font-size: 75% !important;
+}
+.text-80 {
+font-size: 80% !important;
 }
 .text-85 {
 font-size: 85% !important;
@@ -5206,7 +5301,7 @@ text-align: right !important;
 margin-left: 0px !important;
 }
 .valign-cols div.column {
-vertical-align: middle;
+vertical-align: middle !important;
 }
 </style>
 </head>
@@ -5278,7 +5373,7 @@ vertical-align: middle;
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../w01/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Week 1: Jan 8</span></a>
+ <span class="menu-text">Week 1: Jan 9</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -5303,7 +5398,7 @@ vertical-align: middle;
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-01-26, 03:46:03 PM</em></p>
+<p><em>Updated 2025-01-27, 06:13:16 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->

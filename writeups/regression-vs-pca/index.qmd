@@ -16,7 +16,8 @@ format:
     slide-number: true
     html-math-method: mathjax
     css: "../../dsan-globals/jjstyles.css"
-    include-in-header: {"text": "<link href=\"https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined\" rel=\"stylesheet\" />"}
+    include-in-header:
+      text: "<link href=\"https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined\" rel=\"stylesheet\" />"
     revealjs-plugins:
       - simplemenu
     simplemenu:
@@ -47,7 +48,7 @@ source("../../dsan-globals/_globals.r")
 
 :::
 
-{{< include ../../dsan-globals/_tex.globals.qmd >}}
+{{< include ../../dsan-globals/_globals-tex.qmd >}}
 
 * If science is understanding relationships between variables, **regression** is the most basic but fundamental tool we have to start **measuring** these relationships
 * Often exactly what humans do when we see data!

@@ -259,7 +259,7 @@
     "href": "writeups/index.html",
     "title": "Extra Writeups",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nWeek\n\n\nAssignment\n\n\n\n\n\n\nRegression vs. PCA\n\n\n \n\n\n \n\n\n\n\nMathematical Optimization\n\n\n13\n\n\nQuiz 4\n\n\n\n\nQuiz 1 Study Guide\n\n\n2\n\n\nQuiz 1\n\n\n\n\nGetting Started with Lab 1\n\n\n2\n\n\nLab 1\n\n\n\n\nExtra Slides: A Slightly Deeper Dive Into Machine Learning\n\n\n2\n\n\nGeneral\n\n\n\n\n\nNo matching items",
+    "text": "Order By\n       Default\n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nWeek\n\n\nAssignment\n\n\n\n\n\n\nRegression vs. PCA\n\n\n \n\n\n \n\n\n\n\nQuiz 1 Study Guide\n\n\n2\n\n\nQuiz 1\n\n\n\n\nGetting Started with Lab 1\n\n\n2\n\n\nLab 1\n\n\n\n\nExtra Slides: A Slightly Deeper Dive Into Machine Learning\n\n\n2\n\n\nGeneral\n\n\n\n\nMathematical Optimization\n\n\n1\n\n\nGeneral\n\n\n\n\n\nNo matching items",
     "crumbs": [
       "Writeups"
     ]
@@ -738,6 +738,237 @@
     ]
   },
   {
+    "objectID": "w03/index.html",
+    "href": "w03/index.html",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "",
+    "text": "Open slides in new tab →"
+  },
+  {
+    "objectID": "w03/index.html#what-regression-is-not",
+    "href": "w03/index.html#what-regression-is-not",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "What Regression is Not",
+    "text": "What Regression is Not\n\nFinal reminder that Regression, PCA have different goals!\nIf your goal was to, e.g., generate realistic \\((x,y)\\) pairs, then (mathematically) you want PCA! Roughly:\n\\[\n\\widehat{f}_{\\text{PCA}} = \\min_{\\mathbf{c}}\\left[ \\sum_{i=1}^{n} (\\widehat{x}_i(\\mathbf{c}) - x_i)^2 + (\\widehat{y}_i(\\mathbf{c}) - y_i)^2 \\right]\n\\]\nOur goal is a good predictor of \\(Y\\):\n\\[\n\\widehat{f}_{\\text{Reg}} = \\min_{\\beta_0, \\beta_1}\\left[ \\sum_{i=1}^{n} (\\widehat{y}_i(\\beta) - y_i)^2 \\right]\n\\]"
+  },
+  {
+    "objectID": "w03/index.html#how-do-we-define-best",
+    "href": "w03/index.html#how-do-we-define-best",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "How Do We Define “Best”?",
+    "text": "How Do We Define “Best”?\n\nIntuitively, two different ways to measure how well a line fits the data:\n\n\nCode\nlibrary(tidyverse)\nset.seed(5321)\nN &lt;- 11\nx &lt;- seq(from = 0, to = 1, by = 1 / (N - 1))\ny &lt;- x + rnorm(N, 0, 0.2)\nmean_y &lt;- mean(y)\nspread &lt;- y - mean_y\ndf &lt;- tibble(x = x, y = y, spread = spread)\nggplot(df, aes(x=x, y=y)) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=cbPalette[1], linewidth=g_linewidth*2) +\n  geom_segment(xend=(x+y)/2, yend=(x+y)/2, linewidth=g_linewidth*2, color=cbPalette[2]) +\n  geom_point(size=g_pointsize) +\n  coord_equal() +\n  xlim(0, 1) + ylim(0, 1) +\n  dsan_theme(\"half\") +\n  labs(\n    title = \"Principal Component Line\"\n  )\nggplot(df, aes(x=x, y=y)) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=cbPalette[1], linewidth=g_linewidth*2) +\n  geom_segment(xend=x, yend=x, linewidth=g_linewidth*2, color=cbPalette[2]) +\n  geom_point(size=g_pointsize) +\n  coord_equal() +\n  xlim(0, 1) + ylim(0, 1) +\n  dsan_theme(\"half\") +\n  labs(\n    title = \"Regression Line\"\n  )\n\n\n\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ lubridate 1.9.3     ✔ tibble    3.2.1\n✔ purrr     1.0.2     ✔ tidyr     1.3.1\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_segment()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\n\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_segment()`).\n\n\nWarning: Removed 1 row containing missing values or values outside the scale range\n(`geom_point()`).\n\n\n\n\n\n\n\n\n\n\n\n\n\nOn the difference between these two lines, and why it matters, I cannot recommend Gelman and Hill (2007) enough!"
+  },
+  {
+    "objectID": "w03/index.html#multiple-linear-regression-mlr-model",
+    "href": "w03/index.html#multiple-linear-regression-mlr-model",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Multiple Linear Regression (MLR) Model",
+    "text": "Multiple Linear Regression (MLR) Model\n\nNotation: \\(x_{i,j}\\) = value of independent variable \\(j\\) for person/observation \\(i\\)\n\\(M\\) = total number of independent variables\n\n\\[\n\\widehat{y}_i = \\beta_0 + \\beta_1x_{i,1} + \\beta_2x_{i,2} + \\cdots + \\beta_M x_{i,M}\n\\]\n\n\\(\\beta_j\\) interpretation: a one-unit increase in \\(x_{i,j}\\) is associated with a \\(\\beta_j\\) unit increase in \\(y_i\\), holding all other independent variables constant"
+  },
+  {
+    "objectID": "w03/index.html#visualizing-multiple-linear-regression",
+    "href": "w03/index.html#visualizing-multiple-linear-regression",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Visualizing Multiple Linear Regression",
+    "text": "Visualizing Multiple Linear Regression\n\n\n\n(ISLR, Fig 3.5): A pronounced non-linear relationship. Positive residuals (visible above the surface) tend to lie along the 45-degree line, where budgets are split evenly. Negative residuals (most not visible) tend to be away from this line, where budgets are more lopsided."
+  },
+  {
+    "objectID": "w03/index.html#interpreting-mlr",
+    "href": "w03/index.html#interpreting-mlr",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Interpreting MLR",
+    "text": "Interpreting MLR\n\n\nCode\nmlr_model = smf.ols(\n  formula=\"sales ~ TV + radio + newspaper\",\n  data=ad_df\n)\nmlr_result = mlr_model.fit()\nprint(mlr_result.summary().tables[1])\n\n\n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nIntercept      2.9389      0.312      9.422      0.000       2.324       3.554\nTV             0.0458      0.001     32.809      0.000       0.043       0.049\nradio          0.1885      0.009     21.893      0.000       0.172       0.206\nnewspaper     -0.0010      0.006     -0.177      0.860      -0.013       0.011\n==============================================================================\n\n\n\n\n\nHolding radio and newspaper spending constant…\n\nAn increase of $1K in spending on TV advertising is associated with\nAn increase in sales of about 46 units\n\n\n\n\nHolding TV and newspaper spending constant…\n\nAn increase of $1K in spending on radio advertising is associated with\nAn increase in sales of about 189 units"
+  },
+  {
+    "objectID": "w03/index.html#but-wait",
+    "href": "w03/index.html#but-wait",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "But Wait…",
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-01-27 18:13 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-01-27 18:13 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
+  },
+  {
+    "objectID": "w03/index.html#correlations-among-features",
+    "href": "w03/index.html#correlations-among-features",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Correlations Among Features",
+    "text": "Correlations Among Features\n\n\nCode\nad_df.drop(columns=\"id\").corr()\n\n\n                 TV     radio  newspaper     sales\nTV         1.000000  0.054809   0.056648  0.782224\nradio      0.054809  1.000000   0.354104  0.576223\nnewspaper  0.056648  0.354104   1.000000  0.228299\nsales      0.782224  0.576223   0.228299  1.000000\n\n\n\nObserve how \\(\\text{cor}(\\texttt{radio}, \\texttt{newspaper}) \\approx 0.35\\)\nIn markets where we spend more on radio our sales will tend to be higher…\nCorr matrix \\(\\implies\\) we spend more on newspaper in those same markets…\nIn SLR which only examines sales vs. newspaper, we (correctly!) observe that higher values of newspaper are associated with higher values of sales…\nIn essence, newspaper advertising is a surrogate for radio advertising \\(\\implies\\) in our SLR, newspaper “gets credit” for the association between radio and sales"
+  },
+  {
+    "objectID": "w03/index.html#another-mlr-superpower-incorporating-categorical-vars",
+    "href": "w03/index.html#another-mlr-superpower-incorporating-categorical-vars",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Another MLR Superpower: Incorporating Categorical Vars",
+    "text": "Another MLR Superpower: Incorporating Categorical Vars\n\n\n\\[\n\\begin{align*}\nY &= \\beta_0 + \\beta_1 \\times \\texttt{income} \\\\\n&\\phantom{Y}\n\\end{align*}\n\\]\n\n\nCode\ncredit_df &lt;- read_csv(\"assets/Credit.csv\")\n\n\nRows: 400 Columns: 11\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): Own, Student, Married, Region\ndbl (7): Income, Limit, Rating, Cards, Age, Education, Balance\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nCode\ncredit_plot &lt;- credit_df |&gt; ggplot(aes(x=Income, y=Balance)) +\n  geom_point(size=0.5*g_pointsize) +\n  geom_smooth(method='lm', formula=\"y ~ x\", linewidth=1) +\n  theme_dsan() +\n  labs(\n    title=\"Credit Card Balance vs. Income Level\",\n    x=\"Income ($1K)\",\n    y=\"Credit Card Balance ($)\"\n  )\ncredit_plot\n\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\nY = &\\beta_0 + \\beta_1 \\times \\texttt{income} + \\beta_2 \\times \\texttt{Student} \\\\\n&+ \\beta_3 \\times (\\texttt{Student} \\times \\texttt{Income})\n\\end{align*}\n\\]\n\n\nCode\nstudent_plot &lt;- credit_df |&gt; ggplot(aes(x=Income, y=Balance, color=Student)) +\n  geom_point(size=0.5*g_pointsize) +\n  geom_smooth(method='lm', formula=\"y ~ x\", linewidth=1) +\n  theme_dsan() +\n  labs(\n    title=\"Credit Card Balance vs. Income Level\",\n    x=\"Income ($1K)\",\n    y=\"Credit Card Balance ($)\"\n  )\nstudent_plot\n\n\n\n\n\n\n\n\n\n\n\n\nWhy do we need the \\(\\texttt{Student} \\times \\texttt{Income}\\) term?\nUnderstanding this setup will open up a vast array of possibilities for regression 😎\n(Dear future Jeff, let’s go through this on the board! Sincerely, past Jeff)"
+  },
+  {
+    "objectID": "w03/index.html#from-mlr-to-logistic-regression",
+    "href": "w03/index.html#from-mlr-to-logistic-regression",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "From MLR to Logistic Regression",
+    "text": "From MLR to Logistic Regression\n\nAs DSAN students, you know that we’re still sweeping classification under the rug!\nWe saw how to include binary/multiclass covariates, but what if the actual thing we’re trying to predict is binary?\nThe wrong approach is the “Linear Probability Model”:\n\n\n\n\\[\n\\Pr(Y \\mid X) = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]"
+  },
+  {
+    "objectID": "w03/index.html#credit-default",
+    "href": "w03/index.html#credit-default",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Credit Default",
+    "text": "Credit Default\n\n\nCode\nlibrary(tidyverse)\nlibrary(ggExtra)\ndefault_df &lt;- read_csv(\"assets/Default.csv\") |&gt;\n  mutate(default_num = ifelse(default==\"Yes\",1,0))\n\n\nRows: 10000 Columns: 4\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (2): default, student\ndbl (2): balance, income\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\nCode\ndefault_plot &lt;- default_df |&gt; ggplot(aes(x=balance, y=income, color=default, shape=default)) +\n  geom_point(alpha=0.6) +\n  theme_classic(base_size=16) +\n  labs(\n    title=\"Credit Defaults by Income and Account Balance\",\n    x = \"Account Balance\",\n    y = \"Income\"\n  )\ndefault_mplot &lt;- default_plot |&gt; ggMarginal(type=\"boxplot\", groupColour=FALSE, groupFill=TRUE)\ndefault_mplot"
+  },
+  {
+    "objectID": "w03/index.html#lines-vs.-sigmoids",
+    "href": "w03/index.html#lines-vs.-sigmoids",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Lines vs. Sigmoids(!)",
+    "text": "Lines vs. Sigmoids(!)\n\n\nHere’s what lines look like for this dataset:\n\n\nCode\n#lpm_model &lt;- lm(default ~ balance, data=default_df)\ndefault_df |&gt; ggplot(\n    aes(\n      x=balance, y=default_num\n    )\n  ) +\n  geom_point(aes(color=default)) +\n  stat_smooth(method=\"lm\", formula=y~x, color='black') +\n  theme_classic(base_size=16)\n\n\n\n\n\n\n\n\n\n\nHere’s what sigmoids look like:\n\n\nCode\nlibrary(tidyverse)\nlogistic_model &lt;- glm(default_num ~ balance, family=binomial(link='logit'),data=default_df)\ndefault_df$predictions &lt;- predict(logistic_model, newdata = default_df, type = \"response\")\nmy_sigmoid &lt;- function(x) 1 / (1+exp(-x))\ndefault_df |&gt; ggplot(aes(x=balance, y=default_num)) +\n  #stat_function(fun=my_sigmoid) +\n  geom_point(aes(color=default)) +\n  geom_line(\n    data=default_df,\n    aes(x=balance, y=predictions),\n    linewidth=1\n  ) +\n  theme_classic(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\Pr(Y \\mid X) = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]\n\n\\[\n\\log\\underbrace{\\left[ \\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)} \\right]}_{\\mathclap{\\smash{\\text{Odds Ratio}}}} = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]"
+  },
+  {
+    "objectID": "w03/index.html#but-lets-derive-this",
+    "href": "w03/index.html#but-lets-derive-this",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "But Let’s Derive This!",
+    "text": "But Let’s Derive This!\n\\[\n\\begin{align*}\n\\Pr(Y \\mid X) &= \\frac{e^{\\beta_0 + \\beta_1X}}{1 + e^{\\beta_0 + \\beta_1X}} \\\\\n\\iff \\underbrace{\\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)}}_{\\text{Odds Ratio}} &= e^{\\beta_0 + \\beta_1X} \\\\\n\\iff \\underbrace{\\log\\left[ \\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)} \\right]}_{\\text{Log-Odds Ratio}} &= \\beta_0 + \\beta_1X\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "w03/index.html#now-how-will-we-ever-find-good-parameter-values",
+    "href": "w03/index.html#now-how-will-we-ever-find-good-parameter-values",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Now How Will We Ever Find “Good” Parameter Values?",
+    "text": "Now How Will We Ever Find “Good” Parameter Values?\n\nIf only we had some sort of estimator… One that would choose \\(\\beta_0\\) and \\(\\beta_1\\) so as to maximize the likelihood of seeing some data…\n\n\\[\nL(\\beta_0, \\beta_1) = \\prod_{\\{i \\mid y_i = 1\\}}\\Pr(Y = 1 \\mid X) \\prod_{\\{i \\mid y_i = 0\\}}(1-\\Pr(Y = 1 \\mid X))\n\\]\n\n(Much more on this later 😸)"
+  },
+  {
+    "objectID": "w03/index.html#the-interpretation-problem",
+    "href": "w03/index.html#the-interpretation-problem",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "The Interpretation Problem",
+    "text": "The Interpretation Problem\n\n\nCode\noptions(scipen = 999)\nprint(summary(logistic_model))\n\n\n\nCall:\nglm(formula = default_num ~ balance, family = binomial(link = \"logit\"), \n    data = default_df)\n\nCoefficients:\n               Estimate  Std. Error z value            Pr(&gt;|z|)    \n(Intercept) -10.6513306   0.3611574  -29.49 &lt;0.0000000000000002 ***\nbalance       0.0054989   0.0002204   24.95 &lt;0.0000000000000002 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 2920.6  on 9999  degrees of freedom\nResidual deviance: 1596.5  on 9998  degrees of freedom\nAIC: 1600.5\n\nNumber of Fisher Scoring iterations: 8\n\n\n\nSlope is no longer the same everywhere! It varies across different values of \\(x\\)…\nLet’s brainstorm some possible ways to make our lives easier when interpreting these coefficients!"
+  },
+  {
+    "objectID": "w03/index.html#references",
+    "href": "w03/index.html#references",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "References",
+    "text": "References\n\n\nGelman, Andrew, and Jennifer Hill. 2007. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press."
+  },
+  {
+    "objectID": "w03/index.html#appendix-mlr-in-r",
+    "href": "w03/index.html#appendix-mlr-in-r",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Appendix: MLR in R",
+    "text": "Appendix: MLR in R\n\n\n\n\nCode\nlibrary(tidyverse)\nad_df &lt;- read_csv(\"assets/Advertising.csv\") |&gt; rename(id=`...1`)\n\n\nNew names:\nRows: 200 Columns: 5\n── Column specification\n──────────────────────────────────────────────────────── Delimiter: \",\" dbl\n(5): ...1, TV, radio, newspaper, sales\nℹ Use `spec()` to retrieve the full column specification for this data. ℹ\nSpecify the column types or set `show_col_types = FALSE` to quiet this message.\n• `` -&gt; `...1`\n\n\nCode\nmlr_model &lt;- lm(\n  sales ~ TV + radio + newspaper,\n  data=ad_df\n)\nprint(summary(mlr_model))\n\n\n\nCall:\nlm(formula = sales ~ TV + radio + newspaper, data = ad_df)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-8.8277 -0.8908  0.2418  1.1893  2.8292 \n\nCoefficients:\n             Estimate Std. Error t value            Pr(&gt;|t|)    \n(Intercept)  2.938889   0.311908   9.422 &lt;0.0000000000000002 ***\nTV           0.045765   0.001395  32.809 &lt;0.0000000000000002 ***\nradio        0.188530   0.008611  21.893 &lt;0.0000000000000002 ***\nnewspaper   -0.001037   0.005871  -0.177                0.86    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 1.686 on 196 degrees of freedom\nMultiple R-squared:  0.8972,    Adjusted R-squared:  0.8956 \nF-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 0.00000000000000022\n\n\n\n\nHolding radio and newspaper spending constant…\n\nAn increase of $1K in spending on TV advertising is associated with\nAn increase in sales of about 46 units\n\nHolding TV and newspaper spending constant…\n\nAn increase of $1K in spending on radio advertising is associated with\nAn increase in sales of about 189 units"
+  },
+  {
+    "objectID": "w03/slides.html#what-regression-is-not",
+    "href": "w03/slides.html#what-regression-is-not",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "What Regression is Not",
+    "text": "What Regression is Not\n\nFinal reminder that Regression, PCA have different goals!\nIf your goal was to, e.g., generate realistic \\((x,y)\\) pairs, then (mathematically) you want PCA! Roughly:\n\\[\n\\widehat{f}_{\\text{PCA}} = \\min_{\\mathbf{c}}\\left[ \\sum_{i=1}^{n} (\\widehat{x}_i(\\mathbf{c}) - x_i)^2 + (\\widehat{y}_i(\\mathbf{c}) - y_i)^2 \\right]\n\\]\nOur goal is a good predictor of \\(Y\\):\n\\[\n\\widehat{f}_{\\text{Reg}} = \\min_{\\beta_0, \\beta_1}\\left[ \\sum_{i=1}^{n} (\\widehat{y}_i(\\beta) - y_i)^2 \\right]\n\\]"
+  },
+  {
+    "objectID": "w03/slides.html#how-do-we-define-best",
+    "href": "w03/slides.html#how-do-we-define-best",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "How Do We Define “Best”?",
+    "text": "How Do We Define “Best”?\n\nIntuitively, two different ways to measure how well a line fits the data:\n\n\nCode\nlibrary(tidyverse)\nset.seed(5321)\nN &lt;- 11\nx &lt;- seq(from = 0, to = 1, by = 1 / (N - 1))\ny &lt;- x + rnorm(N, 0, 0.2)\nmean_y &lt;- mean(y)\nspread &lt;- y - mean_y\ndf &lt;- tibble(x = x, y = y, spread = spread)\nggplot(df, aes(x=x, y=y)) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=cbPalette[1], linewidth=g_linewidth*2) +\n  geom_segment(xend=(x+y)/2, yend=(x+y)/2, linewidth=g_linewidth*2, color=cbPalette[2]) +\n  geom_point(size=g_pointsize) +\n  coord_equal() +\n  xlim(0, 1) + ylim(0, 1) +\n  dsan_theme(\"half\") +\n  labs(\n    title = \"Principal Component Line\"\n  )\nggplot(df, aes(x=x, y=y)) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=cbPalette[1], linewidth=g_linewidth*2) +\n  geom_segment(xend=x, yend=x, linewidth=g_linewidth*2, color=cbPalette[2]) +\n  geom_point(size=g_pointsize) +\n  coord_equal() +\n  xlim(0, 1) + ylim(0, 1) +\n  dsan_theme(\"half\") +\n  labs(\n    title = \"Regression Line\"\n  )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOn the difference between these two lines, and why it matters, I cannot recommend Gelman and Hill (2007) enough!"
+  },
+  {
+    "objectID": "w03/slides.html#multiple-linear-regression-mlr-model",
+    "href": "w03/slides.html#multiple-linear-regression-mlr-model",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Multiple Linear Regression (MLR) Model",
+    "text": "Multiple Linear Regression (MLR) Model\n\nNotation: \\(x_{i,j}\\) = value of independent variable \\(j\\) for person/observation \\(i\\)\n\\(M\\) = total number of independent variables\n\n\\[\n\\widehat{y}_i = \\beta_0 + \\beta_1x_{i,1} + \\beta_2x_{i,2} + \\cdots + \\beta_M x_{i,M}\n\\]\n\n\\(\\beta_j\\) interpretation: a one-unit increase in \\(x_{i,j}\\) is associated with a \\(\\beta_j\\) unit increase in \\(y_i\\), holding all other independent variables constant"
+  },
+  {
+    "objectID": "w03/slides.html#visualizing-multiple-linear-regression",
+    "href": "w03/slides.html#visualizing-multiple-linear-regression",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Visualizing Multiple Linear Regression",
+    "text": "Visualizing Multiple Linear Regression\n\n(ISLR, Fig 3.5): A pronounced non-linear relationship. Positive residuals (visible above the surface) tend to lie along the 45-degree line, where budgets are split evenly. Negative residuals (most not visible) tend to be away from this line, where budgets are more lopsided."
+  },
+  {
+    "objectID": "w03/slides.html#interpreting-mlr",
+    "href": "w03/slides.html#interpreting-mlr",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Interpreting MLR",
+    "text": "Interpreting MLR\n\n\nCode\nmlr_model = smf.ols(\n  formula=\"sales ~ TV + radio + newspaper\",\n  data=ad_df\n)\nmlr_result = mlr_model.fit()\nprint(mlr_result.summary().tables[1])\n\n\n==============================================================================\n                 coef    std err          t      P&gt;|t|      [0.025      0.975]\n------------------------------------------------------------------------------\nIntercept      2.9389      0.312      9.422      0.000       2.324       3.554\nTV             0.0458      0.001     32.809      0.000       0.043       0.049\nradio          0.1885      0.009     21.893      0.000       0.172       0.206\nnewspaper     -0.0010      0.006     -0.177      0.860      -0.013       0.011\n==============================================================================\n\n\n\n\n\nHolding radio and newspaper spending constant…\n\nAn increase of $1K in spending on TV advertising is associated with\nAn increase in sales of about 46 units\n\n\n\n\nHolding TV and newspaper spending constant…\n\nAn increase of $1K in spending on radio advertising is associated with\nAn increase in sales of about 189 units"
+  },
+  {
+    "objectID": "w03/slides.html#but-wait",
+    "href": "w03/slides.html#but-wait",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "But Wait…",
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-01-27 18:13 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-01-27 18:13 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
+  },
+  {
+    "objectID": "w03/slides.html#correlations-among-features",
+    "href": "w03/slides.html#correlations-among-features",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Correlations Among Features",
+    "text": "Correlations Among Features\n\n\nCode\nad_df.drop(columns=\"id\").corr()\n\n\n                 TV     radio  newspaper     sales\nTV         1.000000  0.054809   0.056648  0.782224\nradio      0.054809  1.000000   0.354104  0.576223\nnewspaper  0.056648  0.354104   1.000000  0.228299\nsales      0.782224  0.576223   0.228299  1.000000\n\n\n\nObserve how \\(\\text{cor}(\\texttt{radio}, \\texttt{newspaper}) \\approx 0.35\\)\nIn markets where we spend more on radio our sales will tend to be higher…\nCorr matrix \\(\\implies\\) we spend more on newspaper in those same markets…\nIn SLR which only examines sales vs. newspaper, we (correctly!) observe that higher values of newspaper are associated with higher values of sales…\nIn essence, newspaper advertising is a surrogate for radio advertising \\(\\implies\\) in our SLR, newspaper “gets credit” for the association between radio and sales"
+  },
+  {
+    "objectID": "w03/slides.html#another-mlr-superpower-incorporating-categorical-vars",
+    "href": "w03/slides.html#another-mlr-superpower-incorporating-categorical-vars",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Another MLR Superpower: Incorporating Categorical Vars",
+    "text": "Another MLR Superpower: Incorporating Categorical Vars\n\n\n\\[\n\\begin{align*}\nY &= \\beta_0 + \\beta_1 \\times \\texttt{income} \\\\\n&\\phantom{Y}\n\\end{align*}\n\\]\n\n\nCode\ncredit_df &lt;- read_csv(\"assets/Credit.csv\")\ncredit_plot &lt;- credit_df |&gt; ggplot(aes(x=Income, y=Balance)) +\n  geom_point(size=0.5*g_pointsize) +\n  geom_smooth(method='lm', formula=\"y ~ x\", linewidth=1) +\n  theme_dsan() +\n  labs(\n    title=\"Credit Card Balance vs. Income Level\",\n    x=\"Income ($1K)\",\n    y=\"Credit Card Balance ($)\"\n  )\ncredit_plot\n\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\nY = &\\beta_0 + \\beta_1 \\times \\texttt{income} + \\beta_2 \\times \\texttt{Student} \\\\\n&+ \\beta_3 \\times (\\texttt{Student} \\times \\texttt{Income})\n\\end{align*}\n\\]\n\n\nCode\nstudent_plot &lt;- credit_df |&gt; ggplot(aes(x=Income, y=Balance, color=Student)) +\n  geom_point(size=0.5*g_pointsize) +\n  geom_smooth(method='lm', formula=\"y ~ x\", linewidth=1) +\n  theme_dsan() +\n  labs(\n    title=\"Credit Card Balance vs. Income Level\",\n    x=\"Income ($1K)\",\n    y=\"Credit Card Balance ($)\"\n  )\nstudent_plot\n\n\n\n\n\n\n\n\n\n\n\nWhy do we need the \\(\\texttt{Student} \\times \\texttt{Income}\\) term?\nUnderstanding this setup will open up a vast array of possibilities for regression 😎\n(Dear future Jeff, let’s go through this on the board! Sincerely, past Jeff)"
+  },
+  {
+    "objectID": "w03/slides.html#from-mlr-to-logistic-regression",
+    "href": "w03/slides.html#from-mlr-to-logistic-regression",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "From MLR to Logistic Regression",
+    "text": "From MLR to Logistic Regression\n\nAs DSAN students, you know that we’re still sweeping classification under the rug!\nWe saw how to include binary/multiclass covariates, but what if the actual thing we’re trying to predict is binary?\nThe wrong approach is the “Linear Probability Model”:\n\n\n\n\\[\n\\Pr(Y \\mid X) = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]"
+  },
+  {
+    "objectID": "w03/slides.html#credit-default",
+    "href": "w03/slides.html#credit-default",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Credit Default",
+    "text": "Credit Default\n\n\nCode\nlibrary(tidyverse)\nlibrary(ggExtra)\ndefault_df &lt;- read_csv(\"assets/Default.csv\") |&gt;\n  mutate(default_num = ifelse(default==\"Yes\",1,0))\ndefault_plot &lt;- default_df |&gt; ggplot(aes(x=balance, y=income, color=default, shape=default)) +\n  geom_point(alpha=0.6) +\n  theme_classic(base_size=16) +\n  labs(\n    title=\"Credit Defaults by Income and Account Balance\",\n    x = \"Account Balance\",\n    y = \"Income\"\n  )\ndefault_mplot &lt;- default_plot |&gt; ggMarginal(type=\"boxplot\", groupColour=FALSE, groupFill=TRUE)\ndefault_mplot"
+  },
+  {
+    "objectID": "w03/slides.html#lines-vs.-sigmoids",
+    "href": "w03/slides.html#lines-vs.-sigmoids",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Lines vs. Sigmoids(!)",
+    "text": "Lines vs. Sigmoids(!)\n\n\nHere’s what lines look like for this dataset:\n\n\nCode\n#lpm_model &lt;- lm(default ~ balance, data=default_df)\ndefault_df |&gt; ggplot(\n    aes(\n      x=balance, y=default_num\n    )\n  ) +\n  geom_point(aes(color=default)) +\n  stat_smooth(method=\"lm\", formula=y~x, color='black') +\n  theme_classic(base_size=16)\n\n\n\n\n\n\n\n\n\n\nHere’s what sigmoids look like:\n\n\nCode\nlibrary(tidyverse)\nlogistic_model &lt;- glm(default_num ~ balance, family=binomial(link='logit'),data=default_df)\ndefault_df$predictions &lt;- predict(logistic_model, newdata = default_df, type = \"response\")\nmy_sigmoid &lt;- function(x) 1 / (1+exp(-x))\ndefault_df |&gt; ggplot(aes(x=balance, y=default_num)) +\n  #stat_function(fun=my_sigmoid) +\n  geom_point(aes(color=default)) +\n  geom_line(\n    data=default_df,\n    aes(x=balance, y=predictions),\n    linewidth=1\n  ) +\n  theme_classic(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\Pr(Y \\mid X) = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]\n\n\\[\n\\log\\underbrace{\\left[ \\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)} \\right]}_{\\mathclap{\\smash{\\text{Odds Ratio}}}} = \\beta_0 + \\beta_1 X + \\varepsilon\n\\]"
+  },
+  {
+    "objectID": "w03/slides.html#but-lets-derive-this",
+    "href": "w03/slides.html#but-lets-derive-this",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "But Let’s Derive This!",
+    "text": "But Let’s Derive This!\n\\[\n\\begin{align*}\n\\Pr(Y \\mid X) &= \\frac{e^{\\beta_0 + \\beta_1X}}{1 + e^{\\beta_0 + \\beta_1X}} \\\\\n\\iff \\underbrace{\\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)}}_{\\text{Odds Ratio}} &= e^{\\beta_0 + \\beta_1X} \\\\\n\\iff \\underbrace{\\log\\left[ \\frac{\\Pr(Y \\mid X)}{1 - \\Pr(Y \\mid X)} \\right]}_{\\text{Log-Odds Ratio}} &= \\beta_0 + \\beta_1X\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "w03/slides.html#now-how-will-we-ever-find-good-parameter-values",
+    "href": "w03/slides.html#now-how-will-we-ever-find-good-parameter-values",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Now How Will We Ever Find “Good” Parameter Values?",
+    "text": "Now How Will We Ever Find “Good” Parameter Values?\n\nIf only we had some sort of estimator… One that would choose \\(\\beta_0\\) and \\(\\beta_1\\) so as to maximize the likelihood of seeing some data…\n\n\\[\nL(\\beta_0, \\beta_1) = \\prod_{\\{i \\mid y_i = 1\\}}\\Pr(Y = 1 \\mid X) \\prod_{\\{i \\mid y_i = 0\\}}(1-\\Pr(Y = 1 \\mid X))\n\\]\n\n(Much more on this later 😸)"
+  },
+  {
+    "objectID": "w03/slides.html#the-interpretation-problem",
+    "href": "w03/slides.html#the-interpretation-problem",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "The Interpretation Problem",
+    "text": "The Interpretation Problem\n\n\nCode\noptions(scipen = 999)\nprint(summary(logistic_model))\n\n\n\nCall:\nglm(formula = default_num ~ balance, family = binomial(link = \"logit\"), \n    data = default_df)\n\nCoefficients:\n               Estimate  Std. Error z value            Pr(&gt;|z|)    \n(Intercept) -10.6513306   0.3611574  -29.49 &lt;0.0000000000000002 ***\nbalance       0.0054989   0.0002204   24.95 &lt;0.0000000000000002 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 2920.6  on 9999  degrees of freedom\nResidual deviance: 1596.5  on 9998  degrees of freedom\nAIC: 1600.5\n\nNumber of Fisher Scoring iterations: 8\n\n\n\nSlope is no longer the same everywhere! It varies across different values of \\(x\\)…\nLet’s brainstorm some possible ways to make our lives easier when interpreting these coefficients!"
+  },
+  {
+    "objectID": "w03/slides.html#references",
+    "href": "w03/slides.html#references",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "References",
+    "text": "References\n\n\nGelman, Andrew, and Jennifer Hill. 2007. Data Analysis Using Regression and Multilevel/Hierarchical Models. Cambridge University Press."
+  },
+  {
+    "objectID": "w03/slides.html#appendix-mlr-in-r",
+    "href": "w03/slides.html#appendix-mlr-in-r",
+    "title": "Week 3: Getting Fancy with Regression",
+    "section": "Appendix: MLR in R",
+    "text": "Appendix: MLR in R\n\n\n\n\nCode\nlibrary(tidyverse)\nad_df &lt;- read_csv(\"assets/Advertising.csv\") |&gt; rename(id=`...1`)\nmlr_model &lt;- lm(\n  sales ~ TV + radio + newspaper,\n  data=ad_df\n)\nprint(summary(mlr_model))\n\n\n\nCall:\nlm(formula = sales ~ TV + radio + newspaper, data = ad_df)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-8.8277 -0.8908  0.2418  1.1893  2.8292 \n\nCoefficients:\n             Estimate Std. Error t value            Pr(&gt;|t|)    \n(Intercept)  2.938889   0.311908   9.422 &lt;0.0000000000000002 ***\nTV           0.045765   0.001395  32.809 &lt;0.0000000000000002 ***\nradio        0.188530   0.008611  21.893 &lt;0.0000000000000002 ***\nnewspaper   -0.001037   0.005871  -0.177                0.86    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 1.686 on 196 degrees of freedom\nMultiple R-squared:  0.8972,    Adjusted R-squared:  0.8956 \nF-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 0.00000000000000022\n\n\n\n\nHolding radio and newspaper spending constant…\n\nAn increase of $1K in spending on TV advertising is associated with\nAn increase in sales of about 46 units\n\nHolding TV and newspaper spending constant…\n\nAn increase of $1K in spending on radio advertising is associated with\nAn increase in sales of about 189 units\n\n\n\n\n\n\nDSAN 5300-01 Week 3: Fancier Linear Regression"
+  },
+  {
     "objectID": "writeups/quiz-1/index.html",
     "href": "writeups/quiz-1/index.html",
     "title": "Quiz 1 Study Guide",
@@ -966,14 +1197,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.57189\n\nget_rss(lin_model)\n\n[1] 0.5356712\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5283913\n\nget_rss(lin_model)\n\n[1] 0.5212032\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8837171\n\nlin_rss_test\n\n[1] 0.1223117\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.4190901\n\npoly_rss_test\n\n[1] 0.6110277"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8732597\n\nlin_rss_test\n\n[1] 0.1289457\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3865475\n\npoly_rss_test\n\n[1] 0.6241272"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -1148,14 +1379,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5468355\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5653339\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.57096\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5562765\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8939268\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1193267\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4036601\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6708505"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.9096513\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1130901\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4467595\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6924951"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -1218,7 +1449,7 @@
     "href": "index.html",
     "title": "DSAN 5300-01: Statistical Learning",
     "section": "",
-    "text": "Welcome to the homepage for Section 01 (Mondays 6:30-9pm in Car Barn 203) of DSAN 5300: Statistical Learning at Georgetown University, for the Spring 2025 semester!\nUse the following links to view notes and lecture slides for individual weeks:\n\n\n\n\n\nTitle\n\n\nDate\n\n\n\n\n\n\nWeek 1: Introduction to the Course\n\n\nJanuary 8\n\n\n\n\nWeek 2: Linear Regression\n\n\nJanuary 13\n\n\n\n\n\nNo matching items",
+    "text": "Welcome to the homepage for Section 01 (Mondays 6:30-9pm in Car Barn 203) of DSAN 5300: Statistical Learning at Georgetown University, for the Spring 2025 semester!\nUse the following links to view notes and lecture slides for individual weeks:\n\n\n\n\n\nTitle\n\n\nDate\n\n\n\n\n\n\nWeek 1: Introduction to the Course\n\n\nJanuary 8\n\n\n\n\nWeek 2: Linear Regression\n\n\nJanuary 13\n\n\n\n\nWeek 3: Getting Fancy with Regression\n\n\nJanuary 27\n\n\n\n\n\nNo matching items",
     "crumbs": [
       "<i class='bi bi-house pe-1'></i> Home"
     ]
