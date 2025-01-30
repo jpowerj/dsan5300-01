@@ -16,6 +16,8 @@ format:
     toc: true
 ---
 
+## Part 2: What is it asking, how do you know your implementation is correct?
+
 ## Visualizing the Loss Function
 
 ::: {.hidden}

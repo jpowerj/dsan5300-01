@@ -41,6 +41,7 @@ To see your first 3D plot created with `matplotlib`, let's consider how **gradie
 #| label: base-min-plot
 #| echo: true
 #| code-fold: show
+#| fig-align: center
 import matplotlib.pyplot as plt
 import numpy as np
 rng = np.random.default_rng(seed=5302)
@@ -139,6 +140,7 @@ Also note how I made the plot-generation code into a **function**, here called `
 #| label: basic-max-plot
 #| echo: true
 #| code-fold: false
+#| fig-align: center
 gen_surface_plot(points=[rand_v], minimization=False)
 ```
 
@@ -150,6 +152,9 @@ Returning to our minimization-in-3D case, how can we now plot the **path**/**tra
 
 ```{python}
 #| label: grad-5-steps
+#| fig-align: center
+#| echo: true
+#| code-fold: show
 def grad_loss(x, y):
   return np.array([2*x, 2*y])
 
@@ -173,6 +178,7 @@ Even though it may be obvious in this case the order of the points (meaning, you
 #| label: grad-5-steps-labels
 #| echo: true
 #| code-fold: show
+#| fig-align: center
 gen_surface_plot(grad_path, title=f"Gradient Descent, {num_steps} steps", label_points=True)
 ```
 
@@ -182,6 +188,7 @@ And now we can get a sense for how many steps we'll need for convergence in this
 #| label: grad-10-steps
 #| echo: true
 #| code-fold: show
+#| fig-align: center
 num_steps = 10
 grad_path_10 = run_grad_descent(rand_v, num_steps)
 gen_surface_plot(grad_path_10, title=f"Gradient Descent, {num_steps} steps", label_points=True)
@@ -195,6 +202,7 @@ I'm not gonna lie to you... by the time you are trying to add arrows to your `ma
 #| label: grad-with-arrows
 #| echo: true
 #| code-fold: show
+#| fig-align: center
 gen_surface_plot(
   grad_path_10,
   title="Adding arrows with ax.quiver()",
@@ -211,6 +219,7 @@ Lastly, finally, since this trajectory is somewhat difficult to see from the def
 #| label: trajectory-rotate
 #| echo: true
 #| code-fold: show
+#| fig-align: center
 gen_surface_plot(
   grad_path_10,
   title=f"Gradient Descent, {num_steps} steps",
