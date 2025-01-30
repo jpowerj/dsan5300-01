@@ -6,6 +6,8 @@ institute: "<a href=\"mailto:jj1088@georgetown.edu\">`jj1088@georgetown.edu`</a>
 author: "Jeff Jacobs"
 categories: ["Extra Writeups"]
 bibliography: "../../_DSAN5300.bib"
+weeknum: 2
+assignment: "General"
 format:
   revealjs:
     output-file: slides.html
