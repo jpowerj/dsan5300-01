@@ -4,8 +4,8 @@ subtitle: "DSAN 5300: Statistical Learning"
 sidebar: mainnav
 weeknum: 3
 assignment: "HW 1"
-categories:
-  - "Extra Writeups"
+# categories:
+#   - "Extra Writeups"
 format:
   html:
     embed-resources: true
