@@ -21,7 +21,7 @@ website:
         target: "_blank"
       - text: "Writeups"
         href: writeups/index.qmd
-      - text: "Recordings"
+      - text: "Recordings <i class='bi bi-box-arrow-up-right ps-1'></i>"
         href: "https://georgetown.hosted.panopto.com/Panopto/Pages/Sessions/List.aspx?folderID=07b596c2-6a0e-4302-a186-b25c00b555ce"
         target: "_blank"
       - "---"
