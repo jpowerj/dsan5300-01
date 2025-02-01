@@ -5370,7 +5370,7 @@ vertical-align: middle !important;
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-01-31, 02:26:27 AM</em></p>
+<p><em>Updated 2025-02-01, 01:40:42 AM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -5383,6 +5383,7 @@ vertical-align: middle !important;
   <li><a href="#the-regression-models-linear-algebraic-representation" id="toc-the-regression-models-linear-algebraic-representation" class="nav-link" data-scroll-target="#the-regression-models-linear-algebraic-representation">The Regression Model’s Linear Algebraic Representation</a></li>
   <li><a href="#from-vectors-to-matrices" id="toc-from-vectors-to-matrices" class="nav-link" data-scroll-target="#from-vectors-to-matrices">From Vectors to Matrices</a></li>
   <li><a href="#sanity-check-how-do-we-know-these-operations-will-be-well-defined" id="toc-sanity-check-how-do-we-know-these-operations-will-be-well-defined" class="nav-link" data-scroll-target="#sanity-check-how-do-we-know-these-operations-will-be-well-defined">Sanity Check: How Do We Know These Operations Will Be Well-Defined?</a></li>
+  <li><a href="#least-squares-derivation" id="toc-least-squares-derivation" class="nav-link" data-scroll-target="#least-squares-derivation">Least Squares Derivation</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/writeups/hw1-guide/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -5403,6 +5404,12 @@ vertical-align: middle !important;
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Saturday, February 1, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -5412,6 +5419,25 @@ vertical-align: middle !important;
 </header>
 
 
+<div class="callout callout-style-default callout-note callout-titled" title="Update Log">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Update Log
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Section on <a href="#least-squares-derivation">Least Squares Derivation</a> added <strong>1 Feb 2025, 1:00am</strong></li>
+<li>Original version posted <strong>31 Jan 2025, 2:30am</strong></li>
+</ul>
+</div>
+</div>
+</div>
 <p>As with the <a href="../lab-1/">Lab 1 getting-started guide</a>, here we don’t give away the answers but do provide as much background as possible to nudge you up to the starting line!</p>
 <section id="sums-leftrightarrows-linear-algebraic-operations" class="level2">
 <h2 class="anchored" data-anchor-id="sums-leftrightarrows-linear-algebraic-operations">Sums <span class="math inline">\(\leftrightarrows\)</span> Linear-Algebraic Operations</h2>
@@ -5627,6 +5653,69 @@ a_{31}b_{11} + a_{32}b_{21} &amp; a_{31}b_{12} + a_{32}b_{22} &amp; a_{31}b_{13}
 <p><span class="math display">\[
 [\underline{r_A} \times \overset{✅}{c_A}][\overset{✅}{r_B} \times \underline{c_B}] = [r_A \times c_B]
 \]</span></p>
+</section>
+<section id="least-squares-derivation" class="level2">
+<h2 class="anchored" data-anchor-id="least-squares-derivation">Least Squares Derivation</h2>
+<p>For this part, the truth is you’re mainly going to have to wade through a lot of algebra—the idea is to get comfortable with the use/manipulation of the kinds of quantities that will probably come up again and again as you absorb fancier and fancier regression and ML models!</p>
+<p>So, if your derivation has lots of terms that look like <span class="math inline">\(\sum_{i=1}^{N}x_iy_i\)</span>, <span class="math inline">\(\sum_{i=1}^{N}x_i^2\)</span>, and so on, that is a good sign (and relates to the points in the previous sections about turning sums into Linear Algebraic operations)!</p>
+<p>Probably the most concrete advice I can give, for those of you still wrestling with this part, is that at least for the way my brain works it helps to “compartmentalize” the derivation into two chunks:</p>
+<p><strong>First</strong> (again, for me, though this division may not be helpful for everyone), I find it helpful to split the terms we might see into (a) terms which arise from treating it like a “pure” <strong>calculus</strong> problem that we solve by taking derivatives and setting them equal to zero, and then (b) terms/definitions which we bring in from <strong>statistics</strong> (the definitions which are given in the problem) which can help us interpret what we find. So, for this derivation, that split would look like:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>(a) Calculus/Algebra Thing</th>
+<th>(b) Statistics Thing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\sum_{i=1}^{N}x_i\)</span></td>
+<td><span class="math inline">\(\overline{x} = \frac{1}{N}\sum_{i=1}^{N}x_i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sum_{i=1}^{N}y_i\)</span></td>
+<td><span class="math inline">\(\overline{y} = \frac{1}{N}\sum_{i=1}^{N}y_i\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sum_{i=1}^{N}x_iy_i\)</span></td>
+<td><span class="math inline">\(\text{Cov}[X, Y] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})(y_i - \overline{y})\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sum_{i=1}^{N}x_i^2\)</span></td>
+<td><span class="math inline">\(\text{Var}[X] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})^2\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Then</strong>, I like to think of the first actual doing-math step as the step where I treat is as a “pure” calculus problem. Mainly because my brain starts to hurt if I switch back-and-forth between Calculus/Algebra Things and Statistics Things, I find it more comfortable to forget about the right column in the above table and just solve:</p>
+<p><span class="math display">\[
+\begin{align*}
+\min_{m,b}\left[ L(m,b) \right] &amp;= \min_{m,b}\left[ \sum_{i=1}^{N} (\widehat{y}(m,b) - y)^2 \right] \\
+&amp;= \min_{m,b}\left[ \sum_{i=1}^{N}((mx_i + b) - y)^2 \right]
+\end{align*}
+\]</span></p>
+<p>The way I learned to solve minimization problems in calculus: by taking the thing inside the square brackets, computing its derivative(s) with respect to the maximand(s) (<span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> in this case), and then solving the system of equations which in some classes would be called the “First-Order Conditions” that are necessary (but not sufficient) for some chosen values <span class="math inline">\(m^*\)</span> and <span class="math inline">\(b^*\)</span> to minimize the function:</p>
+<p><span class="math display">\[
+\left. \frac{\partial L}{\partial m}\right|_{\substack{m=m^* \\ b=b^*}} = 0 \wedge \left. \frac{\partial L}{\partial b}\right|_{\substack{m=m^* \\ b=b^*}} = 0
+\]</span></p>
+<p>The goal, once you take these two derivatives and set them equal to zero, is to use algebraic manipulations to eventually arrive at <strong>closed-form solutions</strong> for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>. In this case, what would a closed-form solution look like?</p>
+<ul>
+<li><p>A closed-form solution for <span class="math inline">\(m\)</span> would be an expression like</p>
+<p><span class="math display">\[
+m = [\text{stuff}],
+\]</span></p>
+<p>where everything on the right-hand side is a function of only <span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>, and <span class="math inline">\(N\)</span>. Meaning, if <span class="math inline">\(b\)</span> or <span class="math inline">\(m\)</span> itself appear on the right-hand side, you have not yet arrived at a closed-form solution for <span class="math inline">\(m\)</span>!</p></li>
+<li><p>A closed-form solution for <span class="math inline">\(b\)</span> would be an expression like</p>
+<p><span class="math display">\[
+b = [\text{stuff}],
+\]</span></p>
+<p>where everything on the right-hand side here is a function of only <span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>, and <span class="math inline">\(N\)</span>. So, if <span class="math inline">\(m\)</span> or <span class="math inline">\(b\)</span> itself appear on the right-hand side, you have not yet arrived at a closed-form solution for <span class="math inline">\(b\)</span>!</p></li>
+</ul>
+<p><strong>Finally</strong>, once I have these two <strong>closed-form solutions</strong> for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>, I then take the Statistics Things back out and try to rewrite the terms in this closed form solution in terms of <span class="math inline">\(\overline{x}\)</span>, <span class="math inline">\(\overline{y}\)</span>, <span class="math inline">\(\text{Var}[X]\)</span>, <span class="math inline">\(\text{Var}[Y]\)</span>, and <span class="math inline">\(\text{Cov}[X,Y]\)</span>.</p>
+<p>This may not help in terms of the particular point at which you may be stuck, in which case I’m sorry in advance! But, it’s the… division-of-tasks that tended to help me when deriving closed-form solutions like this in e.g. econometrics classes!</p>
 <!-- ## Part 2: What is it asking, how do you know your implementation is correct? -->
 
 

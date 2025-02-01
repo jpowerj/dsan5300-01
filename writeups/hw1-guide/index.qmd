@@ -4,6 +4,8 @@ subtitle: "DSAN 5300: Statistical Learning"
 sidebar: mainnav
 weeknum: 3
 assignment: "HW 1"
+date: last-modified
+date-format: full
 categories:
   - "Extra Writeups"
 format:
@@ -15,6 +17,13 @@ format:
     df-print: kable
     toc: true
 ---
+
+::: {.callout-note title="Update Log" collapse="false"}
+
+* Section on [Least Squares Derivation](#least-squares-derivation) added **1 Feb 2025, 1:00am**
+* Original version posted **31 Jan 2025, 2:30am**
+
+:::
 
 As with the [Lab 1 getting-started guide](../lab-1/), here we don't give away the answers but do provide as much background as possible to nudge you up to the starting line!
 
@@ -279,4 +288,58 @@ $$
 [\underline{r_A} \times \overset{✅}{c_A}][\overset{✅}{r_B} \times \underline{c_B}] = [r_A \times c_B]
 $$
 
+## Least Squares Derivation
+
+For this part, the truth is you're mainly going to have to wade through a lot of algebra---the idea is to get comfortable with the use/manipulation of the kinds of quantities that will probably come up again and again as you absorb fancier and fancier regression and ML models!
+
+So, if your derivation has lots of terms that look like $\sum_{i=1}^{N}x_iy_i$, $\sum_{i=1}^{N}x_i^2$, and so on, that is a good sign (and relates to the points in the previous sections about turning sums into Linear Algebraic operations)!
+
+Probably the most concrete advice I can give, for those of you still wrestling with this part, is that at least for the way my brain works it helps to "compartmentalize" the derivation into two chunks:
+
+**First** (again, for me, though this division may not be helpful for everyone), I find it helpful to split the terms we might see into (a) terms which arise from treating it like a "pure" **calculus** problem that we solve by taking derivatives and setting them equal to zero, and then (b) terms/definitions which we bring in from **statistics** (the definitions which are given in the problem) which can help us interpret what we find. So, for this derivation, that split would look like:
+
+| (a) Calculus/Algebra Thing | (b) Statistics Thing |
+| - | - |
+| $\sum_{i=1}^{N}x_i$ | $\overline{x} = \frac{1}{N}\sum_{i=1}^{N}x_i$ |
+| $\sum_{i=1}^{N}y_i$ | $\overline{y} = \frac{1}{N}\sum_{i=1}^{N}y_i$ |
+| $\sum_{i=1}^{N}x_iy_i$ | $\text{Cov}[X, Y] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})(y_i - \overline{y})$ |
+| $\sum_{i=1}^{N}x_i^2$ | $\text{Var}[X] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})^2$ |
+
+**Then**, I like to think of the first actual doing-math step as the step where I treat is as a "pure" calculus problem. Mainly because my brain starts to hurt if I switch back-and-forth between Calculus/Algebra Things and Statistics Things, I find it more comfortable to forget about the right column in the above table and just solve:
+
+$$
+\begin{align*}
+\min_{m,b}\left[ L(m,b) \right] &= \min_{m,b}\left[ \sum_{i=1}^{N} (\widehat{y}(m,b) - y)^2 \right] \\
+&= \min_{m,b}\left[ \sum_{i=1}^{N}((mx_i + b) - y)^2 \right]
+\end{align*}
+$$
+
+The way I learned to solve minimization problems in calculus: by taking the thing inside the square brackets, computing its derivative(s) with respect to the maximand(s) ($m$ and $b$ in this case), and then solving the system of equations which in some classes would be called the "First-Order Conditions" that are necessary (but not sufficient) for some chosen values $m^*$ and $b^*$ to minimize the function:
+
+$$
+\left. \frac{\partial L}{\partial m}\right|_{\substack{m=m^* \\ b=b^*}} = 0 \wedge \left. \frac{\partial L}{\partial b}\right|_{\substack{m=m^* \\ b=b^*}} = 0
+$$
+
+The goal, once you take these two derivatives and set them equal to zero, is to use algebraic manipulations to eventually arrive at **closed-form solutions** for $m$ and $b$. In this case, what would a closed-form solution look like?
+
+* A closed-form solution for $m$ would be an expression like
+
+  $$
+  m = [\text{stuff}],
+  $$
+  
+  where everything on the right-hand side is a function of only $x_i$, $y_i$, and $N$. Meaning, if $b$ or $m$ itself appear on the right-hand side, you have not yet arrived at a closed-form solution for $m$!
+* A closed-form solution for $b$ would be an expression like
+
+  $$
+  b = [\text{stuff}],
+  $$
+
+  where everything on the right-hand side here is a function of only $x_i$, $y_i$, and $N$. So, if $m$ or $b$ itself appear on the right-hand side, you have not yet arrived at a closed-form solution for $b$!
+
+**Finally**, once I have these two **closed-form solutions** for $m$ and $b$, I then take the Statistics Things back out and try to rewrite the terms in this closed form solution in terms of $\overline{x}$, $\overline{y}$, $\text{Var}[X]$, $\text{Var}[Y]$, and $\text{Cov}[X,Y]$.
+
+This may not help in terms of the particular point at which you may be stuck, in which case I'm sorry in advance! But, it's the... division-of-tasks that tended to help me when deriving closed-form solutions like this in e.g. econometrics classes!
+
 <!-- ## Part 2: What is it asking, how do you know your implementation is correct? -->
+
