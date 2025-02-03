@@ -4,6 +4,8 @@ subtitle: "DSAN 5300: Statistical Learning"
 sidebar: mainnav
 weeknum: 2
 assignment: "Quiz 1"
+date: last-modified
+date-format: full
 categories:
   - "Extra Writeups"
 format:
