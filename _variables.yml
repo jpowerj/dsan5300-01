@@ -12,14 +12,14 @@ w02:
   date-md: "Jan 13"
 w03:
   weeknum: 3
-  title: "Getting Fancy with Regression"
-  footer: "Fancier Linear Regression"
+  title: "Logistic Regression"
+  footer: "Logistic Regression"
   date-md: "Jan 27"
-# w04:
-#   weeknum: 4
-#   title: "Fairness in AI"
-#   footer: "Fairness in AI"
-#   date-md: "Jan 29"
+w04:
+  weeknum: 4
+  title: "Cross-Validation and Model Selection"
+  footer: "Cross-Validation and Model Selection"
+  date-md: "Feb 3"
 # w05:
 #   weeknum: 5
 #   title: "Context-Sensitive Fairness"

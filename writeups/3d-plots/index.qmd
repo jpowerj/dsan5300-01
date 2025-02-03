@@ -5,6 +5,7 @@ sidebar: mainnav
 weeknum: 3
 assignment: "General"
 jupyter: python3
+cache: true
 categories:
   - "Extra Writeups"
 format:
