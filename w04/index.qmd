@@ -1,5 +1,5 @@
 ---
-title: "Week 4: Cross-Validation and Model Selection"
+title: "Week 4: The Scourge of Overfitting"
 subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
 author: "Jeff Jacobs"
 institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
@@ -58,7 +58,7 @@ Today's Planned Schedule:
 |:- |:- |:- |:- |
 | **Lecture** | 6:30pm | 6:40pm | [Logistic Regression Recap &rarr;](#recap-logistic-regression) |
 | | 6:40pm | 7:00pm | [CV and Model Selection Motivation &rarr;](#what-we-have-thus-far) |
-| | 7:00pm | 8:00pm | [Cross Validation Methods &rarr;](#cross-validation) |
+| | 7:00pm | 8:00pm | [Anti-Overfitting Toolkit &rarr;](#building-an-anti-overfitting-toolkit) |
 | **Break!** | 8:00pm | 8:10pm | |
 | | 8:10pm | 9:00pm | [Quizzo &rarr;](#quiz-time) |
 
@@ -155,6 +155,11 @@ $$
 
 :::
 ::::
+
+## How Can We Attain Hiromi's Aura?
+
+* Ingredient 1: Lots of *examples*: find mysteries/questions you care about in the world and think of how regression could help us understand them!
+* But, **Ingredient 2** is **Generalized Linear Models** (GLM), which I'll give an intro to **on the board** 🏃‍♂️‍➡️
 
 ## Where Are We Going / What Problems Are We Solving? {.smaller}
 
@@ -414,33 +419,187 @@ poly_rss_test
 
 ![Image source: circulated as secret shitposting among PhD students in seminars](images/hypothesis.jpg){fig-align="center"}
 
-## Resampling Methods
+# Building an Anti-Overfitting Toolkit {data-stack-name="Anti-Overfitting Toolkit"}
 
-* Cross-Validation and Bootstrap
+* Penalizing Complexity
+* Cross-Validation
+* Model Selection (Penalizing Complexity 2.0)
 
-## Model Selection
+## Ok So, How Do We Avoid Overfitting? {.crunch-title .crunch-math .crunch-ul}
 
-* Subset Selection
-* "Complexity Penalties"
-* LASSO 🤠
+* The gist: penalize model **complexity**
+* Original optimization:
 
-# Cross-Validation {data-stack-name="Cross Validation"}
+  $$
+  \theta^* = \underset{\theta}{\operatorname{argmin}} \mathcal{L}(y, \widehat{y})
+  $$
 
-## Naïve Approach: Validation Set
+* New optimization:
 
-## Better Approach: LOOCV
+  $$
+  \theta^* = \underset{\theta}{\operatorname{argmin}} \left[ \lambda \mathcal{L}(y, \widehat{y}) + (1-\lambda) \mathsf{Complexity}(\theta) \right]
+  $$
 
-## Best Approach: $K$-Fold CV
+* But how do we measure, and penalize, "complexity"?
 
-# Model Selection Preview {data-stack-name="Model Selection"}
+## Regularization: Measuring and Penalizing Complexity {.smaller .title-11 .math-90}
 
-## The Goal
+-   In the case of polynomials, fairly simple complexity measure: *degree* of polynomial
 
-* Maximize **generalizability** by
-* Penalizing **complexity**
+$$
+\mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3) > \mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x)
+$$
 
-# Quiz Time! {data-name="Quiz 1"}
+-   In general machine learning, however, we might not be working with polynomials
+-   In neural networks, for example, we sometimes toss in millions of features and ask the algorithm to "just figure it out"
+-   The gist, in the general case, is thus: try to "amplify" the most important features and shrink the rest, so that
+
+$$
+\mathsf{Complexity} \propto \frac{|\text{AmplifiedFeatures}|}{|\text{ShrunkFeatures}|}
+$$
+
+## LASSO and Elastic Net Regularization {.smaller .crunch-title .math-90}
+
+-   Many ways to translate this intuition into math!
+-   In several fields, however (econ, biostatistics), LASSO[^4] [@tibshirani_regression_1996] is standard:
+
+[^4]: **L**east **A**bsolute **S**hrinkage and **S**election **O**perator
+
+$$
+\beta^*_{LASSO} = {\underset{\beta}{\operatorname{argmin}}}\left\{{\frac {1}{N}}\left\|y-X\beta \right\|_{2}^{2}+\lambda \|\beta \|_{1}\right\}
+$$
+
+-   Why does this work to penalize complexity? What does the parameter $\lambda$ do?
+-   Some known issues with LASSO fixed in extension of the same intuitions: **Elastic Net**
+
+$$
+\beta^*_{EN} = {\underset {\beta }{\operatorname {argmin} }}\left\{ \|y-X\beta \|^{2}_2+\lambda _{2}\|\beta \|^{2}+\lambda _{1}\|\beta \|_{1} \right\}
+$$
+
+-   Ensures a unique global minimum! Note that $\lambda_2 = 0, \lambda_1 = 1 \implies \beta^*_{LASSO} = \beta^*_{EN}$
+
+## Training vs. Test Data
+
+```{dot}
+//| fig-size: 3
+graph grid
+{
+    graph [
+        overlap=true
+    ]
+    nodesep=0.0
+    ranksep=0.0
+    rankdir="TB"
+    node [
+        style="filled",
+        color=black,
+        fillcolor=lightblue,
+        shape=box
+    ]
+
+	// uncomment to hide the grid
+	edge [style=invis]
+	
+	subgraph cluster_01 {
+	    label="Training Set (80%)"
+	N1[label="20%"] N2[label="20%"] N3[label="20%"] N4[label="20%"]
+	}
+	subgraph cluster_02 {
+	    label="Test Set (20%)"
+	N5[label="20%",fillcolor=orange]
+	}
+}
+```
+
+## Cross-Validation
+
+-   The idea that **good models generalize well** is crucial!
+    -   What if we could leverage this insight to optimize **over our training data**?
+    -   The key: **Validation Sets**
+
+```{dot}
+//| fig-height: 3
+graph grid
+{
+    graph [
+        overlap=true,
+        scale=0.2
+    ]
+    nodesep=0.0
+    ranksep=0.0
+    rankdir="LR"
+    scale=0.2
+    node [
+        style="filled",
+        color=black,
+        fillcolor=lightblue,
+        shape=box
+    ]
+
+	// uncomment to hide the grid
+	edge [style=invis]
+	
+	subgraph cluster_01 {
+	    label="Training Set (80%)"
+	    subgraph cluster_02 {
+	        label="Training Fold (80%)"
+	        A1[label="16%"] A2[label="16%"] A3[label="16%"] A4[label="16%"]
+	    }
+	    subgraph cluster_03 {
+	        label="Validation Fold (20%)"
+	        B1[label="16%",fillcolor=lightgreen]
+	    }
+	}
+	subgraph cluster_04 {
+	    label="Test Set (20%)"
+	C1[label="20%",fillcolor=orange]
+	}
+	A1 -- A2 -- A3 -- A4 -- B1 -- C1;
+}
+```
+
+## Hyperparameters
+
+-   The unspoken (but highly consequential!) "settings" for our learning procedure (that we *haven't* optimized via gradient descent)
+-   There are several you've already seen in e.g. 5000 -- can you name them?
+
+## Hyperparameters You've Already Seen
+
+-   Unsupervised Clustering: The number of clusters we want $K$
+-   Gradient Descent: The **step size** $\gamma$
+-   LASSO/Elastic Net: $\lambda$
+-   The train/validation/test split!
+
+## Hyperparameter Selection {.crunch-title .crunch-ul}
+
+-   Every model comes with its own hyperparameters:
+    -   Neural Networks: Number of layers, nodes per layer
+    -   Decision Trees: Max tree depth, max features to include
+    -   Topic Models: Number of topics, document/topic **priors**
+-   So, how do we choose?
+    -   Often more art than science
+    -   Principled, universally applicable, but slow: grid search
+    -   Specific methods for specific algorithms: ADAM [@kingma_adam_2017] for Neural Network learning rates)
+
+## ...Now What? {.crunch-title .crunch-ul}
+
+-   So we've got a trained model...
+    -   Data collected ✅
+    -   Loss function chosen ✅
+    -   Gradient descent complete ✅
+    -   Hyperparameters tuned ✅
+    -   Good $F_1$ score on test data ✅
+-   What's our next step?
+    -   This is where **engineers** and **social scientists** diverge...
+    -   Stay tuned!
+
+# Quiz Time! {data-stack-name="Quiz"}
 
 * Jeff hands out your (paper) quizzes now!
 * You have 55 minutes (8:05 to 9pm)
 * You got this 💪
+
+## References
+
+::: {#refs}
+:::

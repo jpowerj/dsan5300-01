@@ -8,7 +8,7 @@
 
 <meta name="author" content="Jeff Jacobs">
 
-<title>Week 4: Cross-Validation and Model Selection – DSAN 5300-01</title>
+<title>Week 4: The Scourge of Overfitting – DSAN 5300-01</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -241,7 +261,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-02-03, 04:34:44 PM</em></p>
+<p><em>Updated 2025-02-03, 06:00:31 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -257,26 +277,30 @@ window.Quarto = {
   </ul></li>
   <li><a href="#taking-off-the-linearity-training-wheels" id="toc-taking-off-the-linearity-training-wheels" class="nav-link" data-scroll-target="#taking-off-the-linearity-training-wheels">Taking Off the Linearity Training Wheels</a>
   <ul class="collapse">
+  <li><a href="#how-can-we-attain-hiromis-aura" id="toc-how-can-we-attain-hiromis-aura" class="nav-link" data-scroll-target="#how-can-we-attain-hiromis-aura">How Can We Attain Hiromi’s Aura?</a></li>
   <li><a href="#where-are-we-going-what-problems-are-we-solving" id="toc-where-are-we-going-what-problems-are-we-solving" class="nav-link" data-scroll-target="#where-are-we-going-what-problems-are-we-solving">Where Are We Going / What Problems Are We Solving?</a></li>
   <li><a href="#the-level-2-goal-generalizability" id="toc-the-level-2-goal-generalizability" class="nav-link" data-scroll-target="#the-level-2-goal-generalizability">The Level 2 Goal: <em>Generalizability</em></a></li>
   <li><a href="#can-we-just-like-not" id="toc-can-we-just-like-not" class="nav-link" data-scroll-target="#can-we-just-like-not">…Can We Just, Like, Not?</a></li>
   <li><a href="#memorizing-data-vs.-learning-the-relationship" id="toc-memorizing-data-vs.-learning-the-relationship" class="nav-link" data-scroll-target="#memorizing-data-vs.-learning-the-relationship">Memorizing Data vs.&nbsp;<em>Learning</em> the Relationship</a></li>
   <li><a href="#accuracy-leadsto-5300-generalization" id="toc-accuracy-leadsto-5300-generalization" class="nav-link" data-scroll-target="#accuracy-leadsto-5300-generalization">5000: Accuracy <span class="math inline">\(\leadsto\)</span> 5300: Generalization</a></li>
   <li><a href="#in-other-words" id="toc-in-other-words" class="nav-link" data-scroll-target="#in-other-words">In Other Words…</a></li>
-  <li><a href="#resampling-methods" id="toc-resampling-methods" class="nav-link" data-scroll-target="#resampling-methods">Resampling Methods</a></li>
-  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection">Model Selection</a></li>
   </ul></li>
-  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-Validation</a>
+  <li><a href="#building-an-anti-overfitting-toolkit" id="toc-building-an-anti-overfitting-toolkit" class="nav-link" data-scroll-target="#building-an-anti-overfitting-toolkit">Building an Anti-Overfitting Toolkit</a>
   <ul class="collapse">
-  <li><a href="#naïve-approach-validation-set" id="toc-naïve-approach-validation-set" class="nav-link" data-scroll-target="#naïve-approach-validation-set">Naïve Approach: Validation Set</a></li>
-  <li><a href="#better-approach-loocv" id="toc-better-approach-loocv" class="nav-link" data-scroll-target="#better-approach-loocv">Better Approach: LOOCV</a></li>
-  <li><a href="#best-approach-k-fold-cv" id="toc-best-approach-k-fold-cv" class="nav-link" data-scroll-target="#best-approach-k-fold-cv">Best Approach: <span class="math inline">\(K\)</span>-Fold CV</a></li>
+  <li><a href="#ok-so-how-do-we-avoid-overfitting" id="toc-ok-so-how-do-we-avoid-overfitting" class="nav-link" data-scroll-target="#ok-so-how-do-we-avoid-overfitting">Ok So, How Do We Avoid Overfitting?</a></li>
+  <li><a href="#regularization-measuring-and-penalizing-complexity" id="toc-regularization-measuring-and-penalizing-complexity" class="nav-link" data-scroll-target="#regularization-measuring-and-penalizing-complexity">Regularization: Measuring and Penalizing Complexity</a></li>
+  <li><a href="#lasso-and-elastic-net-regularization" id="toc-lasso-and-elastic-net-regularization" class="nav-link" data-scroll-target="#lasso-and-elastic-net-regularization">LASSO and Elastic Net Regularization</a></li>
+  <li><a href="#training-vs.-test-data" id="toc-training-vs.-test-data" class="nav-link" data-scroll-target="#training-vs.-test-data">Training vs.&nbsp;Test Data</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-Validation</a></li>
+  <li><a href="#hyperparameters" id="toc-hyperparameters" class="nav-link" data-scroll-target="#hyperparameters">Hyperparameters</a></li>
+  <li><a href="#hyperparameters-youve-already-seen" id="toc-hyperparameters-youve-already-seen" class="nav-link" data-scroll-target="#hyperparameters-youve-already-seen">Hyperparameters You’ve Already Seen</a></li>
+  <li><a href="#hyperparameter-selection" id="toc-hyperparameter-selection" class="nav-link" data-scroll-target="#hyperparameter-selection">Hyperparameter Selection</a></li>
+  <li><a href="#now-what" id="toc-now-what" class="nav-link" data-scroll-target="#now-what">…Now What?</a></li>
   </ul></li>
-  <li><a href="#model-selection-preview" id="toc-model-selection-preview" class="nav-link" data-scroll-target="#model-selection-preview">Model Selection Preview</a>
+  <li><a href="#quiz-time" id="toc-quiz-time" class="nav-link" data-scroll-target="#quiz-time">Quiz Time!</a>
   <ul class="collapse">
-  <li><a href="#the-goal" id="toc-the-goal" class="nav-link" data-scroll-target="#the-goal">The Goal</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
-  <li><a href="#quiz-time" id="toc-quiz-time" class="nav-link" data-scroll-target="#quiz-time">Quiz Time!</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/w04/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -285,7 +309,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Week 4: Cross-Validation and Model Selection</h1>
+<h1 class="title">Week 4: The Scourge of Overfitting</h1>
 <p class="subtitle lead"><em>DSAN 5300: Statistical Learning</em><br><span class="subsubtitle">Spring 2025, Georgetown University</span></p>
   <div class="quarto-categories">
     <div class="quarto-category">Class Sessions</div>
@@ -363,7 +387,7 @@ window.Quarto = {
 <td style="text-align: left;"></td>
 <td style="text-align: left;">7:00pm</td>
 <td style="text-align: left;">8:00pm</td>
-<td style="text-align: left;"><a href="#cross-validation">Cross Validation Methods →</a></td>
+<td style="text-align: left;"><a href="#building-an-anti-overfitting-toolkit">Anti-Overfitting Toolkit →</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>Break!</strong></td>
@@ -523,6 +547,13 @@ Figure&nbsp;2: <a href="http://keepinitkoolinkinderland.blogspot.com/p/fonts.htm
 </div>
 </div>
 </div>
+<section id="how-can-we-attain-hiromis-aura" class="level2">
+<h2 class="anchored" data-anchor-id="how-can-we-attain-hiromis-aura">How Can We Attain Hiromi’s Aura?</h2>
+<ul>
+<li>Ingredient 1: Lots of <em>examples</em>: find mysteries/questions you care about in the world and think of how regression could help us understand them!</li>
+<li>But, <strong>Ingredient 2</strong> is <strong>Generalized Linear Models</strong> (GLM), which I’ll give an intro to <strong>on the board</strong> 🏃‍♂️‍➡️</li>
+</ul>
+</section>
 <section id="where-are-we-going-what-problems-are-we-solving" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="where-are-we-going-what-problems-are-we-solving">Where Are We Going / What Problems Are We Solving?</h2>
 <ul>
@@ -860,55 +891,363 @@ Polynomial Model:
 </figure>
 </div>
 </section>
-<section id="resampling-methods" class="level2">
-<h2 class="anchored" data-anchor-id="resampling-methods">Resampling Methods</h2>
+</section>
+<section id="building-an-anti-overfitting-toolkit" class="level1" data-stack-name="Anti-Overfitting Toolkit">
+<h1 data-stack-name="Anti-Overfitting Toolkit">Building an Anti-Overfitting Toolkit</h1>
 <ul>
-<li>Cross-Validation and Bootstrap</li>
+<li>Penalizing Complexity</li>
+<li>Cross-Validation</li>
+<li>Model Selection (Penalizing Complexity 2.0)</li>
+</ul>
+<section id="ok-so-how-do-we-avoid-overfitting" class="level2 crunch-title crunch-math crunch-ul">
+<h2 class="crunch-title crunch-math crunch-ul anchored" data-anchor-id="ok-so-how-do-we-avoid-overfitting">Ok So, How Do We Avoid Overfitting?</h2>
+<ul>
+<li><p>The gist: penalize model <strong>complexity</strong></p></li>
+<li><p>Original optimization:</p>
+<p><span class="math display">\[
+\theta^* = \underset{\theta}{\operatorname{argmin}} \mathcal{L}(y, \widehat{y})
+\]</span></p></li>
+<li><p>New optimization:</p>
+<p><span class="math display">\[
+\theta^* = \underset{\theta}{\operatorname{argmin}} \left[ \lambda \mathcal{L}(y, \widehat{y}) + (1-\lambda) \mathsf{Complexity}(\theta) \right]
+\]</span></p></li>
+<li><p>But how do we measure, and penalize, “complexity”?</p></li>
 </ul>
 </section>
-<section id="model-selection" class="level2">
-<h2 class="anchored" data-anchor-id="model-selection">Model Selection</h2>
+<section id="regularization-measuring-and-penalizing-complexity" class="level2 smaller title-11 math-90">
+<h2 class="smaller title-11 math-90 anchored" data-anchor-id="regularization-measuring-and-penalizing-complexity">Regularization: Measuring and Penalizing Complexity</h2>
 <ul>
-<li>Subset Selection</li>
-<li>“Complexity Penalties”</li>
-<li>LASSO 🤠</li>
+<li>In the case of polynomials, fairly simple complexity measure: <em>degree</em> of polynomial</li>
+</ul>
+<p><span class="math display">\[
+\mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3) &gt; \mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x)
+\]</span></p>
+<ul>
+<li>In general machine learning, however, we might not be working with polynomials</li>
+<li>In neural networks, for example, we sometimes toss in millions of features and ask the algorithm to “just figure it out”</li>
+<li>The gist, in the general case, is thus: try to “amplify” the most important features and shrink the rest, so that</li>
+</ul>
+<p><span class="math display">\[
+\mathsf{Complexity} \propto \frac{|\text{AmplifiedFeatures}|}{|\text{ShrunkFeatures}|}
+\]</span></p>
+</section>
+<section id="lasso-and-elastic-net-regularization" class="level2 smaller crunch-title math-90">
+<h2 class="smaller crunch-title math-90 anchored" data-anchor-id="lasso-and-elastic-net-regularization">LASSO and Elastic Net Regularization</h2>
+<ul>
+<li>Many ways to translate this intuition into math!</li>
+<li>In several fields, however (econ, biostatistics), LASSO<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="citation" data-cites="tibshirani_regression_1996">(<a href="#ref-tibshirani_regression_1996" role="doc-biblioref">Tibshirani 1996</a>)</span> is standard:</li>
+</ul>
+<p><span class="math display">\[
+\beta^*_{LASSO} = {\underset{\beta}{\operatorname{argmin}}}\left\{{\frac {1}{N}}\left\|y-X\beta \right\|_{2}^{2}+\lambda \|\beta \|_{1}\right\}
+\]</span></p>
+<ul>
+<li>Why does this work to penalize complexity? What does the parameter <span class="math inline">\(\lambda\)</span> do?</li>
+<li>Some known issues with LASSO fixed in extension of the same intuitions: <strong>Elastic Net</strong></li>
+</ul>
+<p><span class="math display">\[
+\beta^*_{EN} = {\underset {\beta }{\operatorname {argmin} }}\left\{ \|y-X\beta \|^{2}_2+\lambda _{2}\|\beta \|^{2}+\lambda _{1}\|\beta \|_{1} \right\}
+\]</span></p>
+<ul>
+<li>Ensures a unique global minimum! Note that <span class="math inline">\(\lambda_2 = 0, \lambda_1 = 1 \implies \beta^*_{LASSO} = \beta^*_{EN}\)</span></li>
+</ul>
+</section>
+<section id="training-vs.-test-data" class="level2">
+<h2 class="anchored" data-anchor-id="training-vs.-test-data">Training vs.&nbsp;Test Data</h2>
+<div class="cell" data-fig-size="3" data-layout-align="default">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode dot code-with-copy"><code class="sourceCode dot"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="va">graph</span> <span class="va">grid</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">graph</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="va">overlap</span><span class="ot">=</span><span class="va">true</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">nodesep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">ranksep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">rankdir</span><span class="ot">=</span><span class="st">"TB"</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">node</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">style</span><span class="ot">=</span><span class="st">"filled"</span><span class="co">,</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">color</span><span class="ot">=</span><span class="va">black</span><span class="co">,</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightblue</span><span class="co">,</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">shape</span><span class="ot">=</span><span class="va">box</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co">    // uncomment to hide the grid</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">edge</span><span class="co"> </span><span class="ot">[</span><span class="at">style</span><span class="ot">=</span><span class="va">invis</span><span class="ot">]</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_01</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Set (80%)"</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">N1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N2</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N3</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N4</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_02</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Test Set (20%)"</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">N5</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">orange</span><span class="ot">]</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="ot">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 366.00 100.80" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 96.8)">
+<title>grid</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-96.8 362,-96.8 362,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_01</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-84.8 243,-84.8 243,-8 8,-8"></polygon>
+<text text-anchor="middle" x="125.5" y="-68.2" font-family="Times,serif" font-size="14.00">Training Set (80%)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_02</title>
+<polygon fill="none" stroke="black" points="251,-8 251,-84.8 350,-84.8 350,-8 251,-8"></polygon>
+<text text-anchor="middle" x="300.5" y="-68.2" font-family="Times,serif" font-size="14.00">Test Set (20%)</text>
+</g>
+<!-- N1 -->
+<g id="node1" class="node">
+<title>N1</title>
+<polygon fill="lightblue" stroke="black" points="235,-52 181,-52 181,-16 235,-16 235,-52"></polygon>
+<text text-anchor="middle" x="208" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N2 -->
+<g id="node2" class="node">
+<title>N2</title>
+<polygon fill="lightblue" stroke="black" points="180,-52 126,-52 126,-16 180,-16 180,-52"></polygon>
+<text text-anchor="middle" x="153" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N3 -->
+<g id="node3" class="node">
+<title>N3</title>
+<polygon fill="lightblue" stroke="black" points="125,-52 71,-52 71,-16 125,-16 125,-52"></polygon>
+<text text-anchor="middle" x="98" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N4 -->
+<g id="node4" class="node">
+<title>N4</title>
+<polygon fill="lightblue" stroke="black" points="70,-52 16,-52 16,-16 70,-16 70,-52"></polygon>
+<text text-anchor="middle" x="43" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N5 -->
+<g id="node5" class="node">
+<title>N5</title>
+<polygon fill="orange" stroke="black" points="327,-52 273,-52 273,-16 327,-16 327,-52"></polygon>
+<text text-anchor="middle" x="300" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h2>
+<ul>
+<li>The idea that <strong>good models generalize well</strong> is crucial!
+<ul>
+<li>What if we could leverage this insight to optimize <strong>over our training data</strong>?</li>
+<li>The key: <strong>Validation Sets</strong></li>
+</ul></li>
+</ul>
+<div class="cell" data-fig-height="3" data-layout-align="default">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode dot code-with-copy"><code class="sourceCode dot"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="va">graph</span> <span class="va">grid</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">graph</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="va">overlap</span><span class="ot">=</span><span class="va">true</span><span class="co">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="va">scale</span><span class="ot">=</span><span class="dv">0.2</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">nodesep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">ranksep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="at">rankdir</span><span class="ot">=</span><span class="st">"LR"</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">scale</span><span class="ot">=</span><span class="dv">0.2</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">node</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">style</span><span class="ot">=</span><span class="st">"filled"</span><span class="co">,</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">color</span><span class="ot">=</span><span class="va">black</span><span class="co">,</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightblue</span><span class="co">,</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">shape</span><span class="ot">=</span><span class="va">box</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="co">    // uncomment to hide the grid</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">edge</span><span class="co"> </span><span class="ot">[</span><span class="at">style</span><span class="ot">=</span><span class="va">invis</span><span class="ot">]</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_01</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Set (80%)"</span></span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_02</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co">            </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Fold (80%)"</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="co">            </span><span class="va">A1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A2</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A3</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A4</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="ot">}</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_03</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co">            </span><span class="at">label</span><span class="ot">=</span><span class="st">"Validation Fold (20%)"</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a><span class="co">            </span><span class="va">B1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightgreen</span><span class="ot">]</span></span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="ot">}</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_04</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Test Set (20%)"</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">C1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">orange</span><span class="ot">]</span></span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a><span class="co">    </span><span class="va">A1</span><span class="co"> -- </span><span class="va">A2</span><span class="co"> -- </span><span class="va">A3</span><span class="co"> -- </span><span class="va">A4</span><span class="co"> -- </span><span class="va">B1</span><span class="co"> -- </span><span class="va">C1</span><span class="ot">;</span></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="ot">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="288" viewbox="0.00 0.00 553.00 142.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 138)">
+<title>grid</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-138 549,-138 549,4 -4,4"></polygon>
+<g id="clust4" class="cluster">
+<title>cluster_04</title>
+<polygon fill="none" stroke="black" points="446,-16 446,-93 545,-93 545,-16 446,-16"></polygon>
+<text text-anchor="middle" x="495.5" y="-76.4" font-family="Times,serif" font-size="14.00">Test Set (20%)</text>
+</g>
+<g id="clust1" class="cluster">
+<title>cluster_01</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-126 438,-126 438,-8 8,-8"></polygon>
+<text text-anchor="middle" x="223" y="-109.4" font-family="Times,serif" font-size="14.00">Training Set (80%)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_02</title>
+<polygon fill="none" stroke="black" points="16,-16 16,-93 272,-93 272,-16 16,-16"></polygon>
+<text text-anchor="middle" x="144" y="-76.4" font-family="Times,serif" font-size="14.00">Training Fold (80%)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_03</title>
+<polygon fill="none" stroke="black" points="288,-16 288,-93 430,-93 430,-16 288,-16"></polygon>
+<text text-anchor="middle" x="359" y="-76.4" font-family="Times,serif" font-size="14.00">Validation Fold (20%)</text>
+</g>
+<!-- A1 -->
+<g id="node1" class="node">
+<title>A1</title>
+<polygon fill="lightblue" stroke="black" points="78,-60 24,-60 24,-24 78,-24 78,-60"></polygon>
+<text text-anchor="middle" x="51" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A2 -->
+<g id="node2" class="node">
+<title>A2</title>
+<polygon fill="lightblue" stroke="black" points="140,-60 86,-60 86,-24 140,-24 140,-60"></polygon>
+<text text-anchor="middle" x="113" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A1&#45;&#45;A2 -->
+<!-- A3 -->
+<g id="node3" class="node">
+<title>A3</title>
+<polygon fill="lightblue" stroke="black" points="202,-60 148,-60 148,-24 202,-24 202,-60"></polygon>
+<text text-anchor="middle" x="175" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A2&#45;&#45;A3 -->
+<!-- A4 -->
+<g id="node4" class="node">
+<title>A4</title>
+<polygon fill="lightblue" stroke="black" points="264,-60 210,-60 210,-24 264,-24 264,-60"></polygon>
+<text text-anchor="middle" x="237" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A3&#45;&#45;A4 -->
+<!-- B1 -->
+<g id="node5" class="node">
+<title>B1</title>
+<polygon fill="lightgreen" stroke="black" points="386,-60 332,-60 332,-24 386,-24 386,-60"></polygon>
+<text text-anchor="middle" x="359" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A4&#45;&#45;B1 -->
+<!-- C1 -->
+<g id="node6" class="node">
+<title>C1</title>
+<polygon fill="orange" stroke="black" points="522,-60 468,-60 468,-24 522,-24 522,-60"></polygon>
+<text text-anchor="middle" x="495" y="-37.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- B1&#45;&#45;C1 -->
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="hyperparameters" class="level2">
+<h2 class="anchored" data-anchor-id="hyperparameters">Hyperparameters</h2>
+<ul>
+<li>The unspoken (but highly consequential!) “settings” for our learning procedure (that we <em>haven’t</em> optimized via gradient descent)</li>
+<li>There are several you’ve already seen in e.g.&nbsp;5000 – can you name them?</li>
+</ul>
+</section>
+<section id="hyperparameters-youve-already-seen" class="level2">
+<h2 class="anchored" data-anchor-id="hyperparameters-youve-already-seen">Hyperparameters You’ve Already Seen</h2>
+<ul>
+<li>Unsupervised Clustering: The number of clusters we want <span class="math inline">\(K\)</span></li>
+<li>Gradient Descent: The <strong>step size</strong> <span class="math inline">\(\gamma\)</span></li>
+<li>LASSO/Elastic Net: <span class="math inline">\(\lambda\)</span></li>
+<li>The train/validation/test split!</li>
+</ul>
+</section>
+<section id="hyperparameter-selection" class="level2 crunch-title crunch-ul">
+<h2 class="crunch-title crunch-ul anchored" data-anchor-id="hyperparameter-selection">Hyperparameter Selection</h2>
+<ul>
+<li>Every model comes with its own hyperparameters:
+<ul>
+<li>Neural Networks: Number of layers, nodes per layer</li>
+<li>Decision Trees: Max tree depth, max features to include</li>
+<li>Topic Models: Number of topics, document/topic <strong>priors</strong></li>
+</ul></li>
+<li>So, how do we choose?
+<ul>
+<li>Often more art than science</li>
+<li>Principled, universally applicable, but slow: grid search</li>
+<li>Specific methods for specific algorithms: ADAM <span class="citation" data-cites="kingma_adam_2017">(<a href="#ref-kingma_adam_2017" role="doc-biblioref">Kingma and Ba 2017</a>)</span> for Neural Network learning rates)</li>
+</ul></li>
+</ul>
+</section>
+<section id="now-what" class="level2 crunch-title crunch-ul">
+<h2 class="crunch-title crunch-ul anchored" data-anchor-id="now-what">…Now What?</h2>
+<ul>
+<li>So we’ve got a trained model…
+<ul>
+<li>Data collected ✅</li>
+<li>Loss function chosen ✅</li>
+<li>Gradient descent complete ✅</li>
+<li>Hyperparameters tuned ✅</li>
+<li>Good <span class="math inline">\(F_1\)</span> score on test data ✅</li>
+</ul></li>
+<li>What’s our next step?
+<ul>
+<li>This is where <strong>engineers</strong> and <strong>social scientists</strong> diverge…</li>
+<li>Stay tuned!</li>
+</ul></li>
 </ul>
 </section>
 </section>
-<section id="cross-validation" class="level1" data-stack-name="Cross Validation">
-<h1 data-stack-name="Cross Validation">Cross-Validation</h1>
-<section id="naïve-approach-validation-set" class="level2">
-<h2 class="anchored" data-anchor-id="naïve-approach-validation-set">Naïve Approach: Validation Set</h2>
-</section>
-<section id="better-approach-loocv" class="level2">
-<h2 class="anchored" data-anchor-id="better-approach-loocv">Better Approach: LOOCV</h2>
-</section>
-<section id="best-approach-k-fold-cv" class="level2">
-<h2 class="anchored" data-anchor-id="best-approach-k-fold-cv">Best Approach: <span class="math inline">\(K\)</span>-Fold CV</h2>
-</section>
-</section>
-<section id="model-selection-preview" class="level1" data-stack-name="Model Selection">
-<h1 data-stack-name="Model Selection">Model Selection Preview</h1>
-<section id="the-goal" class="level2">
-<h2 class="anchored" data-anchor-id="the-goal">The Goal</h2>
-<ul>
-<li>Maximize <strong>generalizability</strong> by</li>
-<li>Penalizing <strong>complexity</strong></li>
-</ul>
-</section>
-</section>
-<section id="quiz-time" class="level1" data-name="Quiz 1">
-<h1 data-name="Quiz 1">Quiz Time!</h1>
+<section id="quiz-time" class="level1" data-stack-name="Quiz">
+<h1 data-stack-name="Quiz">Quiz Time!</h1>
 <ul>
 <li>Jeff hands out your (paper) quizzes now!</li>
 <li>You have 55 minutes (8:05 to 9pm)</li>
 <li>You got this 💪</li>
 </ul>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-kingma_adam_2017" class="csl-entry" role="listitem">
+Kingma, Diederik P., and Jimmy Ba. 2017. <span>“Adam: <span>A Method</span> for <span>Stochastic Optimization</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.1412.6980">https://doi.org/10.48550/arXiv.1412.6980</a>.
+</div>
+<div id="ref-tibshirani_regression_1996" class="csl-entry" role="listitem">
+Tibshirani, Robert. 1996. <span>“Regression <span>Shrinkage</span> and <span>Selection</span> via the <span>Lasso</span>.”</span> <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 58 (1): 267–88. <a href="https://www.jstor.org/stable/2346178">https://www.jstor.org/stable/2346178</a>.
+</div>
+</div>
 
 
 </section>
+</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><strong>L</strong>east <strong>A</strong>bsolute <strong>S</strong>hrinkage and <strong>S</strong>election <strong>O</strong>perator<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

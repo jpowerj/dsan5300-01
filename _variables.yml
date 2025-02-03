@@ -17,8 +17,8 @@ w03:
   date-md: "Jan 27"
 w04:
   weeknum: 4
-  title: "Cross-Validation and Model Selection"
-  footer: "Cross-Validation and Model Selection"
+  title: "The Scourge of Overfitting"
+  footer: "The Scourge of Overfitting"
   date-md: "Feb 3"
 # w05:
 #   weeknum: 5

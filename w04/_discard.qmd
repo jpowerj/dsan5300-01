@@ -86,3 +86,36 @@ get_rss(poly_model)
 :::
 
 ::::
+
+---
+
+# Cross-Validation {data-stack-name="Cross Validation"}
+
+## Naïve Approach: Validation Set
+
+## Better Approach: LOOCV
+
+## Best Approach: $K$-Fold CV
+
+---
+
+# Model Selection Preview {data-stack-name="Model Selection"}
+
+## The Goal
+
+* Maximize **generalizability** by
+* Penalizing **complexity**
+
+---
+
+## Resampling Methods
+
+* Cross-Validation and Bootstrap
+
+## Model Selection
+
+* Subset Selection
+* "Complexity Penalties"
+* LASSO 🤠
+
+---

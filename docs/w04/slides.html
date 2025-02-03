@@ -12,7 +12,7 @@
   <meta name="generator" content="quarto-1.5.57">
 
   <meta name="author" content="Jeff Jacobs">
-  <title>DSAN 5300-01 – Week 4: Cross-Validation and Model Selection</title>
+  <title>DSAN 5300-01 – Week 4: The Scourge of Overfitting</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -95,7 +95,27 @@
     code span.va { color: #111111; } /* Variable */
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto.css">
   <link rel="stylesheet" href="../dsan-globals/jjstyles.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -396,7 +416,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Week 4: Cross-Validation and Model Selection</h1>
+  <h1 class="title">Week 4: The Scourge of Overfitting</h1>
   <p class="subtitle"><em>DSAN 5300: Statistical Learning</em><br><span class="subsubtitle">Spring 2025, Georgetown University</span></p>
 
 <div class="quarto-title-authors">
@@ -447,7 +467,7 @@ Jeff Jacobs
 <td style="text-align: left;"></td>
 <td style="text-align: left;">7:00pm</td>
 <td style="text-align: left;">8:00pm</td>
-<td style="text-align: left;"><a href="#/cross-validation">Cross Validation Methods →</a></td>
+<td style="text-align: left;"><a href="#/building-an-anti-overfitting-toolkit">Anti-Overfitting Toolkit →</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>Break!</strong></td>
@@ -609,6 +629,13 @@ Figure&nbsp;2: <a href="http://keepinitkoolinkinderland.blogspot.com/p/fonts.htm
 </figure>
 </div>
 </div></div>
+</section>
+<section id="how-can-we-attain-hiromis-aura" class="slide level2">
+<h2>How Can We Attain Hiromi’s Aura?</h2>
+<ul>
+<li>Ingredient 1: Lots of <em>examples</em>: find mysteries/questions you care about in the world and think of how regression could help us understand them!</li>
+<li>But, <strong>Ingredient 2</strong> is <strong>Generalized Linear Models</strong> (GLM), which I’ll give an intro to <strong>on the board</strong> 🏃‍♂️‍➡️</li>
+</ul>
 </section>
 <section id="where-are-we-going-what-problems-are-we-solving" class="slide level2 smaller">
 <h2>Where Are We Going / What Problems Are We Solving?</h2>
@@ -932,61 +959,362 @@ Polynomial Model:
 <section id="in-other-words" class="slide level2">
 <h2>In Other Words…</h2>
 
-<img data-src="images/hypothesis.jpg" class="r-stretch quarto-figure-center"><p class="caption">Image source: circulated as secret shitposting among PhD students in seminars</p></section>
-<section id="resampling-methods" class="slide level2">
-<h2>Resampling Methods</h2>
+<img data-src="images/hypothesis.jpg" class="r-stretch quarto-figure-center"><p class="caption">Image source: circulated as secret shitposting among PhD students in seminars</p></section></section>
+<section>
+<section id="building-an-anti-overfitting-toolkit" class="title-slide slide level1 center" data-stack-name="Anti-Overfitting Toolkit">
+<h1>Building an Anti-Overfitting Toolkit</h1>
 <ul>
-<li>Cross-Validation and Bootstrap</li>
+<li>Penalizing Complexity</li>
+<li>Cross-Validation</li>
+<li>Model Selection (Penalizing Complexity 2.0)</li>
 </ul>
 </section>
-<section id="model-selection" class="slide level2">
-<h2>Model Selection</h2>
+<section id="ok-so-how-do-we-avoid-overfitting" class="slide level2 crunch-title crunch-math crunch-ul">
+<h2>Ok So, How Do We Avoid Overfitting?</h2>
 <ul>
-<li>Subset Selection</li>
-<li>“Complexity Penalties”</li>
-<li>LASSO 🤠</li>
+<li><p>The gist: penalize model <strong>complexity</strong></p></li>
+<li><p>Original optimization:</p>
+<p><span class="math display">\[
+\theta^* = \underset{\theta}{\operatorname{argmin}} \mathcal{L}(y, \widehat{y})
+\]</span></p></li>
+<li><p>New optimization:</p>
+<p><span class="math display">\[
+\theta^* = \underset{\theta}{\operatorname{argmin}} \left[ \lambda \mathcal{L}(y, \widehat{y}) + (1-\lambda) \mathsf{Complexity}(\theta) \right]
+\]</span></p></li>
+<li><p>But how do we measure, and penalize, “complexity”?</p></li>
+</ul>
+</section>
+<section id="regularization-measuring-and-penalizing-complexity" class="slide level2 smaller title-11 math-90">
+<h2>Regularization: Measuring and Penalizing Complexity</h2>
+<ul>
+<li>In the case of polynomials, fairly simple complexity measure: <em>degree</em> of polynomial</li>
+</ul>
+<p><span class="math display">\[
+\mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3) &gt; \mathsf{Complexity}(\widehat{y} = \beta_0 + \beta_1 x)
+\]</span></p>
+<ul>
+<li>In general machine learning, however, we might not be working with polynomials</li>
+<li>In neural networks, for example, we sometimes toss in millions of features and ask the algorithm to “just figure it out”</li>
+<li>The gist, in the general case, is thus: try to “amplify” the most important features and shrink the rest, so that</li>
+</ul>
+<p><span class="math display">\[
+\mathsf{Complexity} \propto \frac{|\text{AmplifiedFeatures}|}{|\text{ShrunkFeatures}|}
+\]</span></p>
+</section>
+<section id="lasso-and-elastic-net-regularization" class="slide level2 smaller crunch-title math-90 scrollable">
+<h2>LASSO and Elastic Net Regularization</h2>
+<ul>
+<li>Many ways to translate this intuition into math!</li>
+<li>In several fields, however (econ, biostatistics), LASSO<sup>1</sup> <span class="citation" data-cites="tibshirani_regression_1996">(<a href="#/references" role="doc-biblioref" onclick="">Tibshirani 1996</a>)</span> is standard:</li>
+</ul>
+<p><span class="math display">\[
+\beta^*_{LASSO} = {\underset{\beta}{\operatorname{argmin}}}\left\{{\frac {1}{N}}\left\|y-X\beta \right\|_{2}^{2}+\lambda \|\beta \|_{1}\right\}
+\]</span></p>
+<ul>
+<li>Why does this work to penalize complexity? What does the parameter <span class="math inline">\(\lambda\)</span> do?</li>
+<li>Some known issues with LASSO fixed in extension of the same intuitions: <strong>Elastic Net</strong></li>
+</ul>
+<p><span class="math display">\[
+\beta^*_{EN} = {\underset {\beta }{\operatorname {argmin} }}\left\{ \|y-X\beta \|^{2}_2+\lambda _{2}\|\beta \|^{2}+\lambda _{1}\|\beta \|_{1} \right\}
+\]</span></p>
+<ul>
+<li>Ensures a unique global minimum! Note that <span class="math inline">\(\lambda_2 = 0, \lambda_1 = 1 \implies \beta^*_{LASSO} = \beta^*_{EN}\)</span></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><strong>L</strong>east <strong>A</strong>bsolute <strong>S</strong>hrinkage and <strong>S</strong>election <strong>O</strong>perator</p></li></ol></aside></section>
+<section id="training-vs.-test-data" class="slide level2">
+<h2>Training vs.&nbsp;Test Data</h2>
+<div class="cell" data-fig-size="3" data-layout-align="default">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource dot number-lines code-with-copy"><code class="sourceCode dot"><span id="cb23-1"><a></a><span class="va">graph</span> <span class="va">grid</span></span>
+<span id="cb23-2"><a></a><span class="ot">{</span></span>
+<span id="cb23-3"><a></a><span class="co">    </span><span class="va">graph</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb23-4"><a></a><span class="co">        </span><span class="va">overlap</span><span class="ot">=</span><span class="va">true</span></span>
+<span id="cb23-5"><a></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb23-6"><a></a><span class="co">    </span><span class="at">nodesep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb23-7"><a></a><span class="co">    </span><span class="at">ranksep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb23-8"><a></a><span class="co">    </span><span class="at">rankdir</span><span class="ot">=</span><span class="st">"TB"</span></span>
+<span id="cb23-9"><a></a><span class="co">    </span><span class="kw">node</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb23-10"><a></a><span class="co">        </span><span class="at">style</span><span class="ot">=</span><span class="st">"filled"</span><span class="co">,</span></span>
+<span id="cb23-11"><a></a><span class="co">        </span><span class="at">color</span><span class="ot">=</span><span class="va">black</span><span class="co">,</span></span>
+<span id="cb23-12"><a></a><span class="co">        </span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightblue</span><span class="co">,</span></span>
+<span id="cb23-13"><a></a><span class="co">        </span><span class="at">shape</span><span class="ot">=</span><span class="va">box</span></span>
+<span id="cb23-14"><a></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb23-15"><a></a></span>
+<span id="cb23-16"><a></a><span class="co">    // uncomment to hide the grid</span></span>
+<span id="cb23-17"><a></a><span class="co">    </span><span class="kw">edge</span><span class="co"> </span><span class="ot">[</span><span class="at">style</span><span class="ot">=</span><span class="va">invis</span><span class="ot">]</span></span>
+<span id="cb23-18"><a></a><span class="co">    </span></span>
+<span id="cb23-19"><a></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_01</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb23-20"><a></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Set (80%)"</span></span>
+<span id="cb23-21"><a></a><span class="co">    </span><span class="va">N1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N2</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N3</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span><span class="co"> </span><span class="va">N4</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="ot">]</span></span>
+<span id="cb23-22"><a></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb23-23"><a></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_02</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb23-24"><a></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Test Set (20%)"</span></span>
+<span id="cb23-25"><a></a><span class="co">    </span><span class="va">N5</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">orange</span><span class="ot">]</span></span>
+<span id="cb23-26"><a></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb23-27"><a></a><span class="ot">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="960" height="480" viewbox="0.00 0.00 366.00 100.80" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 96.8)">
+<title>grid</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-96.8 362,-96.8 362,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_01</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-84.8 243,-84.8 243,-8 8,-8"></polygon>
+<text text-anchor="middle" x="125.5" y="-68.2" font-family="Times,serif" font-size="14.00">Training Set (80%)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_02</title>
+<polygon fill="none" stroke="black" points="251,-8 251,-84.8 350,-84.8 350,-8 251,-8"></polygon>
+<text text-anchor="middle" x="300.5" y="-68.2" font-family="Times,serif" font-size="14.00">Test Set (20%)</text>
+</g>
+<!-- N1 -->
+<g id="node1" class="node">
+<title>N1</title>
+<polygon fill="lightblue" stroke="black" points="235,-52 181,-52 181,-16 235,-16 235,-52"></polygon>
+<text text-anchor="middle" x="208" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N2 -->
+<g id="node2" class="node">
+<title>N2</title>
+<polygon fill="lightblue" stroke="black" points="180,-52 126,-52 126,-16 180,-16 180,-52"></polygon>
+<text text-anchor="middle" x="153" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N3 -->
+<g id="node3" class="node">
+<title>N3</title>
+<polygon fill="lightblue" stroke="black" points="125,-52 71,-52 71,-16 125,-16 125,-52"></polygon>
+<text text-anchor="middle" x="98" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N4 -->
+<g id="node4" class="node">
+<title>N4</title>
+<polygon fill="lightblue" stroke="black" points="70,-52 16,-52 16,-16 70,-16 70,-52"></polygon>
+<text text-anchor="middle" x="43" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- N5 -->
+<g id="node5" class="node">
+<title>N5</title>
+<polygon fill="orange" stroke="black" points="327,-52 273,-52 273,-16 327,-16 327,-52"></polygon>
+<text text-anchor="middle" x="300" y="-29.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-validation" class="slide level2">
+<h2>Cross-Validation</h2>
+<ul>
+<li>The idea that <strong>good models generalize well</strong> is crucial!
+<ul>
+<li>What if we could leverage this insight to optimize <strong>over our training data</strong>?</li>
+<li>The key: <strong>Validation Sets</strong></li>
+</ul></li>
+</ul>
+<div class="cell" data-fig-height="3" data-layout-align="default">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource dot number-lines code-with-copy"><code class="sourceCode dot"><span id="cb24-1"><a></a><span class="va">graph</span> <span class="va">grid</span></span>
+<span id="cb24-2"><a></a><span class="ot">{</span></span>
+<span id="cb24-3"><a></a><span class="co">    </span><span class="va">graph</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb24-4"><a></a><span class="co">        </span><span class="va">overlap</span><span class="ot">=</span><span class="va">true</span><span class="co">,</span></span>
+<span id="cb24-5"><a></a><span class="co">        </span><span class="va">scale</span><span class="ot">=</span><span class="dv">0.2</span></span>
+<span id="cb24-6"><a></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb24-7"><a></a><span class="co">    </span><span class="at">nodesep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb24-8"><a></a><span class="co">    </span><span class="at">ranksep</span><span class="ot">=</span><span class="dv">0.0</span></span>
+<span id="cb24-9"><a></a><span class="co">    </span><span class="at">rankdir</span><span class="ot">=</span><span class="st">"LR"</span></span>
+<span id="cb24-10"><a></a><span class="co">    </span><span class="va">scale</span><span class="ot">=</span><span class="dv">0.2</span></span>
+<span id="cb24-11"><a></a><span class="co">    </span><span class="kw">node</span><span class="co"> </span><span class="ot">[</span></span>
+<span id="cb24-12"><a></a><span class="co">        </span><span class="at">style</span><span class="ot">=</span><span class="st">"filled"</span><span class="co">,</span></span>
+<span id="cb24-13"><a></a><span class="co">        </span><span class="at">color</span><span class="ot">=</span><span class="va">black</span><span class="co">,</span></span>
+<span id="cb24-14"><a></a><span class="co">        </span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightblue</span><span class="co">,</span></span>
+<span id="cb24-15"><a></a><span class="co">        </span><span class="at">shape</span><span class="ot">=</span><span class="va">box</span></span>
+<span id="cb24-16"><a></a><span class="co">    </span><span class="ot">]</span></span>
+<span id="cb24-17"><a></a></span>
+<span id="cb24-18"><a></a><span class="co">    // uncomment to hide the grid</span></span>
+<span id="cb24-19"><a></a><span class="co">    </span><span class="kw">edge</span><span class="co"> </span><span class="ot">[</span><span class="at">style</span><span class="ot">=</span><span class="va">invis</span><span class="ot">]</span></span>
+<span id="cb24-20"><a></a><span class="co">    </span></span>
+<span id="cb24-21"><a></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_01</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb24-22"><a></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Set (80%)"</span></span>
+<span id="cb24-23"><a></a><span class="co">        </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_02</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb24-24"><a></a><span class="co">            </span><span class="at">label</span><span class="ot">=</span><span class="st">"Training Fold (80%)"</span></span>
+<span id="cb24-25"><a></a><span class="co">            </span><span class="va">A1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A2</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A3</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span><span class="co"> </span><span class="va">A4</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="ot">]</span></span>
+<span id="cb24-26"><a></a><span class="co">        </span><span class="ot">}</span></span>
+<span id="cb24-27"><a></a><span class="co">        </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_03</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb24-28"><a></a><span class="co">            </span><span class="at">label</span><span class="ot">=</span><span class="st">"Validation Fold (20%)"</span></span>
+<span id="cb24-29"><a></a><span class="co">            </span><span class="va">B1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"16%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">lightgreen</span><span class="ot">]</span></span>
+<span id="cb24-30"><a></a><span class="co">        </span><span class="ot">}</span></span>
+<span id="cb24-31"><a></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb24-32"><a></a><span class="co">    </span><span class="kw">subgraph</span><span class="co"> </span><span class="va">cluster_04</span><span class="co"> </span><span class="ot">{</span></span>
+<span id="cb24-33"><a></a><span class="co">        </span><span class="at">label</span><span class="ot">=</span><span class="st">"Test Set (20%)"</span></span>
+<span id="cb24-34"><a></a><span class="co">    </span><span class="va">C1</span><span class="ot">[</span><span class="at">label</span><span class="ot">=</span><span class="st">"20%"</span><span class="co">,</span><span class="at">fillcolor</span><span class="ot">=</span><span class="va">orange</span><span class="ot">]</span></span>
+<span id="cb24-35"><a></a><span class="co">    </span><span class="ot">}</span></span>
+<span id="cb24-36"><a></a><span class="co">    </span><span class="va">A1</span><span class="co"> -- </span><span class="va">A2</span><span class="co"> -- </span><span class="va">A3</span><span class="co"> -- </span><span class="va">A4</span><span class="co"> -- </span><span class="va">B1</span><span class="co"> -- </span><span class="va">C1</span><span class="ot">;</span></span>
+<span id="cb24-37"><a></a><span class="ot">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<svg width="960" height="288" viewbox="0.00 0.00 553.00 142.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none; display: block; margin: auto auto auto auto">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 138)">
+<title>grid</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-138 549,-138 549,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_01</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-126 438,-126 438,-8 8,-8"></polygon>
+<text text-anchor="middle" x="223" y="-109.4" font-family="Times,serif" font-size="14.00">Training Set (80%)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_02</title>
+<polygon fill="none" stroke="black" points="16,-16 16,-93 272,-93 272,-16 16,-16"></polygon>
+<text text-anchor="middle" x="144" y="-76.4" font-family="Times,serif" font-size="14.00">Training Fold (80%)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_03</title>
+<polygon fill="none" stroke="black" points="288,-16 288,-93 430,-93 430,-16 288,-16"></polygon>
+<text text-anchor="middle" x="359" y="-76.4" font-family="Times,serif" font-size="14.00">Validation Fold (20%)</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_04</title>
+<polygon fill="none" stroke="black" points="446,-16 446,-93 545,-93 545,-16 446,-16"></polygon>
+<text text-anchor="middle" x="495.5" y="-76.4" font-family="Times,serif" font-size="14.00">Test Set (20%)</text>
+</g>
+<!-- A1 -->
+<g id="node1" class="node">
+<title>A1</title>
+<polygon fill="lightblue" stroke="black" points="78,-60 24,-60 24,-24 78,-24 78,-60"></polygon>
+<text text-anchor="middle" x="51" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A2 -->
+<g id="node2" class="node">
+<title>A2</title>
+<polygon fill="lightblue" stroke="black" points="140,-60 86,-60 86,-24 140,-24 140,-60"></polygon>
+<text text-anchor="middle" x="113" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A1&#45;&#45;A2 -->
+<!-- A3 -->
+<g id="node3" class="node">
+<title>A3</title>
+<polygon fill="lightblue" stroke="black" points="202,-60 148,-60 148,-24 202,-24 202,-60"></polygon>
+<text text-anchor="middle" x="175" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A2&#45;&#45;A3 -->
+<!-- A4 -->
+<g id="node4" class="node">
+<title>A4</title>
+<polygon fill="lightblue" stroke="black" points="264,-60 210,-60 210,-24 264,-24 264,-60"></polygon>
+<text text-anchor="middle" x="237" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A3&#45;&#45;A4 -->
+<!-- B1 -->
+<g id="node5" class="node">
+<title>B1</title>
+<polygon fill="lightgreen" stroke="black" points="386,-60 332,-60 332,-24 386,-24 386,-60"></polygon>
+<text text-anchor="middle" x="359" y="-37.8" font-family="Times,serif" font-size="14.00">16%</text>
+</g>
+<!-- A4&#45;&#45;B1 -->
+<!-- C1 -->
+<g id="node6" class="node">
+<title>C1</title>
+<polygon fill="orange" stroke="black" points="522,-60 468,-60 468,-24 522,-24 522,-60"></polygon>
+<text text-anchor="middle" x="495" y="-37.8" font-family="Times,serif" font-size="14.00">20%</text>
+</g>
+<!-- B1&#45;&#45;C1 -->
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="hyperparameters" class="slide level2">
+<h2>Hyperparameters</h2>
+<ul>
+<li>The unspoken (but highly consequential!) “settings” for our learning procedure (that we <em>haven’t</em> optimized via gradient descent)</li>
+<li>There are several you’ve already seen in e.g.&nbsp;5000 – can you name them?</li>
+</ul>
+</section>
+<section id="hyperparameters-youve-already-seen" class="slide level2">
+<h2>Hyperparameters You’ve Already Seen</h2>
+<ul>
+<li>Unsupervised Clustering: The number of clusters we want <span class="math inline">\(K\)</span></li>
+<li>Gradient Descent: The <strong>step size</strong> <span class="math inline">\(\gamma\)</span></li>
+<li>LASSO/Elastic Net: <span class="math inline">\(\lambda\)</span></li>
+<li>The train/validation/test split!</li>
+</ul>
+</section>
+<section id="hyperparameter-selection" class="slide level2 crunch-title crunch-ul">
+<h2>Hyperparameter Selection</h2>
+<ul>
+<li>Every model comes with its own hyperparameters:
+<ul>
+<li>Neural Networks: Number of layers, nodes per layer</li>
+<li>Decision Trees: Max tree depth, max features to include</li>
+<li>Topic Models: Number of topics, document/topic <strong>priors</strong></li>
+</ul></li>
+<li>So, how do we choose?
+<ul>
+<li>Often more art than science</li>
+<li>Principled, universally applicable, but slow: grid search</li>
+<li>Specific methods for specific algorithms: ADAM <span class="citation" data-cites="kingma_adam_2017">(<a href="#/references" role="doc-biblioref" onclick="">Kingma and Ba 2017</a>)</span> for Neural Network learning rates)</li>
+</ul></li>
+</ul>
+</section>
+<section id="now-what" class="slide level2 crunch-title crunch-ul">
+<h2>…Now What?</h2>
+<ul>
+<li>So we’ve got a trained model…
+<ul>
+<li>Data collected ✅</li>
+<li>Loss function chosen ✅</li>
+<li>Gradient descent complete ✅</li>
+<li>Hyperparameters tuned ✅</li>
+<li>Good <span class="math inline">\(F_1\)</span> score on test data ✅</li>
+</ul></li>
+<li>What’s our next step?
+<ul>
+<li>This is where <strong>engineers</strong> and <strong>social scientists</strong> diverge…</li>
+<li>Stay tuned!</li>
+</ul></li>
 </ul>
 </section></section>
 <section>
-<section id="cross-validation" class="title-slide slide level1 center" data-stack-name="Cross Validation">
-<h1>Cross-Validation</h1>
-
-</section>
-<section id="naïve-approach-validation-set" class="slide level2">
-<h2>Naïve Approach: Validation Set</h2>
-</section>
-<section id="better-approach-loocv" class="slide level2">
-<h2>Better Approach: LOOCV</h2>
-</section>
-<section id="best-approach-k-fold-cv" class="slide level2">
-<h2>Best Approach: <span class="math inline">\(K\)</span>-Fold CV</h2>
-</section></section>
-<section>
-<section id="model-selection-preview" class="title-slide slide level1 center" data-stack-name="Model Selection">
-<h1>Model Selection Preview</h1>
-
-</section>
-<section id="the-goal" class="slide level2">
-<h2>The Goal</h2>
-<ul>
-<li>Maximize <strong>generalizability</strong> by</li>
-<li>Penalizing <strong>complexity</strong></li>
-</ul>
-</section></section>
-<section id="quiz-time" class="title-slide slide level1 center" data-name="Quiz 1">
+<section id="quiz-time" class="title-slide slide level1 center" data-stack-name="Quiz">
 <h1>Quiz Time!</h1>
 <ul>
 <li>Jeff hands out your (paper) quizzes now!</li>
 <li>You have 55 minutes (8:05 to 9pm)</li>
 <li>You got this 💪</li>
 </ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-kingma_adam_2017" class="csl-entry" role="listitem">
+Kingma, Diederik P., and Jimmy Ba. 2017. <span>“Adam: <span>A Method</span> for <span>Stochastic Optimization</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.1412.6980">https://doi.org/10.48550/arXiv.1412.6980</a>.
+</div>
+<div id="ref-tibshirani_regression_1996" class="csl-entry" role="listitem">
+Tibshirani, Robert. 1996. <span>“Regression <span>Shrinkage</span> and <span>Selection</span> via the <span>Lasso</span>.”</span> <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 58 (1): 267–88. <a href="https://www.jstor.org/stable/2346178">https://www.jstor.org/stable/2346178</a>.
+</div>
+</div>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
-<p>DSAN 5300-01 Week 4: Cross-Validation and Model Selection</p>
+<p>DSAN 5300-01 Week 4: The Scourge of Overfitting</p>
 </div>
 </div>
-</section>
+</section></section>
+
     </div>
   </div>
 

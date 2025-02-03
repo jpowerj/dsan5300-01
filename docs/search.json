@@ -879,7 +879,7 @@
     "href": "w03/slides.html#but-wait",
     "title": "Week 3: Getting Fancy with Regression",
     "section": "But Wait…",
-    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-03 16:34 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-03 16:34 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-03 18:00 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-03 18:00 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
   },
   {
     "objectID": "w03/slides.html#correlations-among-features",
@@ -1016,7 +1016,7 @@
     "href": "w03/index.html#but-wait",
     "title": "Week 3: Getting Fancy with Regression",
     "section": "But Wait…",
-    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-03 16:34 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-03 16:34 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!",
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-03 18:00 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-03 18:00 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!",
     "crumbs": [
       "Week 3: {{< var w03.date-md >}}"
     ]
@@ -1124,7 +1124,7 @@
   {
     "objectID": "w04/index.html",
     "href": "w04/index.html",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "",
     "text": "Open slides in new tab →",
     "crumbs": [
@@ -1134,7 +1134,7 @@
   {
     "objectID": "w04/index.html#what-we-have-thus-far",
     "href": "w04/index.html#what-we-have-thus-far",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "What We Have Thus Far",
     "text": "What We Have Thus Far\n\nWe have a core model, regression, that we can build up into p much anything we want!\n\n\n\n\n\n\n\n\nClass Topic\nThis Video\n\n\n\n\nLinear regression\nPachelbel’s Canon in D (1m26s-1m46s)\n\n\nLogistic regression\nAdd swing:  (1m46s)\n\n\nNeural networks\n(triads \\(\\mapsto\\) 7th/9th chords) (5m24s-5m53s)",
     "crumbs": [
@@ -1142,9 +1142,19 @@
     ]
   },
   {
+    "objectID": "w04/index.html#how-can-we-attain-hiromis-aura",
+    "href": "w04/index.html#how-can-we-attain-hiromis-aura",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "How Can We Attain Hiromi’s Aura?",
+    "text": "How Can We Attain Hiromi’s Aura?\n\nIngredient 1: Lots of examples: find mysteries/questions you care about in the world and think of how regression could help us understand them!\nBut, Ingredient 2 is Generalized Linear Models (GLM), which I’ll give an intro to on the board 🏃‍♂️‍➡️",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
     "objectID": "w04/index.html#where-are-we-going-what-problems-are-we-solving",
     "href": "w04/index.html#where-are-we-going-what-problems-are-we-solving",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "Where Are We Going / What Problems Are We Solving?",
     "text": "Where Are We Going / What Problems Are We Solving?\n\nAnother nice property we have: OLS estimator is BLUE (Best Linear Unbiased Estimator) of conditional mean \\(\\mathbb{E}[Y \\mid X]\\)\nThe first problem we’ll tackle is: as we move from linear models with these kinds of guarantees to fancier models with more uncertainties / “potholes”… how do we ensure they still achieve want we want them to achieve?\nTldr: we can study more complex relationships between \\(X\\) and \\(Y\\) than linear ones, but we lose guarantees like “If it’s linear, then it is [this]”: in other words, we lose this automatic generalizability\n(With great[er] power comes great[er] responsibility!)",
     "crumbs": [
@@ -1154,7 +1164,7 @@
   {
     "objectID": "w04/index.html#the-level-2-goal-generalizability",
     "href": "w04/index.html#the-level-2-goal-generalizability",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "The Level 2 Goal: Generalizability",
     "text": "The Level 2 Goal: Generalizability\n\n\n\n\n\n\n The Goal of Statistical Learning\n\n\n\nFind…\n\nA function \\(\\widehat{y} = f(x)\\) ✅\nThat best predicts \\(Y\\) for given values of \\(X\\) ✅\nFor data that has not yet been observed! 😳❓",
     "crumbs": [
@@ -1164,7 +1174,7 @@
   {
     "objectID": "w04/index.html#can-we-just-like-not",
     "href": "w04/index.html#can-we-just-like-not",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "…Can We Just, Like, Not?",
     "text": "…Can We Just, Like, Not?\n\n\n\nWhat happens if we “unleash” fancier non-linear models on data the same way we’ve been using linear models?\nThe evil scourge of… OVERFITTING (⚡️ a single overly-dramatic lightning bolt strikes the whiteboard behind me right at this exact moment what are the odds ⚡️)\n\n\n\n\n\nYour computer is Yes Man\n\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ lubridate 1.9.3     ✔ tibble    3.2.1\n✔ purrr     1.0.2     ✔ tidyr     1.3.1\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\nCode\nset.seed(5300)\nN &lt;- 30\nx_vals &lt;- runif(N, min=0, max=1)\ny_vals_raw &lt;- 3 * x_vals\ny_noise &lt;- rnorm(N, mean=0, sd=0.5)\ny_vals &lt;- y_vals_raw + y_noise\ndata_df &lt;- tibble(x=x_vals, y=y_vals)\ndata_df |&gt; ggplot(aes(x=x, y=y)) +\n  geom_point(size=2) +\n  stat_smooth(\n    method=\"lm\",\n    formula=\"y ~ x\",\n    se=FALSE,\n    linewidth=1\n  ) +\n  labs(\n    title = paste0(\"Linear Regression, N = \",N)\n  ) +\n  theme_dsan(base_size=28)\n\n\n\n\n\nYou: “Fit the data… but you’re only allowed to be linear!” Computer: “You got it boss!”\n\n\n\n\n\n\n\nCode\ndata_df |&gt; ggplot(aes(x=x, y=y)) +\n  geom_point(size=2.5) +\n  stat_smooth(\n    method=\"lm\",\n    formula=y ~ poly(x, N, raw=TRUE),\n    se=FALSE,\n    linewidth=1\n  ) +\n  labs(\n    title = paste0(\"Polynomial Regression, N = \",N)\n  ) +\n  theme_dsan(base_size=28)\n\n\n\n\n\nYou: “Fit the data…” Computer: “You got it boss!”\n\n\n\n\n\n\n\n(Image Source)",
     "crumbs": [
@@ -1174,7 +1184,7 @@
   {
     "objectID": "w04/index.html#memorizing-data-vs.-learning-the-relationship",
     "href": "w04/index.html#memorizing-data-vs.-learning-the-relationship",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "Memorizing Data vs. Learning the Relationship",
     "text": "Memorizing Data vs. Learning the Relationship\n\n\n\n\nCode\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\nCode\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\nHow have we measured “good” fit? High \\(R^2\\)? Low \\(RSS\\)?\n\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5679903\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5638522\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0",
     "crumbs": [
@@ -1184,7 +1194,7 @@
   {
     "objectID": "w04/index.html#accuracy-leadsto-5300-generalization",
     "href": "w04/index.html#accuracy-leadsto-5300-generalization",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "5000: Accuracy \\(\\leadsto\\) 5300: Generalization",
     "text": "5000: Accuracy \\(\\leadsto\\) 5300: Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\nCode\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  theme_classic() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Evaluation: Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8906269\n\n\nCode\nlin_rss_test\n\n\n[1] 0.139159\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.5237016\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6060099",
     "crumbs": [
@@ -1194,7 +1204,7 @@
   {
     "objectID": "w04/index.html#in-other-words",
     "href": "w04/index.html#in-other-words",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "In Other Words…",
     "text": "In Other Words…\n\n\n\nImage source: circulated as secret shitposting among PhD students in seminars",
     "crumbs": [
@@ -1202,61 +1212,111 @@
     ]
   },
   {
-    "objectID": "w04/index.html#resampling-methods",
-    "href": "w04/index.html#resampling-methods",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Resampling Methods",
-    "text": "Resampling Methods\n\nCross-Validation and Bootstrap",
+    "objectID": "w04/index.html#ok-so-how-do-we-avoid-overfitting",
+    "href": "w04/index.html#ok-so-how-do-we-avoid-overfitting",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Ok So, How Do We Avoid Overfitting?",
+    "text": "Ok So, How Do We Avoid Overfitting?\n\nThe gist: penalize model complexity\nOriginal optimization:\n\\[\n\\theta^* = \\underset{\\theta}{\\operatorname{argmin}} \\mathcal{L}(y, \\widehat{y})\n\\]\nNew optimization:\n\\[\n\\theta^* = \\underset{\\theta}{\\operatorname{argmin}} \\left[ \\lambda \\mathcal{L}(y, \\widehat{y}) + (1-\\lambda) \\mathsf{Complexity}(\\theta) \\right]\n\\]\nBut how do we measure, and penalize, “complexity”?",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
   },
   {
-    "objectID": "w04/index.html#model-selection",
-    "href": "w04/index.html#model-selection",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Model Selection",
-    "text": "Model Selection\n\nSubset Selection\n“Complexity Penalties”\nLASSO 🤠",
+    "objectID": "w04/index.html#regularization-measuring-and-penalizing-complexity",
+    "href": "w04/index.html#regularization-measuring-and-penalizing-complexity",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Regularization: Measuring and Penalizing Complexity",
+    "text": "Regularization: Measuring and Penalizing Complexity\n\nIn the case of polynomials, fairly simple complexity measure: degree of polynomial\n\n\\[\n\\mathsf{Complexity}(\\widehat{y} = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\beta_3 x^3) &gt; \\mathsf{Complexity}(\\widehat{y} = \\beta_0 + \\beta_1 x)\n\\]\n\nIn general machine learning, however, we might not be working with polynomials\nIn neural networks, for example, we sometimes toss in millions of features and ask the algorithm to “just figure it out”\nThe gist, in the general case, is thus: try to “amplify” the most important features and shrink the rest, so that\n\n\\[\n\\mathsf{Complexity} \\propto \\frac{|\\text{AmplifiedFeatures}|}{|\\text{ShrunkFeatures}|}\n\\]",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
   },
   {
-    "objectID": "w04/index.html#naïve-approach-validation-set",
-    "href": "w04/index.html#naïve-approach-validation-set",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Naïve Approach: Validation Set",
-    "text": "Naïve Approach: Validation Set",
+    "objectID": "w04/index.html#lasso-and-elastic-net-regularization",
+    "href": "w04/index.html#lasso-and-elastic-net-regularization",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "LASSO and Elastic Net Regularization",
+    "text": "LASSO and Elastic Net Regularization\n\nMany ways to translate this intuition into math!\nIn several fields, however (econ, biostatistics), LASSO1 (Tibshirani 1996) is standard:\n\n\\[\n\\beta^*_{LASSO} = {\\underset{\\beta}{\\operatorname{argmin}}}\\left\\{{\\frac {1}{N}}\\left\\|y-X\\beta \\right\\|_{2}^{2}+\\lambda \\|\\beta \\|_{1}\\right\\}\n\\]\n\nWhy does this work to penalize complexity? What does the parameter \\(\\lambda\\) do?\nSome known issues with LASSO fixed in extension of the same intuitions: Elastic Net\n\n\\[\n\\beta^*_{EN} = {\\underset {\\beta }{\\operatorname {argmin} }}\\left\\{ \\|y-X\\beta \\|^{2}_2+\\lambda _{2}\\|\\beta \\|^{2}+\\lambda _{1}\\|\\beta \\|_{1} \\right\\}\n\\]\n\nEnsures a unique global minimum! Note that \\(\\lambda_2 = 0, \\lambda_1 = 1 \\implies \\beta^*_{LASSO} = \\beta^*_{EN}\\)",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
   },
   {
-    "objectID": "w04/index.html#better-approach-loocv",
-    "href": "w04/index.html#better-approach-loocv",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Better Approach: LOOCV",
-    "text": "Better Approach: LOOCV",
+    "objectID": "w04/index.html#training-vs.-test-data",
+    "href": "w04/index.html#training-vs.-test-data",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Training vs. Test Data",
+    "text": "Training vs. Test Data\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"TB\"\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n    N1[label=\"20%\"] N2[label=\"20%\"] N3[label=\"20%\"] N4[label=\"20%\"]\n    }\n    subgraph cluster_02 {\n        label=\"Test Set (20%)\"\n    N5[label=\"20%\",fillcolor=orange]\n    }\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTest Set (20%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
   },
   {
-    "objectID": "w04/index.html#best-approach-k-fold-cv",
-    "href": "w04/index.html#best-approach-k-fold-cv",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Best Approach: \\(K\\)-Fold CV",
-    "text": "Best Approach: \\(K\\)-Fold CV",
+    "objectID": "w04/index.html#cross-validation",
+    "href": "w04/index.html#cross-validation",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Cross-Validation",
+    "text": "Cross-Validation\n\nThe idea that good models generalize well is crucial!\n\nWhat if we could leverage this insight to optimize over our training data?\nThe key: Validation Sets\n\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_04\n\nTest Set (20%)\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
   },
   {
-    "objectID": "w04/index.html#the-goal",
-    "href": "w04/index.html#the-goal",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "The Goal",
-    "text": "The Goal\n\nMaximize generalizability by\nPenalizing complexity",
+    "objectID": "w04/index.html#hyperparameters",
+    "href": "w04/index.html#hyperparameters",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameters",
+    "text": "Hyperparameters\n\nThe unspoken (but highly consequential!) “settings” for our learning procedure (that we haven’t optimized via gradient descent)\nThere are several you’ve already seen in e.g. 5000 – can you name them?",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w04/index.html#hyperparameters-youve-already-seen",
+    "href": "w04/index.html#hyperparameters-youve-already-seen",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameters You’ve Already Seen",
+    "text": "Hyperparameters You’ve Already Seen\n\nUnsupervised Clustering: The number of clusters we want \\(K\\)\nGradient Descent: The step size \\(\\gamma\\)\nLASSO/Elastic Net: \\(\\lambda\\)\nThe train/validation/test split!",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w04/index.html#hyperparameter-selection",
+    "href": "w04/index.html#hyperparameter-selection",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameter Selection",
+    "text": "Hyperparameter Selection\n\nEvery model comes with its own hyperparameters:\n\nNeural Networks: Number of layers, nodes per layer\nDecision Trees: Max tree depth, max features to include\nTopic Models: Number of topics, document/topic priors\n\nSo, how do we choose?\n\nOften more art than science\nPrincipled, universally applicable, but slow: grid search\nSpecific methods for specific algorithms: ADAM (Kingma and Ba 2017) for Neural Network learning rates)",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w04/index.html#now-what",
+    "href": "w04/index.html#now-what",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "…Now What?",
+    "text": "…Now What?\n\nSo we’ve got a trained model…\n\nData collected ✅\nLoss function chosen ✅\nGradient descent complete ✅\nHyperparameters tuned ✅\nGood \\(F_1\\) score on test data ✅\n\nWhat’s our next step?\n\nThis is where engineers and social scientists diverge…\nStay tuned!",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w04/index.html#references",
+    "href": "w04/index.html#references",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "References",
+    "text": "References\n\n\nKingma, Diederik P., and Jimmy Ba. 2017. “Adam: A Method for Stochastic Optimization.” arXiv. https://doi.org/10.48550/arXiv.1412.6980.\n\n\nTibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” Journal of the Royal Statistical Society. Series B (Methodological) 58 (1): 267–88. https://www.jstor.org/stable/2346178.",
+    "crumbs": [
+      "Week 4: {{< var w04.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w04/index.html#footnotes",
+    "href": "w04/index.html#footnotes",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nLeast Absolute Shrinkage and Selection Operator↩︎",
     "crumbs": [
       "Week 4: {{< var w04.date-md >}}"
     ]
@@ -1264,93 +1324,128 @@
   {
     "objectID": "w04/slides.html#what-we-have-thus-far",
     "href": "w04/slides.html#what-we-have-thus-far",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "What We Have Thus Far",
     "text": "What We Have Thus Far\n\nWe have a core model, regression, that we can build up into p much anything we want!\n\n\n\n\n\n\n\n\nClass Topic\nThis Video\n\n\n\n\nLinear regression\nPachelbel’s Canon in D (1m26s-1m46s)\n\n\nLogistic regression\nAdd swing:  (1m46s)\n\n\nNeural networks\n(triads \\(\\mapsto\\) 7th/9th chords) (5m24s-5m53s)"
   },
   {
+    "objectID": "w04/slides.html#how-can-we-attain-hiromis-aura",
+    "href": "w04/slides.html#how-can-we-attain-hiromis-aura",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "How Can We Attain Hiromi’s Aura?",
+    "text": "How Can We Attain Hiromi’s Aura?\n\nIngredient 1: Lots of examples: find mysteries/questions you care about in the world and think of how regression could help us understand them!\nBut, Ingredient 2 is Generalized Linear Models (GLM), which I’ll give an intro to on the board 🏃‍♂️‍➡️"
+  },
+  {
     "objectID": "w04/slides.html#where-are-we-going-what-problems-are-we-solving",
     "href": "w04/slides.html#where-are-we-going-what-problems-are-we-solving",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "Where Are We Going / What Problems Are We Solving?",
     "text": "Where Are We Going / What Problems Are We Solving?\n\nAnother nice property we have: OLS estimator is BLUE (Best Linear Unbiased Estimator) of conditional mean \\(\\mathbb{E}[Y \\mid X]\\)\nThe first problem we’ll tackle is: as we move from linear models with these kinds of guarantees to fancier models with more uncertainties / “potholes”… how do we ensure they still achieve want we want them to achieve?\nTldr: we can study more complex relationships between \\(X\\) and \\(Y\\) than linear ones, but we lose guarantees like “If it’s linear, then it is [this]”: in other words, we lose this automatic generalizability\n(With great[er] power comes great[er] responsibility!)"
   },
   {
     "objectID": "w04/slides.html#the-level-2-goal-generalizability",
     "href": "w04/slides.html#the-level-2-goal-generalizability",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "The Level 2 Goal: Generalizability",
     "text": "The Level 2 Goal: Generalizability\n\n\n\n\n The Goal of Statistical Learning\n\n\nFind…\n\nA function \\(\\widehat{y} = f(x)\\) ✅\nThat best predicts \\(Y\\) for given values of \\(X\\) ✅\nFor data that has not yet been observed! 😳❓"
   },
   {
     "objectID": "w04/slides.html#can-we-just-like-not",
     "href": "w04/slides.html#can-we-just-like-not",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "…Can We Just, Like, Not?",
     "text": "…Can We Just, Like, Not?\n\n\n\nWhat happens if we “unleash” fancier non-linear models on data the same way we’ve been using linear models?\nThe evil scourge of… OVERFITTING (⚡️ a single overly-dramatic lightning bolt strikes the whiteboard behind me right at this exact moment what are the odds ⚡️)\n\n\n\n\n\nYour computer is Yes Man\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\nset.seed(5300)\nN &lt;- 30\nx_vals &lt;- runif(N, min=0, max=1)\ny_vals_raw &lt;- 3 * x_vals\ny_noise &lt;- rnorm(N, mean=0, sd=0.5)\ny_vals &lt;- y_vals_raw + y_noise\ndata_df &lt;- tibble(x=x_vals, y=y_vals)\ndata_df |&gt; ggplot(aes(x=x, y=y)) +\n  geom_point(size=2) +\n  stat_smooth(\n    method=\"lm\",\n    formula=\"y ~ x\",\n    se=FALSE,\n    linewidth=1\n  ) +\n  labs(\n    title = paste0(\"Linear Regression, N = \",N)\n  ) +\n  theme_dsan(base_size=28)\n\n\n\n\n\nYou: “Fit the data… but you’re only allowed to be linear!” Computer: “You got it boss!”\n\n\n\n\n\n\n\nCode\ndata_df |&gt; ggplot(aes(x=x, y=y)) +\n  geom_point(size=2.5) +\n  stat_smooth(\n    method=\"lm\",\n    formula=y ~ poly(x, N, raw=TRUE),\n    se=FALSE,\n    linewidth=1\n  ) +\n  labs(\n    title = paste0(\"Polynomial Regression, N = \",N)\n  ) +\n  theme_dsan(base_size=28)\n\n\n\n\n\nYou: “Fit the data…” Computer: “You got it boss!”\n\n\n\n\n\n\n(Image Source)"
   },
   {
     "objectID": "w04/slides.html#memorizing-data-vs.-learning-the-relationship",
     "href": "w04/slides.html#memorizing-data-vs.-learning-the-relationship",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "Memorizing Data vs. Learning the Relationship",
     "text": "Memorizing Data vs. Learning the Relationship\n\n\n\n\nCode\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\nCode\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\nHow have we measured “good” fit? High \\(R^2\\)? Low \\(RSS\\)?\n\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5679903\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5638522\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "w04/slides.html#accuracy-leadsto-5300-generalization",
     "href": "w04/slides.html#accuracy-leadsto-5300-generalization",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "5000: Accuracy \\(\\leadsto\\) 5300: Generalization",
     "text": "5000: Accuracy \\(\\leadsto\\) 5300: Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\nCode\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  theme_classic() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Evaluation: Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  theme_dsan(base_size=16)\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8906269\n\n\nCode\nlin_rss_test\n\n\n[1] 0.139159\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.5237016\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6060099"
   },
   {
     "objectID": "w04/slides.html#in-other-words",
     "href": "w04/slides.html#in-other-words",
-    "title": "Week 4: Cross-Validation and Model Selection",
+    "title": "Week 4: The Scourge of Overfitting",
     "section": "In Other Words…",
     "text": "In Other Words…\n\nImage source: circulated as secret shitposting among PhD students in seminars"
   },
   {
-    "objectID": "w04/slides.html#resampling-methods",
-    "href": "w04/slides.html#resampling-methods",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Resampling Methods",
-    "text": "Resampling Methods\n\nCross-Validation and Bootstrap"
+    "objectID": "w04/slides.html#ok-so-how-do-we-avoid-overfitting",
+    "href": "w04/slides.html#ok-so-how-do-we-avoid-overfitting",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Ok So, How Do We Avoid Overfitting?",
+    "text": "Ok So, How Do We Avoid Overfitting?\n\nThe gist: penalize model complexity\nOriginal optimization:\n\\[\n\\theta^* = \\underset{\\theta}{\\operatorname{argmin}} \\mathcal{L}(y, \\widehat{y})\n\\]\nNew optimization:\n\\[\n\\theta^* = \\underset{\\theta}{\\operatorname{argmin}} \\left[ \\lambda \\mathcal{L}(y, \\widehat{y}) + (1-\\lambda) \\mathsf{Complexity}(\\theta) \\right]\n\\]\nBut how do we measure, and penalize, “complexity”?"
   },
   {
-    "objectID": "w04/slides.html#model-selection",
-    "href": "w04/slides.html#model-selection",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Model Selection",
-    "text": "Model Selection\n\nSubset Selection\n“Complexity Penalties”\nLASSO 🤠"
+    "objectID": "w04/slides.html#regularization-measuring-and-penalizing-complexity",
+    "href": "w04/slides.html#regularization-measuring-and-penalizing-complexity",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Regularization: Measuring and Penalizing Complexity",
+    "text": "Regularization: Measuring and Penalizing Complexity\n\nIn the case of polynomials, fairly simple complexity measure: degree of polynomial\n\n\\[\n\\mathsf{Complexity}(\\widehat{y} = \\beta_0 + \\beta_1 x + \\beta_2 x^2 + \\beta_3 x^3) &gt; \\mathsf{Complexity}(\\widehat{y} = \\beta_0 + \\beta_1 x)\n\\]\n\nIn general machine learning, however, we might not be working with polynomials\nIn neural networks, for example, we sometimes toss in millions of features and ask the algorithm to “just figure it out”\nThe gist, in the general case, is thus: try to “amplify” the most important features and shrink the rest, so that\n\n\\[\n\\mathsf{Complexity} \\propto \\frac{|\\text{AmplifiedFeatures}|}{|\\text{ShrunkFeatures}|}\n\\]"
   },
   {
-    "objectID": "w04/slides.html#naïve-approach-validation-set",
-    "href": "w04/slides.html#naïve-approach-validation-set",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Naïve Approach: Validation Set",
-    "text": "Naïve Approach: Validation Set"
+    "objectID": "w04/slides.html#lasso-and-elastic-net-regularization",
+    "href": "w04/slides.html#lasso-and-elastic-net-regularization",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "LASSO and Elastic Net Regularization",
+    "text": "LASSO and Elastic Net Regularization\n\nMany ways to translate this intuition into math!\nIn several fields, however (econ, biostatistics), LASSO1 (Tibshirani 1996) is standard:\n\n\\[\n\\beta^*_{LASSO} = {\\underset{\\beta}{\\operatorname{argmin}}}\\left\\{{\\frac {1}{N}}\\left\\|y-X\\beta \\right\\|_{2}^{2}+\\lambda \\|\\beta \\|_{1}\\right\\}\n\\]\n\nWhy does this work to penalize complexity? What does the parameter \\(\\lambda\\) do?\nSome known issues with LASSO fixed in extension of the same intuitions: Elastic Net\n\n\\[\n\\beta^*_{EN} = {\\underset {\\beta }{\\operatorname {argmin} }}\\left\\{ \\|y-X\\beta \\|^{2}_2+\\lambda _{2}\\|\\beta \\|^{2}+\\lambda _{1}\\|\\beta \\|_{1} \\right\\}\n\\]\n\nEnsures a unique global minimum! Note that \\(\\lambda_2 = 0, \\lambda_1 = 1 \\implies \\beta^*_{LASSO} = \\beta^*_{EN}\\)\n\nLeast Absolute Shrinkage and Selection Operator"
   },
   {
-    "objectID": "w04/slides.html#better-approach-loocv",
-    "href": "w04/slides.html#better-approach-loocv",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Better Approach: LOOCV",
-    "text": "Better Approach: LOOCV"
+    "objectID": "w04/slides.html#training-vs.-test-data",
+    "href": "w04/slides.html#training-vs.-test-data",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Training vs. Test Data",
+    "text": "Training vs. Test Data\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"TB\"\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n    N1[label=\"20%\"] N2[label=\"20%\"] N3[label=\"20%\"] N4[label=\"20%\"]\n    }\n    subgraph cluster_02 {\n        label=\"Test Set (20%)\"\n    N5[label=\"20%\",fillcolor=orange]\n    }\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTest Set (20%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%"
   },
   {
-    "objectID": "w04/slides.html#best-approach-k-fold-cv",
-    "href": "w04/slides.html#best-approach-k-fold-cv",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "Best Approach: \\(K\\)-Fold CV",
-    "text": "Best Approach: \\(K\\)-Fold CV"
+    "objectID": "w04/slides.html#cross-validation",
+    "href": "w04/slides.html#cross-validation",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Cross-Validation",
+    "text": "Cross-Validation\n\nThe idea that good models generalize well is crucial!\n\nWhat if we could leverage this insight to optimize over our training data?\nThe key: Validation Sets\n\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%"
   },
   {
-    "objectID": "w04/slides.html#the-goal",
-    "href": "w04/slides.html#the-goal",
-    "title": "Week 4: Cross-Validation and Model Selection",
-    "section": "The Goal",
-    "text": "The Goal\n\nMaximize generalizability by\nPenalizing complexity"
+    "objectID": "w04/slides.html#hyperparameters",
+    "href": "w04/slides.html#hyperparameters",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameters",
+    "text": "Hyperparameters\n\nThe unspoken (but highly consequential!) “settings” for our learning procedure (that we haven’t optimized via gradient descent)\nThere are several you’ve already seen in e.g. 5000 – can you name them?"
+  },
+  {
+    "objectID": "w04/slides.html#hyperparameters-youve-already-seen",
+    "href": "w04/slides.html#hyperparameters-youve-already-seen",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameters You’ve Already Seen",
+    "text": "Hyperparameters You’ve Already Seen\n\nUnsupervised Clustering: The number of clusters we want \\(K\\)\nGradient Descent: The step size \\(\\gamma\\)\nLASSO/Elastic Net: \\(\\lambda\\)\nThe train/validation/test split!"
+  },
+  {
+    "objectID": "w04/slides.html#hyperparameter-selection",
+    "href": "w04/slides.html#hyperparameter-selection",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "Hyperparameter Selection",
+    "text": "Hyperparameter Selection\n\nEvery model comes with its own hyperparameters:\n\nNeural Networks: Number of layers, nodes per layer\nDecision Trees: Max tree depth, max features to include\nTopic Models: Number of topics, document/topic priors\n\nSo, how do we choose?\n\nOften more art than science\nPrincipled, universally applicable, but slow: grid search\nSpecific methods for specific algorithms: ADAM (Kingma and Ba 2017) for Neural Network learning rates)"
+  },
+  {
+    "objectID": "w04/slides.html#now-what",
+    "href": "w04/slides.html#now-what",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "…Now What?",
+    "text": "…Now What?\n\nSo we’ve got a trained model…\n\nData collected ✅\nLoss function chosen ✅\nGradient descent complete ✅\nHyperparameters tuned ✅\nGood \\(F_1\\) score on test data ✅\n\nWhat’s our next step?\n\nThis is where engineers and social scientists diverge…\nStay tuned!"
+  },
+  {
+    "objectID": "w04/slides.html#references",
+    "href": "w04/slides.html#references",
+    "title": "Week 4: The Scourge of Overfitting",
+    "section": "References",
+    "text": "References\n\n\nKingma, Diederik P., and Jimmy Ba. 2017. “Adam: A Method for Stochastic Optimization.” arXiv. https://doi.org/10.48550/arXiv.1412.6980.\n\n\nTibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” Journal of the Royal Statistical Society. Series B (Methodological) 58 (1): 267–88. https://www.jstor.org/stable/2346178.\n\n\n\n\n\nDSAN 5300-01 Week 4: The Scourge of Overfitting"
   },
   {
     "objectID": "writeups/quiz-1/index.html",
@@ -1493,7 +1588,7 @@
     "href": "writeups/machine-learning/index.html#the-oversimplified-big-picture",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "The (Oversimplified) Big Picture",
-    "text": "The (Oversimplified) Big Picture\n\nA model: some representation of something in the world\n\n\n\n\n\nHow well does our model represent the world?2 \\(\\mathsf{Correspondence}(y_{obs}, \\theta)\\)\n\\(P\\left(y_{obs}, \\theta\\right)\\), \\(P\\left(\\theta \\; | \\; y_{obs}\\right)\\), \\(P\\left(y_{obs} \\; | \\; \\theta\\right)\\)3\nMaximum Likelihood Estimation?\n\n\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_02\n\n\"Science\"\n\n\ncluster_01\n\n\"Nature\"\n\n\n\nObs\n\nThing(s) we can see\n\n\n\nUnd\n\nUnderlying process\n\n\n\nUnd-&gt;Obs\n\n\n\n\n\nModel\n\nModel\n\n\n\nUnd-&gt;Model\n\n\n\n\n\nModel-&gt;Obs\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n\\mathsf{Correspondence}(y_{obs}, \\theta) &\\equiv P(y = y_{obs}, \\theta) \\\\\nP(y = y_{obs}, \\theta) &= P(y=y_{obs} \\; | \\; \\theta)P(\\theta) \\\\\n&\\propto P\\left(y = y_{obs} \\; | \\; \\theta\\right)\\ldots \\implies \\text{(maximize this!)}  \\\\\n\\end{align*}\n\\]"
+    "text": "The (Oversimplified) Big Picture\n\nA model: some representation of something in the world\n\n\n\n\n\nHow well does our model represent the world?2 \\(\\mathsf{Correspondence}(y_{obs}, \\theta)\\)\n\\(P\\left(y_{obs}, \\theta\\right)\\), \\(P\\left(\\theta \\; | \\; y_{obs}\\right)\\), \\(P\\left(y_{obs} \\; | \\; \\theta\\right)\\)3\nMaximum Likelihood Estimation?\n\n\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\n\"Nature\"\n\n\ncluster_02\n\n\"Science\"\n\n\n\nObs\n\nThing(s) we can see\n\n\n\nUnd\n\nUnderlying process\n\n\n\nUnd-&gt;Obs\n\n\n\n\n\nModel\n\nModel\n\n\n\nUnd-&gt;Model\n\n\n\n\n\nModel-&gt;Obs\n\n\n\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n\\mathsf{Correspondence}(y_{obs}, \\theta) &\\equiv P(y = y_{obs}, \\theta) \\\\\nP(y = y_{obs}, \\theta) &= P(y=y_{obs} \\; | \\; \\theta)P(\\theta) \\\\\n&\\propto P\\left(y = y_{obs} \\; | \\; \\theta\\right)\\ldots \\implies \\text{(maximize this!)}  \\\\\n\\end{align*}\n\\]"
   },
   {
     "objectID": "writeups/machine-learning/index.html#measuring-errors-f1-score",
@@ -1549,14 +1644,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5360671\n\nget_rss(lin_model)\n\n[1] 0.4862679\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5224409\n\nget_rss(lin_model)\n\n[1] 0.5045637\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8231677\n\nlin_rss_test\n\n[1] 0.1981025\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3948382\n\npoly_rss_test\n\n[1] 0.6779534"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8272789\n\nlin_rss_test\n\n[1] 0.2020212\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.4890126\n\npoly_rss_test\n\n[1] 0.5976703"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -1591,7 +1686,7 @@
     "href": "writeups/machine-learning/index.html#cross-validation",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Cross-Validation",
-    "text": "Cross-Validation\n\nThe idea that good models generalize well is crucial!\n\nWhat if we could leverage this insight to optimize over our training data?\nThe key: Validation Sets\n\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_04\n\nTest Set (20%)\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%"
+    "text": "Cross-Validation\n\nThe idea that good models generalize well is crucial!\n\nWhat if we could leverage this insight to optimize over our training data?\nThe key: Validation Sets\n\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%"
   },
   {
     "objectID": "writeups/machine-learning/index.html#hyperparameters",
@@ -1731,14 +1826,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5624663\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.4897772\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5650703\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5358728\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8427659\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1722526\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4040393\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6528853"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8676447\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1429628\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.2415311\n\n\nCode\npoly_rss_test\n\n\n[1] 0.8192553"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -1766,7 +1861,7 @@
     "href": "writeups/machine-learning/slides.html#training-vs.-test-data",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Training vs. Test Data",
-    "text": "Training vs. Test Data\n\n\n\n\n\n\n\ngrid\n\n\ncluster_02\n\nTest Set (20%)\n\n\ncluster_01\n\nTraining Set (80%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%"
+    "text": "Training vs. Test Data\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTest Set (20%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#cross-validation",
@@ -1801,7 +1896,7 @@
     "href": "index.html",
     "title": "DSAN 5300-01: Statistical Learning",
     "section": "",
-    "text": "Welcome to the homepage for Section 01 (Mondays 6:30-9pm in Car Barn 203) of DSAN 5300: Statistical Learning at Georgetown University, for the Spring 2025 semester!\nIf you’re looking to book an office hour with Jeff, you can use the link in the sidebar, or this direct link: the office hour blocks for Spring 2025 are held from 3:30-6:30pm every Tuesday.\nUse the following links to view notes and lecture slides for individual weeks:\n\n\n\n\n\nTitle\n\n\nDate\n\n\n\n\n\n\nWeek 1: Introduction to the Course\n\n\nJanuary 8\n\n\n\n\nWeek 2: Linear Regression\n\n\nJanuary 13\n\n\n\n\nWeek 3: Getting Fancy with Regression\n\n\nJanuary 27\n\n\n\n\nWeek 4: Cross-Validation and Model Selection\n\n\nFebruary 3\n\n\n\n\n\nNo matching items",
+    "text": "Welcome to the homepage for Section 01 (Mondays 6:30-9pm in Car Barn 203) of DSAN 5300: Statistical Learning at Georgetown University, for the Spring 2025 semester!\nIf you’re looking to book an office hour with Jeff, you can use the link in the sidebar, or this direct link: the office hour blocks for Spring 2025 are held from 3:30-6:30pm every Tuesday.\nUse the following links to view notes and lecture slides for individual weeks:\n\n\n\n\n\nTitle\n\n\nDate\n\n\n\n\n\n\nWeek 1: Introduction to the Course\n\n\nJanuary 8\n\n\n\n\nWeek 2: Linear Regression\n\n\nJanuary 13\n\n\n\n\nWeek 3: Getting Fancy with Regression\n\n\nJanuary 27\n\n\n\n\nWeek 4: The Scourge of Overfitting\n\n\nFebruary 3\n\n\n\n\n\nNo matching items",
     "crumbs": [
       "<i class='bi bi-house pe-1'></i> Home"
     ]
