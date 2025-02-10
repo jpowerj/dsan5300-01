@@ -54,10 +54,11 @@ Today's Planned Schedule:
 
 | | Start | End | Topic |
 |:- |:- |:- |:- |
-| **Lecture** | 6:30pm | 6:40pm | [Roadmap: Week 4 $\leadsto$ Week 6 &rarr;](#roadmap) |
-| | 6:40pm | 8:00pm | [Cross-Validation: Evaluating Non-Linear Models &rarr;](#cross-validation-evaluating-non-linear-models) |
+| **Lecture** | 6:30pm | 6:50pm | [Roadmap: Week 4 $\leadsto$ Week 6 &rarr;](#roadmap) |
+| | 6:50pm | 7:20pm | [Non-Linear Data-Generating Processes &rarr;](#a-non-linear-data-generating-process-(dgp)) |
+| | 7:20pm | 8:00pm | [Validation: Evaluating Non-Linear Models &rarr;](#cross-validation-evaluating-non-linear-models) |
 | **Break!** | 8:00pm | 8:10pm | |
-| | 8:10pm | 9:00pm | [Regularization: Penalizing Complexity &rarr;](#regularization-penalizing-complexity) |
+| | 8:10pm | 9:00pm | [$K$-Fold Cross-Validation: Cooking with Gas &rarr;](#k-fold-cross-validation) |
 
 : {tbl-colwidths="[12,12,12,64]"}
 
@@ -74,7 +75,7 @@ set.seed(5300)
 
 {{< include ../dsan-globals/_globals-tex.qmd >}}
 
-# Roadmap {.smaller .title-10 data-name="Roadmap"}
+# Roadmap {.smaller .title-10 data-stack-name="Roadmap"}
 
 * [Week 4] Oh no! When we go beyond linear models, we have to worry about **overfitting**!
     * $\implies$ New goal! Maximize **generalizability** rather than **accuracy**
@@ -83,6 +84,18 @@ set.seed(5300)
     * Answer: **Yes!** Cross-validation!
 * [Week 6] **Regularization** as a tool for **Model Selection**: Now that we have a method (CV) for *imperfectly* measuring "generalizability", is there some way we can try to... **allow** models to optimize CV but **penalize** them for unnecessary complexity?
     * Answer: **Yes!** Regularization methods like LASSO and Elastic Net!
+
+## [Reminder (W04)] New Goal: *Generalizability* {.smaller .crunch-title .crunch-callout .crunch-ul .title-11}
+
+::: {.callout-tip .r-fit-text title="<i class='bi bi-info-circle'></i> The Goal of Statistical Learning" icon="false"}
+
+Find...
+
+* A function $\widehat{y} = f(x)$ ✅
+* That best predicts $Y$ for given values of $X$ ✅
+* For data that has not yet been observed! 😳❓
+
+:::
 
 # A Non-Linear Data-Generating Process (DGP) {data-stack-name="Non-Linear DGP"}
 
@@ -192,6 +205,9 @@ dgp_df |> ggplot(aes(x=gdpc, y=ldalys)) +
 
 # Cross-Validation: Evaluating Non-Linear Models {.title-09 data-stack-name="Cross-Validation"}
 
+Specifically: evaluating non-linear models **on how well they *generalize*!**
+
+* Beyond the Train-Test Split
 * Validation Set
 * LOOCV
 * $K$-Fold CV
@@ -201,8 +217,8 @@ dgp_df |> ggplot(aes(x=gdpc, y=ldalys)) +
 * We introduced this as a first step towards tackling the **scourge of overfitting!**
 
 ```{dot}
-//| fig-size: 3
 //| echo: false
+//| fig-height: 2
 graph grid
 {
     graph [
@@ -232,13 +248,27 @@ graph grid
 }
 ```
 
-## The Validation Set Approach {.crunch-title .crunch-ul .crunch-li-8}
+* Training Set $\leadsto$ Training Error, Test Set $\leadsto$ Test Error
+* So... what's the issue? Why do we need to complicate this picture?
+
+## The Chilling Truth Behind Test Data 🫣 {.smaller .crunch-title .title-11}
+
+* Science-wise, technically, once you use the **test set**, you should **stop working**
+* Full gory details in fancy books (@hume_enquiry_1760 $\rightarrow$ @popper_logic_1934), but the essence is captured by visualizing scientific inference (and **statistical learning!**) like:
+
+![](images/train_test.svg){fig-align="center"}
+
+* So, what do we do? Use $\mathbf{D}_{\text{Tr}}$ along with knowledge of issues like **overfitting** to **estimate** test error!
+* Fulfills our **goal**: find model which **best predicts $Y$ from $X$ for unobserved data**
+
+## The Validation Set Approach {.crunch-title .crunch-ul .crunch-li-8 .crunch-quarto-figure}
 
 * ⚠️ Remember: under our new goal, **"good" models** = models that **generalize well!**
-* What if we could leverage this insight to optimize **over our training data**? Enter the **Validation Set**:
+* Optimizing over **test set** violates scientific inference axioms
+* Instead, optimize over **training data** by "holding out" some portion of it... Enter the **Validation Set**:
 
 ```{dot}
-//| fig-height: 3
+//| fig-height: 2.5
 graph grid
 {
     graph [
@@ -278,17 +308,15 @@ graph grid
 }
 ```
 
-## The Validation Set Algorithm {.crunch-title}
+## Evaluating *One* Model: Validation Set Approach {.crunch-title .title-07 .inline-90}
 
-* <i class='bi bi-1-circle'></i> Let $\mathfrak{M} = (\mathcal{M}_1, \ldots, \mathcal{M}_D)$ be a set of $D$ different models
-  * Ex: $\mathcal{M}_1$ could be a linear model, $\mathcal{M}_2$ a quadratic model, $\mathcal{M}_3$ a cubic model, and so on...
-* <i class='bi bi-2-circle'></i> For each $\mathcal{M}_i \in \mathfrak{M}$ (and for given **training** data $\mathbf{X}_{\text{Tr}}$):
-  * Randomly pick 50% of $\mathbf{X}_{\text{train}}$ as **sub-training set** $\mathbf{X}_{\text{SubTr}}$
-  * The other $50\%$ becomes **validation set** $\mathbf{X}_{\text{Val}}$
-  * Train model on $\mathbf{X}_{\text{SubTr}}$, then evaluate using $\mathbf{X}_{\text{Val}}$, to produce **validation error** $\varepsilon_i$
-* <i class='bi bi-3-circle'></i> Model $\mathcal{M}_i$ with **lowest $\varepsilon_i$ wins!**
+* <i class='bi bi-1-circle'></i> Randomly pick 20% of $\mathbf{D}_{\text{train}}$ as **sub-training set** $\mathbf{D}_{\text{SubTr}}$
+* <i class='bi bi-2-circle'></i> The other 80% becomes **validation set** $\mathbf{D}_{\text{Val}}$
+* <i class='bi bi-3-circle'></i> Train model on $\mathbf{D}_{\text{SubTr}}$, then evaluate using $\mathbf{D}_{\text{Val}}$, to produce **validation error** $\varepsilon_{\text{Val}} = \widehat{\text{Err}}_{\text{Test}}$
+* $\varepsilon_{\text{Val}}$ gives us an **estimate of the test error**
+  * $\implies$ this is what we want to **optimize**, in place of **training error**, for our new goal 😎!
 
-## How Does It Do for Our Model?
+## How Does It Do for Our DGP? {.smaller .crunch-title}
 
 * Recall that the "true" degree is **5**, but that you're not supposed to know that!
 
@@ -296,6 +324,8 @@ graph grid
 ::: {.column width="50%"}
 
 ```{r}
+#| label: n200-delta-plot
+#| fig-cap: "Here, validation error fails to capture 'true' model (likely culprits: low $N$, high noise...)"
 library(boot)
 set.seed(5300)
 sim200_df <- run_dgp(
@@ -327,11 +357,14 @@ sim200_delta_df |> ggplot(aes(x=degree, y=delta)) +
   labs(title="N = 200")
 ```
 
+* Possible resolution: *[See coming slides!]*
+
 :::
 ::: {.column width="50%"}
 
 ```{r}
-#| label: n-1k-delta-plot
+#| label: n1k-delta-plot
+#| fig-cap: Here, validation error fails to sharply distinguish $d \in \{5, 6, 7, 8\}$
 sim1k_deltas <- compute_deltas(sim1k_df)
 sim1k_delta_df <- tibble(degree=1:12, delta=sim1k_deltas)
 sim1k_delta_df |> ggplot(aes(x=degree, y=delta)) +
@@ -345,41 +378,62 @@ sim1k_delta_df |> ggplot(aes(x=degree, y=delta)) +
   labs(title="N = 1000")
 ```
 
+* Possible resolution: *"one standard error rule"*
+
 :::
 ::::
 
-## Leave-One-Out Cross-Validation (LOOCV)
+## Optimizing over *Many* Models {.crunch-title .title-09}
+
+* <i class='bi bi-1-circle'></i> Let $\mathfrak{M} = (\mathcal{M}_1, \ldots, \mathcal{M}_D)$ be a set of $D$ different models
+  * Ex: $\mathcal{M}_1$ could be a linear model, $\mathcal{M}_2$ a quadratic model, $\mathcal{M}_3$ a cubic model, and so on...
+* <i class='bi bi-2-circle'></i> For each $\mathcal{M}_i \in \mathfrak{M}$ (and for given **training** data $\mathbf{D}_{\text{Tr}}$):
+  * Use [Insert Validation Approach] to derive $\varepsilon_i$
+* <i class='bi bi-3-circle'></i> Model $\mathcal{M}_i$ with **lowest $\varepsilon_i$ wins!**
+* We are now **cooking with gas!** We can use CV to optimize over e.g. **HYPERPARAMETERS** 🤯 (that we had to just kind of... guess before)!
+
+## Cooking with Even More Gas! {.crunch-title .crunch-ul .crunch-p}
+
+*(加 even more 油!)*
+
+* It turns out that, for the purposes of estimating test error (aka, estimating how well the fitted model will **generalize**), Validation Set Approach is the **worst** approach (still good, just, least good!)
+* To see its limitations, consider: is there something special about the 20% of data we selected for the validation set?
+* Answer: **No!** It was literally randomly selected!
+* $\implies$ Any other 20% "chunk" (which we'll call a **fold** from now on) could work just as well
+
+## 5-Fold Cross-Validation {.crunch-title .crunch-ul .crunch-quarto-figure}
+
+* Secretly, by choosing a **20%** fold to be the validation set earlier, I was priming you for **5-fold** cross-validation!
+
+![[Image Source](https://biol607.github.io/)](images/kfold.png){fig-align="center"}
 
 ## $K$-Fold Cross-Validation
 
-# Regularization: Penalizing Complexity {data-stack-name="Regularization"}
+* 5 was an arbitrary choice!
+  * (Though, one with important and desirable statistical properties, which we'll get to ASAP)
+* In general, $K$-Fold CV Estimator $\varepsilon_{(K)} = \widehat{\text{Err}}_{\text{Test}}$ given by
 
-## LASSO
+$$
+\varepsilon_{(K)} = \frac{1}{K}\sum_{i=1}^{K}\varepsilon^{\text{Val}}_{i}
+$$
 
+## Leave-One-Out Cross-Validation (LOOCV) {.smaller .crunch-title}
 
+* $K$-Fold CV with $K := N$
+* Produces the maximum possible number of terms in the summation that leads to $\varepsilon_{(K)}$
+  * i.e., $\varepsilon_{(N)}$ is an average over the maximum possible number of models
+* So... does this mean it's the best choice?
+* *Hint*: How "different" are any two models used in the sum?
 
-## Hyperparameter Tuning
+$$
+\begin{align*}
+\varepsilon_{(N)} =~ & \text{Err}(\mathbf{D}_1 \mid \mathbf{D}_{2:100}) + \text{Err}(\mathbf{D}_2 \mid \mathbf{D}_1, \mathbf{D}_{3:100}) \\
+&+ \text{Err}(\mathbf{D}_3 \mid \mathbf{D}_{1:2}, \mathbf{D}_{4:100}) + \cdots + \text{Err}(\mathbf{D}_{100} \mid \mathbf{D}_{1:99})
+\end{align*}
+$$
 
--   The unspoken (but highly consequential!) "settings" for our learning procedure (that we *haven't* optimized via gradient descent)
--   There are several you've already seen in e.g. 5000 -- can you name them?
-
-## Hyperparameters You've Already Seen
-
--   Unsupervised Clustering: The number of clusters we want $K$
--   Gradient Descent: The **step size** $\gamma$
--   LASSO/Elastic Net: $\lambda$
--   The train/validation/test split!
-
-## Hyperparameter Selection {.crunch-title .crunch-ul}
-
--   Every model comes with its own hyperparameters:
-    -   Neural Networks: Number of layers, nodes per layer
-    -   Decision Trees: Max tree depth, max features to include
-    -   Topic Models: Number of topics, document/topic **priors**
--   So, how do we choose?
-    -   Often more art than science
-    -   Principled, universally applicable, but slow: grid search
-    -   Specific methods for specific algorithms: ADAM [@kingma_adam_2017] for Neural Network learning rates)
+* The terms here are **highly correlated!**
+* Fun math results around how $K = 5$ or $K = 10$ can best **strike a balance** between overly-correlated terms ($K = N$) and not averaging enough models ($K = 2$)!
 
 ## References
 

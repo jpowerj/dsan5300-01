@@ -1230,7 +1230,7 @@
     "href": "w03/index.html#but-wait",
     "title": "Week 3: Getting Fancy with Regression",
     "section": "But Wait…",
-    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-10 06:06 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-10 06:06 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!",
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-10 18:25 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-10 18:25 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!",
     "crumbs": [
       "Week 3: {{< var w03.date-md >}}"
     ]
@@ -1375,7 +1375,7 @@
     "href": "w03/slides.html#but-wait",
     "title": "Week 3: Getting Fancy with Regression",
     "section": "But Wait…",
-    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-10 06:06 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-10 06:06 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
+    "text": "But Wait…\n\n\n\n\nCode\n# print(mlr_result.summary2(float_format='%.3f'))\nprint(mlr_result.summary2())\n\n\n                 Results: Ordinary least squares\n=================================================================\nModel:              OLS              Adj. R-squared:     0.896   \nDependent Variable: sales            AIC:                780.3622\nDate:               2025-02-10 18:25 BIC:                793.5555\nNo. Observations:   200              Log-Likelihood:     -386.18 \nDf Model:           3                F-statistic:        570.3   \nDf Residuals:       196              Prob (F-statistic): 1.58e-96\nR-squared:          0.897            Scale:              2.8409  \n------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025  0.975]\n------------------------------------------------------------------\nIntercept       2.9389    0.3119   9.4223  0.0000   2.3238  3.5540\nTV              0.0458    0.0014  32.8086  0.0000   0.0430  0.0485\nradio           0.1885    0.0086  21.8935  0.0000   0.1715  0.2055\nnewspaper      -0.0010    0.0059  -0.1767  0.8599  -0.0126  0.0105\n-----------------------------------------------------------------\nOmnibus:             60.414       Durbin-Watson:          2.084  \nProb(Omnibus):       0.000        Jarque-Bera (JB):       151.241\nSkew:                -1.327       Prob(JB):               0.000  \nKurtosis:            6.332        Condition No.:          454    \n=================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\n\nCode\nslr_model = smf.ols(\n  formula=\"sales ~ newspaper\",\n  data=ad_df\n)\nslr_result = slr_model.fit()\nprint(slr_result.summary2())\n\n\n                 Results: Ordinary least squares\n==================================================================\nModel:              OLS              Adj. R-squared:     0.047    \nDependent Variable: sales            AIC:                1220.6714\nDate:               2025-02-10 18:25 BIC:                1227.2680\nNo. Observations:   200              Log-Likelihood:     -608.34  \nDf Model:           1                F-statistic:        10.89    \nDf Residuals:       198              Prob (F-statistic): 0.00115  \nR-squared:          0.052            Scale:              25.933   \n-------------------------------------------------------------------\n                Coef.   Std.Err.     t     P&gt;|t|    [0.025   0.975]\n-------------------------------------------------------------------\nIntercept      12.3514    0.6214  19.8761  0.0000  11.1260  13.5769\nnewspaper       0.0547    0.0166   3.2996  0.0011   0.0220   0.0874\n------------------------------------------------------------------\nOmnibus:               6.231        Durbin-Watson:           1.983\nProb(Omnibus):         0.044        Jarque-Bera (JB):        5.483\nSkew:                  0.330        Prob(JB):                0.064\nKurtosis:              2.527        Condition No.:           65   \n==================================================================\nNotes:\n[1] Standard Errors assume that the covariance matrix of the\nerrors is correctly specified.\n\n\n\n\nMLR results can be drastically different from SLR results, because of correlations (next slide)\nThis is a good thing! It’s how we’re able to control for confounding variables!"
   },
   {
     "objectID": "w03/slides.html#correlations-among-features",
@@ -1458,6 +1458,16 @@
     ]
   },
   {
+    "objectID": "w05/index.html#reminder-w04-new-goal-generalizability",
+    "href": "w05/index.html#reminder-w04-new-goal-generalizability",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "[Reminder (W04)] New Goal: Generalizability",
+    "text": "[Reminder (W04)] New Goal: Generalizability\n\n\n\n\n\n\n The Goal of Statistical Learning\n\n\n\nFind…\n\nA function \\(\\widehat{y} = f(x)\\) ✅\nThat best predicts \\(Y\\) for given values of \\(X\\) ✅\nFor data that has not yet been observed! 😳❓",
+    "crumbs": [
+      "Week 5: {{< var w05.date-md >}}"
+    ]
+  },
+  {
     "objectID": "w05/index.html#our-working-dgp",
     "href": "w05/index.html#our-working-dgp",
     "title": "Week 5: Cross-Validation for Model Assessment",
@@ -1482,7 +1492,17 @@
     "href": "w05/index.html#training-vs.-test-data",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "Training vs. Test Data",
-    "text": "Training vs. Test Data\n\nWe introduced this as a first step towards tackling the scourge of overfitting!\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_02\n\nTest Set (20%)\n\n\ncluster_01\n\nTraining Set (80%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%",
+    "text": "Training vs. Test Data\n\nWe introduced this as a first step towards tackling the scourge of overfitting!\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_02\n\nTest Set (20%)\n\n\ncluster_01\n\nTraining Set (80%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%\n\n\n\n\n\n\n\n\n\nTraining Set \\(\\leadsto\\) Training Error, Test Set \\(\\leadsto\\) Test Error\nSo… what’s the issue? Why do we need to complicate this picture?",
+    "crumbs": [
+      "Week 5: {{< var w05.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w05/index.html#the-chilling-truth-behind-test-data",
+    "href": "w05/index.html#the-chilling-truth-behind-test-data",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "The Chilling Truth Behind Test Data 🫣",
+    "text": "The Chilling Truth Behind Test Data 🫣\n\nScience-wise, technically, once you use the test set, you should stop working\nFull gory details in fancy books (Hume (1760) \\(\\rightarrow\\) Popper (1934)), but the essence is captured by visualizing scientific inference (and statistical learning!) like:\n\n\n\n\n\n\n\nSo, what do we do? Use \\(\\mathbf{D}_{\\text{Tr}}\\) along with knowledge of issues like overfitting to estimate test error!\nFulfills our goal: find model which best predicts \\(Y\\) from \\(X\\) for unobserved data",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
@@ -1492,37 +1512,57 @@
     "href": "w05/index.html#the-validation-set-approach",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "The Validation Set Approach",
-    "text": "The Validation Set Approach\n\n⚠️ Remember: under our new goal, “good” models = models that generalize well!\nWhat if we could leverage this insight to optimize over our training data? Enter the Validation Set:\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%",
+    "text": "The Validation Set Approach\n\n⚠️ Remember: under our new goal, “good” models = models that generalize well!\nOptimizing over test set violates scientific inference axioms\nInstead, optimize over training data by “holding out” some portion of it… Enter the Validation Set:\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
   },
   {
-    "objectID": "w05/index.html#the-validation-set-algorithm",
-    "href": "w05/index.html#the-validation-set-algorithm",
+    "objectID": "w05/index.html#evaluating-one-model-validation-set-approach",
+    "href": "w05/index.html#evaluating-one-model-validation-set-approach",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "The Validation Set Algorithm",
-    "text": "The Validation Set Algorithm\n\n Let \\(\\mathfrak{M} = (\\mathcal{M}_1, \\ldots, \\mathcal{M}_D)\\) be a set of \\(D\\) different models\n\nEx: \\(\\mathcal{M}_1\\) could be a linear model, \\(\\mathcal{M}_2\\) a quadratic model, \\(\\mathcal{M}_3\\) a cubic model, and so on…\n\n For each \\(\\mathcal{M}_i \\in \\mathfrak{M}\\) (and for given training data \\(\\mathbf{X}_{\\text{Tr}}\\)):\n\nRandomly pick 50% of \\(\\mathbf{X}_{\\text{train}}\\) as sub-training set \\(\\mathbf{X}_{\\text{SubTr}}\\)\nThe other \\(50\\%\\) becomes validation set \\(\\mathbf{X}_{\\text{Val}}\\)\nTrain model on \\(\\mathbf{X}_{\\text{SubTr}}\\), then evaluate using \\(\\mathbf{X}_{\\text{Val}}\\), to produce validation error \\(\\varepsilon_i\\)\n\n Model \\(\\mathcal{M}_i\\) with lowest \\(\\varepsilon_i\\) wins!",
+    "section": "Evaluating One Model: Validation Set Approach",
+    "text": "Evaluating One Model: Validation Set Approach\n\n Randomly pick 20% of \\(\\mathbf{D}_{\\text{train}}\\) as sub-training set \\(\\mathbf{D}_{\\text{SubTr}}\\)\n The other 80% becomes validation set \\(\\mathbf{D}_{\\text{Val}}\\)\n Train model on \\(\\mathbf{D}_{\\text{SubTr}}\\), then evaluate using \\(\\mathbf{D}_{\\text{Val}}\\), to produce validation error \\(\\varepsilon_{\\text{Val}} = \\widehat{\\text{Err}}_{\\text{Test}}\\)\n\\(\\varepsilon_{\\text{Val}}\\) gives us an estimate of the test error\n\n\\(\\implies\\) this is what we want to optimize, in place of training error, for our new goal 😎!",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
   },
   {
-    "objectID": "w05/index.html#how-does-it-do-for-our-model",
-    "href": "w05/index.html#how-does-it-do-for-our-model",
+    "objectID": "w05/index.html#how-does-it-do-for-our-dgp",
+    "href": "w05/index.html#how-does-it-do-for-our-dgp",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "How Does It Do for Our Model?",
-    "text": "How Does It Do for Our Model?\n\nRecall that the “true” degree is 5, but that you’re not supposed to know that!\n\n\n\n\n\nCode\nlibrary(boot)\nset.seed(5300)\nsim200_df &lt;- run_dgp(\n  world_label=\"N=200\", N=200, x_max=100\n)\nsim1k_df &lt;- run_dgp(\n  world_label=\"N=1000\", N=1000, x_max=100\n)\ncompute_deltas &lt;- function(df, min_deg=1, max_deg=12) {\n  cv_deltas &lt;- c()\n  for (i in min_deg:max_deg) {\n    cur_poly &lt;- glm(ldalys ~ poly(gdpc, i), data=df)\n    cur_poly_cv_result &lt;- cv.glm(data=df, glmfit=cur_poly, K=5)\n    cur_cv_adj &lt;- cur_poly_cv_result$delta[1]\n    cv_deltas &lt;- c(cv_deltas, cur_cv_adj)\n  }\n  return(cv_deltas)\n}\nsim200_deltas &lt;- compute_deltas(sim200_df)\nsim200_delta_df &lt;- tibble(degree=1:12, delta=sim200_deltas)\nsim200_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 200\")\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nsim1k_deltas &lt;- compute_deltas(sim1k_df)\nsim1k_delta_df &lt;- tibble(degree=1:12, delta=sim1k_deltas)\nsim1k_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 1000\")",
+    "section": "How Does It Do for Our DGP?",
+    "text": "How Does It Do for Our DGP?\n\nRecall that the “true” degree is 5, but that you’re not supposed to know that!\n\n\n\n\n\nCode\nlibrary(boot)\nset.seed(5300)\nsim200_df &lt;- run_dgp(\n  world_label=\"N=200\", N=200, x_max=100\n)\nsim1k_df &lt;- run_dgp(\n  world_label=\"N=1000\", N=1000, x_max=100\n)\ncompute_deltas &lt;- function(df, min_deg=1, max_deg=12) {\n  cv_deltas &lt;- c()\n  for (i in min_deg:max_deg) {\n    cur_poly &lt;- glm(ldalys ~ poly(gdpc, i), data=df)\n    cur_poly_cv_result &lt;- cv.glm(data=df, glmfit=cur_poly, K=5)\n    cur_cv_adj &lt;- cur_poly_cv_result$delta[1]\n    cv_deltas &lt;- c(cv_deltas, cur_cv_adj)\n  }\n  return(cv_deltas)\n}\nsim200_deltas &lt;- compute_deltas(sim200_df)\nsim200_delta_df &lt;- tibble(degree=1:12, delta=sim200_deltas)\nsim200_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 200\")\n\n\n\n\n\nHere, validation error fails to capture ‘true’ model (likely culprits: low \\(N\\), high noise…)\n\n\n\n\n\nPossible resolution: [See coming slides!]\n\n\n\n\nCode\nsim1k_deltas &lt;- compute_deltas(sim1k_df)\nsim1k_delta_df &lt;- tibble(degree=1:12, delta=sim1k_deltas)\nsim1k_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 1000\")\n\n\n\n\n\nHere, validation error fails to sharply distinguish \\(d \\in \\{5, 6, 7, 8\\}\\)\n\n\n\n\n\nPossible resolution: “one standard error rule”",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
   },
   {
-    "objectID": "w05/index.html#leave-one-out-cross-validation-loocv",
-    "href": "w05/index.html#leave-one-out-cross-validation-loocv",
+    "objectID": "w05/index.html#optimizing-over-many-models",
+    "href": "w05/index.html#optimizing-over-many-models",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Leave-One-Out Cross-Validation (LOOCV)",
-    "text": "Leave-One-Out Cross-Validation (LOOCV)",
+    "section": "Optimizing over Many Models",
+    "text": "Optimizing over Many Models\n\n Let \\(\\mathfrak{M} = (\\mathcal{M}_1, \\ldots, \\mathcal{M}_D)\\) be a set of \\(D\\) different models\n\nEx: \\(\\mathcal{M}_1\\) could be a linear model, \\(\\mathcal{M}_2\\) a quadratic model, \\(\\mathcal{M}_3\\) a cubic model, and so on…\n\n For each \\(\\mathcal{M}_i \\in \\mathfrak{M}\\) (and for given training data \\(\\mathbf{D}_{\\text{Tr}}\\)):\n\nUse [Insert Validation Approach] to derive \\(\\varepsilon_i\\)\n\n Model \\(\\mathcal{M}_i\\) with lowest \\(\\varepsilon_i\\) wins!\nWe are now cooking with gas! We can use CV to optimize over e.g. HYPERPARAMETERS 🤯 (that we had to just kind of… guess before)!",
+    "crumbs": [
+      "Week 5: {{< var w05.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w05/index.html#cooking-with-even-more-gas",
+    "href": "w05/index.html#cooking-with-even-more-gas",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "Cooking with Even More Gas!",
+    "text": "Cooking with Even More Gas!\n(加 even more 油!)\n\nIt turns out that, for the purposes of estimating test error (aka, estimating how well the fitted model will generalize), Validation Set Approach is the worst approach (still good, just, least good!)\nTo see its limitations, consider: is there something special about the 20% of data we selected for the validation set?\nAnswer: No! It was literally randomly selected!\n\\(\\implies\\) Any other 20% “chunk” (which we’ll call a fold from now on) could work just as well",
+    "crumbs": [
+      "Week 5: {{< var w05.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w05/index.html#fold-cross-validation",
+    "href": "w05/index.html#fold-cross-validation",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "5-Fold Cross-Validation",
+    "text": "5-Fold Cross-Validation\n\nSecretly, by choosing a 20% fold to be the validation set earlier, I was priming you for 5-fold cross-validation!\n\n\n\n\nImage Source",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
@@ -1532,47 +1572,17 @@
     "href": "w05/index.html#k-fold-cross-validation",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "\\(K\\)-Fold Cross-Validation",
-    "text": "\\(K\\)-Fold Cross-Validation",
+    "text": "\\(K\\)-Fold Cross-Validation\n\n5 was an arbitrary choice!\n\n(Though, one with important and desirable statistical properties, which we’ll get to ASAP)\n\nIn general, \\(K\\)-Fold CV Estimator \\(\\varepsilon_{(K)} = \\widehat{\\text{Err}}_{\\text{Test}}\\) given by\n\n\\[\n\\varepsilon_{(K)} = \\frac{1}{K}\\sum_{i=1}^{K}\\varepsilon^{\\text{Val}}_{i}\n\\]",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
   },
   {
-    "objectID": "w05/index.html#lasso",
-    "href": "w05/index.html#lasso",
+    "objectID": "w05/index.html#leave-one-out-cross-validation-loocv",
+    "href": "w05/index.html#leave-one-out-cross-validation-loocv",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "LASSO",
-    "text": "LASSO",
-    "crumbs": [
-      "Week 5: {{< var w05.date-md >}}"
-    ]
-  },
-  {
-    "objectID": "w05/index.html#hyperparameter-tuning",
-    "href": "w05/index.html#hyperparameter-tuning",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameter Tuning",
-    "text": "Hyperparameter Tuning\n\nThe unspoken (but highly consequential!) “settings” for our learning procedure (that we haven’t optimized via gradient descent)\nThere are several you’ve already seen in e.g. 5000 – can you name them?",
-    "crumbs": [
-      "Week 5: {{< var w05.date-md >}}"
-    ]
-  },
-  {
-    "objectID": "w05/index.html#hyperparameters-youve-already-seen",
-    "href": "w05/index.html#hyperparameters-youve-already-seen",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameters You’ve Already Seen",
-    "text": "Hyperparameters You’ve Already Seen\n\nUnsupervised Clustering: The number of clusters we want \\(K\\)\nGradient Descent: The step size \\(\\gamma\\)\nLASSO/Elastic Net: \\(\\lambda\\)\nThe train/validation/test split!",
-    "crumbs": [
-      "Week 5: {{< var w05.date-md >}}"
-    ]
-  },
-  {
-    "objectID": "w05/index.html#hyperparameter-selection",
-    "href": "w05/index.html#hyperparameter-selection",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameter Selection",
-    "text": "Hyperparameter Selection\n\nEvery model comes with its own hyperparameters:\n\nNeural Networks: Number of layers, nodes per layer\nDecision Trees: Max tree depth, max features to include\nTopic Models: Number of topics, document/topic priors\n\nSo, how do we choose?\n\nOften more art than science\nPrincipled, universally applicable, but slow: grid search\nSpecific methods for specific algorithms: ADAM (Kingma and Ba 2017) for Neural Network learning rates)",
+    "section": "Leave-One-Out Cross-Validation (LOOCV)",
+    "text": "Leave-One-Out Cross-Validation (LOOCV)\n\n\\(K\\)-Fold CV with \\(K := N\\)\nProduces the maximum possible number of terms in the summation that leads to \\(\\varepsilon_{(K)}\\)\n\ni.e., \\(\\varepsilon_{(N)}\\) is an average over the maximum possible number of models\n\nSo… does this mean it’s the best choice?\nHint: How “different” are any two models used in the sum?\n\n\\[\n\\begin{align*}\n\\varepsilon_{(N)} =~ & \\text{Err}(\\mathbf{D}_1 \\mid \\mathbf{D}_{2:100}) + \\text{Err}(\\mathbf{D}_2 \\mid \\mathbf{D}_1, \\mathbf{D}_{3:100}) \\\\\n&+ \\text{Err}(\\mathbf{D}_3 \\mid \\mathbf{D}_{1:2}, \\mathbf{D}_{4:100}) + \\cdots + \\text{Err}(\\mathbf{D}_{100} \\mid \\mathbf{D}_{1:99})\n\\end{align*}\n\\]\n\nThe terms here are highly correlated!\nFun math results around how \\(K = 5\\) or \\(K = 10\\) can best strike a balance between overly-correlated terms (\\(K = N\\)) and not averaging enough models (\\(K = 2\\))!",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
@@ -1582,10 +1592,17 @@
     "href": "w05/index.html#references",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "References",
-    "text": "References\n\n\nKingma, Diederik P., and Jimmy Ba. 2017. “Adam: A Method for Stochastic Optimization.” arXiv. https://doi.org/10.48550/arXiv.1412.6980.",
+    "text": "References\n\n\nHume, David. 1760. An Enquiry Concerning Human Understanding. Simon and Schuster.\n\n\nPopper, Karl R. 1934. The Logic of Scientific Discovery. Psychology Press.",
     "crumbs": [
       "Week 5: {{< var w05.date-md >}}"
     ]
+  },
+  {
+    "objectID": "w05/slides.html#reminder-w04-new-goal-generalizability",
+    "href": "w05/slides.html#reminder-w04-new-goal-generalizability",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "[Reminder (W04)] New Goal: Generalizability",
+    "text": "[Reminder (W04)] New Goal: Generalizability\n\n\n\n\n The Goal of Statistical Learning\n\n\nFind…\n\nA function \\(\\widehat{y} = f(x)\\) ✅\nThat best predicts \\(Y\\) for given values of \\(X\\) ✅\nFor data that has not yet been observed! 😳❓"
   },
   {
     "objectID": "w05/slides.html#our-working-dgp",
@@ -1606,77 +1623,77 @@
     "href": "w05/slides.html#training-vs.-test-data",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "Training vs. Test Data",
-    "text": "Training vs. Test Data\n\nWe introduced this as a first step towards tackling the scourge of overfitting!\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTest Set (20%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%"
+    "text": "Training vs. Test Data\n\nWe introduced this as a first step towards tackling the scourge of overfitting!\n\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTest Set (20%)\n\n\n\nN1\n\n20%\n\n\n\nN2\n\n20%\n\n\n\nN3\n\n20%\n\n\n\nN4\n\n20%\n\n\n\nN5\n\n20%\n\n\n\n\n\n\n\n\n\nTraining Set \\(\\leadsto\\) Training Error, Test Set \\(\\leadsto\\) Test Error\nSo… what’s the issue? Why do we need to complicate this picture?"
+  },
+  {
+    "objectID": "w05/slides.html#the-chilling-truth-behind-test-data",
+    "href": "w05/slides.html#the-chilling-truth-behind-test-data",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "The Chilling Truth Behind Test Data 🫣",
+    "text": "The Chilling Truth Behind Test Data 🫣\n\nScience-wise, technically, once you use the test set, you should stop working\nFull gory details in fancy books (Hume (1760) \\(\\rightarrow\\) Popper (1934)), but the essence is captured by visualizing scientific inference (and statistical learning!) like:\n\n\n\nSo, what do we do? Use \\(\\mathbf{D}_{\\text{Tr}}\\) along with knowledge of issues like overfitting to estimate test error!\nFulfills our goal: find model which best predicts \\(Y\\) from \\(X\\) for unobserved data"
   },
   {
     "objectID": "w05/slides.html#the-validation-set-approach",
     "href": "w05/slides.html#the-validation-set-approach",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "The Validation Set Approach",
-    "text": "The Validation Set Approach\n\n⚠️ Remember: under our new goal, “good” models = models that generalize well!\nWhat if we could leverage this insight to optimize over our training data? Enter the Validation Set:\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%"
+    "text": "The Validation Set Approach\n\n⚠️ Remember: under our new goal, “good” models = models that generalize well!\nOptimizing over test set violates scientific inference axioms\nInstead, optimize over training data by “holding out” some portion of it… Enter the Validation Set:\n\n\n\nCode\ngraph grid\n{\n    graph [\n        overlap=true,\n        scale=0.2\n    ]\n    nodesep=0.0\n    ranksep=0.0\n    rankdir=\"LR\"\n    scale=0.2\n    node [\n        style=\"filled\",\n        color=black,\n        fillcolor=lightblue,\n        shape=box\n    ]\n\n    // uncomment to hide the grid\n    edge [style=invis]\n    \n    subgraph cluster_01 {\n        label=\"Training Set (80%)\"\n        subgraph cluster_02 {\n            label=\"Training Fold (80%)\"\n            A1[label=\"16%\"] A2[label=\"16%\"] A3[label=\"16%\"] A4[label=\"16%\"]\n        }\n        subgraph cluster_03 {\n            label=\"Validation Fold (20%)\"\n            B1[label=\"16%\",fillcolor=lightgreen]\n        }\n    }\n    subgraph cluster_04 {\n        label=\"Test Set (20%)\"\n    C1[label=\"20%\",fillcolor=orange]\n    }\n    A1 -- A2 -- A3 -- A4 -- B1 -- C1;\n}\n\n\n\n\n\n\n\ngrid\n\n\ncluster_01\n\nTraining Set (80%)\n\n\ncluster_02\n\nTraining Fold (80%)\n\n\ncluster_03\n\nValidation Fold (20%)\n\n\ncluster_04\n\nTest Set (20%)\n\n\n\nA1\n\n16%\n\n\n\nA2\n\n16%\n\n\n\n\nA3\n\n16%\n\n\n\n\nA4\n\n16%\n\n\n\n\nB1\n\n16%\n\n\n\n\nC1\n\n20%"
   },
   {
-    "objectID": "w05/slides.html#the-validation-set-algorithm",
-    "href": "w05/slides.html#the-validation-set-algorithm",
+    "objectID": "w05/slides.html#evaluating-one-model-validation-set-approach",
+    "href": "w05/slides.html#evaluating-one-model-validation-set-approach",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "The Validation Set Algorithm",
-    "text": "The Validation Set Algorithm\n\n Let \\(\\mathfrak{M} = (\\mathcal{M}_1, \\ldots, \\mathcal{M}_D)\\) be a set of \\(D\\) different models\n\nEx: \\(\\mathcal{M}_1\\) could be a linear model, \\(\\mathcal{M}_2\\) a quadratic model, \\(\\mathcal{M}_3\\) a cubic model, and so on…\n\n For each \\(\\mathcal{M}_i \\in \\mathfrak{M}\\) (and for given training data \\(\\mathbf{X}_{\\text{Tr}}\\)):\n\nRandomly pick 50% of \\(\\mathbf{X}_{\\text{train}}\\) as sub-training set \\(\\mathbf{X}_{\\text{SubTr}}\\)\nThe other \\(50\\%\\) becomes validation set \\(\\mathbf{X}_{\\text{Val}}\\)\nTrain model on \\(\\mathbf{X}_{\\text{SubTr}}\\), then evaluate using \\(\\mathbf{X}_{\\text{Val}}\\), to produce validation error \\(\\varepsilon_i\\)\n\n Model \\(\\mathcal{M}_i\\) with lowest \\(\\varepsilon_i\\) wins!"
+    "section": "Evaluating One Model: Validation Set Approach",
+    "text": "Evaluating One Model: Validation Set Approach\n\n Randomly pick 20% of \\(\\mathbf{D}_{\\text{train}}\\) as sub-training set \\(\\mathbf{D}_{\\text{SubTr}}\\)\n The other 80% becomes validation set \\(\\mathbf{D}_{\\text{Val}}\\)\n Train model on \\(\\mathbf{D}_{\\text{SubTr}}\\), then evaluate using \\(\\mathbf{D}_{\\text{Val}}\\), to produce validation error \\(\\varepsilon_{\\text{Val}} = \\widehat{\\text{Err}}_{\\text{Test}}\\)\n\\(\\varepsilon_{\\text{Val}}\\) gives us an estimate of the test error\n\n\\(\\implies\\) this is what we want to optimize, in place of training error, for our new goal 😎!"
   },
   {
-    "objectID": "w05/slides.html#how-does-it-do-for-our-model",
-    "href": "w05/slides.html#how-does-it-do-for-our-model",
+    "objectID": "w05/slides.html#how-does-it-do-for-our-dgp",
+    "href": "w05/slides.html#how-does-it-do-for-our-dgp",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "How Does It Do for Our Model?",
-    "text": "How Does It Do for Our Model?\n\nRecall that the “true” degree is 5, but that you’re not supposed to know that!\n\n\n\n\n\nCode\nlibrary(boot)\nset.seed(5300)\nsim200_df &lt;- run_dgp(\n  world_label=\"N=200\", N=200, x_max=100\n)\nsim1k_df &lt;- run_dgp(\n  world_label=\"N=1000\", N=1000, x_max=100\n)\ncompute_deltas &lt;- function(df, min_deg=1, max_deg=12) {\n  cv_deltas &lt;- c()\n  for (i in min_deg:max_deg) {\n    cur_poly &lt;- glm(ldalys ~ poly(gdpc, i), data=df)\n    cur_poly_cv_result &lt;- cv.glm(data=df, glmfit=cur_poly, K=5)\n    cur_cv_adj &lt;- cur_poly_cv_result$delta[1]\n    cv_deltas &lt;- c(cv_deltas, cur_cv_adj)\n  }\n  return(cv_deltas)\n}\nsim200_deltas &lt;- compute_deltas(sim200_df)\nsim200_delta_df &lt;- tibble(degree=1:12, delta=sim200_deltas)\nsim200_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 200\")\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nsim1k_deltas &lt;- compute_deltas(sim1k_df)\nsim1k_delta_df &lt;- tibble(degree=1:12, delta=sim1k_deltas)\nsim1k_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 1000\")"
+    "section": "How Does It Do for Our DGP?",
+    "text": "How Does It Do for Our DGP?\n\nRecall that the “true” degree is 5, but that you’re not supposed to know that!\n\n\n\n\n\nCode\nlibrary(boot)\nset.seed(5300)\nsim200_df &lt;- run_dgp(\n  world_label=\"N=200\", N=200, x_max=100\n)\nsim1k_df &lt;- run_dgp(\n  world_label=\"N=1000\", N=1000, x_max=100\n)\ncompute_deltas &lt;- function(df, min_deg=1, max_deg=12) {\n  cv_deltas &lt;- c()\n  for (i in min_deg:max_deg) {\n    cur_poly &lt;- glm(ldalys ~ poly(gdpc, i), data=df)\n    cur_poly_cv_result &lt;- cv.glm(data=df, glmfit=cur_poly, K=5)\n    cur_cv_adj &lt;- cur_poly_cv_result$delta[1]\n    cv_deltas &lt;- c(cv_deltas, cur_cv_adj)\n  }\n  return(cv_deltas)\n}\nsim200_deltas &lt;- compute_deltas(sim200_df)\nsim200_delta_df &lt;- tibble(degree=1:12, delta=sim200_deltas)\nsim200_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 200\")\n\n\n\n\n\nHere, validation error fails to capture ‘true’ model (likely culprits: low \\(N\\), high noise…)\n\n\n\n\n\nPossible resolution: [See coming slides!]\n\n\n\n\nCode\nsim1k_deltas &lt;- compute_deltas(sim1k_df)\nsim1k_delta_df &lt;- tibble(degree=1:12, delta=sim1k_deltas)\nsim1k_delta_df |&gt; ggplot(aes(x=degree, y=delta)) +\n  geom_line() +\n  geom_point() +\n  geom_vline(xintercept=5, linetype=\"dashed\") +\n  scale_x_continuous(\n    breaks=seq(from=1,to=12,by=1)\n  ) +\n  theme_dsan(base_size=22) +\n  labs(title=\"N = 1000\")\n\n\n\n\n\nHere, validation error fails to sharply distinguish \\(d \\in \\{5, 6, 7, 8\\}\\)\n\n\n\n\n\nPossible resolution: “one standard error rule”"
   },
   {
-    "objectID": "w05/slides.html#leave-one-out-cross-validation-loocv",
-    "href": "w05/slides.html#leave-one-out-cross-validation-loocv",
+    "objectID": "w05/slides.html#optimizing-over-many-models",
+    "href": "w05/slides.html#optimizing-over-many-models",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Leave-One-Out Cross-Validation (LOOCV)",
-    "text": "Leave-One-Out Cross-Validation (LOOCV)"
+    "section": "Optimizing over Many Models",
+    "text": "Optimizing over Many Models\n\n Let \\(\\mathfrak{M} = (\\mathcal{M}_1, \\ldots, \\mathcal{M}_D)\\) be a set of \\(D\\) different models\n\nEx: \\(\\mathcal{M}_1\\) could be a linear model, \\(\\mathcal{M}_2\\) a quadratic model, \\(\\mathcal{M}_3\\) a cubic model, and so on…\n\n For each \\(\\mathcal{M}_i \\in \\mathfrak{M}\\) (and for given training data \\(\\mathbf{D}_{\\text{Tr}}\\)):\n\nUse [Insert Validation Approach] to derive \\(\\varepsilon_i\\)\n\n Model \\(\\mathcal{M}_i\\) with lowest \\(\\varepsilon_i\\) wins!\nWe are now cooking with gas! We can use CV to optimize over e.g. HYPERPARAMETERS 🤯 (that we had to just kind of… guess before)!"
+  },
+  {
+    "objectID": "w05/slides.html#cooking-with-even-more-gas",
+    "href": "w05/slides.html#cooking-with-even-more-gas",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "Cooking with Even More Gas!",
+    "text": "Cooking with Even More Gas!\n(加 even more 油!)\n\nIt turns out that, for the purposes of estimating test error (aka, estimating how well the fitted model will generalize), Validation Set Approach is the worst approach (still good, just, least good!)\nTo see its limitations, consider: is there something special about the 20% of data we selected for the validation set?\nAnswer: No! It was literally randomly selected!\n\\(\\implies\\) Any other 20% “chunk” (which we’ll call a fold from now on) could work just as well"
+  },
+  {
+    "objectID": "w05/slides.html#fold-cross-validation",
+    "href": "w05/slides.html#fold-cross-validation",
+    "title": "Week 5: Cross-Validation for Model Assessment",
+    "section": "5-Fold Cross-Validation",
+    "text": "5-Fold Cross-Validation\n\nSecretly, by choosing a 20% fold to be the validation set earlier, I was priming you for 5-fold cross-validation!\n\n\nImage Source"
   },
   {
     "objectID": "w05/slides.html#k-fold-cross-validation",
     "href": "w05/slides.html#k-fold-cross-validation",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "\\(K\\)-Fold Cross-Validation",
-    "text": "\\(K\\)-Fold Cross-Validation"
+    "text": "\\(K\\)-Fold Cross-Validation\n\n5 was an arbitrary choice!\n\n(Though, one with important and desirable statistical properties, which we’ll get to ASAP)\n\nIn general, \\(K\\)-Fold CV Estimator \\(\\varepsilon_{(K)} = \\widehat{\\text{Err}}_{\\text{Test}}\\) given by\n\n\\[\n\\varepsilon_{(K)} = \\frac{1}{K}\\sum_{i=1}^{K}\\varepsilon^{\\text{Val}}_{i}\n\\]"
   },
   {
-    "objectID": "w05/slides.html#lasso",
-    "href": "w05/slides.html#lasso",
+    "objectID": "w05/slides.html#leave-one-out-cross-validation-loocv",
+    "href": "w05/slides.html#leave-one-out-cross-validation-loocv",
     "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "LASSO",
-    "text": "LASSO"
-  },
-  {
-    "objectID": "w05/slides.html#hyperparameter-tuning",
-    "href": "w05/slides.html#hyperparameter-tuning",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameter Tuning",
-    "text": "Hyperparameter Tuning\n\nThe unspoken (but highly consequential!) “settings” for our learning procedure (that we haven’t optimized via gradient descent)\nThere are several you’ve already seen in e.g. 5000 – can you name them?"
-  },
-  {
-    "objectID": "w05/slides.html#hyperparameters-youve-already-seen",
-    "href": "w05/slides.html#hyperparameters-youve-already-seen",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameters You’ve Already Seen",
-    "text": "Hyperparameters You’ve Already Seen\n\nUnsupervised Clustering: The number of clusters we want \\(K\\)\nGradient Descent: The step size \\(\\gamma\\)\nLASSO/Elastic Net: \\(\\lambda\\)\nThe train/validation/test split!"
-  },
-  {
-    "objectID": "w05/slides.html#hyperparameter-selection",
-    "href": "w05/slides.html#hyperparameter-selection",
-    "title": "Week 5: Cross-Validation for Model Assessment",
-    "section": "Hyperparameter Selection",
-    "text": "Hyperparameter Selection\n\nEvery model comes with its own hyperparameters:\n\nNeural Networks: Number of layers, nodes per layer\nDecision Trees: Max tree depth, max features to include\nTopic Models: Number of topics, document/topic priors\n\nSo, how do we choose?\n\nOften more art than science\nPrincipled, universally applicable, but slow: grid search\nSpecific methods for specific algorithms: ADAM (Kingma and Ba 2017) for Neural Network learning rates)"
+    "section": "Leave-One-Out Cross-Validation (LOOCV)",
+    "text": "Leave-One-Out Cross-Validation (LOOCV)\n\n\\(K\\)-Fold CV with \\(K := N\\)\nProduces the maximum possible number of terms in the summation that leads to \\(\\varepsilon_{(K)}\\)\n\ni.e., \\(\\varepsilon_{(N)}\\) is an average over the maximum possible number of models\n\nSo… does this mean it’s the best choice?\nHint: How “different” are any two models used in the sum?\n\n\\[\n\\begin{align*}\n\\varepsilon_{(N)} =~ & \\text{Err}(\\mathbf{D}_1 \\mid \\mathbf{D}_{2:100}) + \\text{Err}(\\mathbf{D}_2 \\mid \\mathbf{D}_1, \\mathbf{D}_{3:100}) \\\\\n&+ \\text{Err}(\\mathbf{D}_3 \\mid \\mathbf{D}_{1:2}, \\mathbf{D}_{4:100}) + \\cdots + \\text{Err}(\\mathbf{D}_{100} \\mid \\mathbf{D}_{1:99})\n\\end{align*}\n\\]\n\nThe terms here are highly correlated!\nFun math results around how \\(K = 5\\) or \\(K = 10\\) can best strike a balance between overly-correlated terms (\\(K = N\\)) and not averaging enough models (\\(K = 2\\))!"
   },
   {
     "objectID": "w05/slides.html#references",
     "href": "w05/slides.html#references",
     "title": "Week 5: Cross-Validation for Model Assessment",
     "section": "References",
-    "text": "References\n\n\nKingma, Diederik P., and Jimmy Ba. 2017. “Adam: A Method for Stochastic Optimization.” arXiv. https://doi.org/10.48550/arXiv.1412.6980."
+    "text": "References\n\n\nHume, David. 1760. An Enquiry Concerning Human Understanding. Simon and Schuster.\n\n\nPopper, Karl R. 1934. The Logic of Scientific Discovery. Psychology Press."
   },
   {
     "objectID": "writeups/quiz-1/index.html",
@@ -1875,14 +1892,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5507046\n\nget_rss(lin_model)\n\n[1] 0.5451493\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5360694\n\nget_rss(lin_model)\n\n[1] 0.5372985\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8924906\n\nlin_rss_test\n\n[1] 0.1075212\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3646593\n\npoly_rss_test\n\n[1] 0.6354102"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8930863\n\nlin_rss_test\n\n[1] 0.1152221\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3927934\n\npoly_rss_test\n\n[1] 0.6543932"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -2057,14 +2074,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.548033\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5389123\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5719185\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.546086\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8883287\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1206207\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.3110349\n\n\nCode\npoly_rss_test\n\n\n[1] 0.7441793"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.9050697\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1196862\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.5079255\n\n\nCode\npoly_rss_test\n\n\n[1] 0.620397"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
