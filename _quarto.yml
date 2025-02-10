@@ -33,8 +33,8 @@ website:
         href: "w03/index.qmd"
       - text: "Week 4: {{< var w04.date-md >}}"
         href: "w04/index.qmd"
-      # - text: "Week 5: {{< var w05.date-md >}}"
-      #   href: "w05/index.qmd"
+      - text: "Week 5: {{< var w05.date-md >}}"
+        href: "w05/index.qmd"
       # - text: "Week 6: {{< var w06.date-md >}}"
       #   href: "w06/index.qmd"
       # - text: "Week 7: {{< var w07.date-md >}}"
@@ -68,9 +68,9 @@ website:
 format:
   html:
     theme:
-      light: default
-      dark: darkly
-    css: "/dsan-globals/jjstyles.css"
+      light: [default, "./dsan-globals/jjquarto.scss"]
+      dark: [darkly, "./dsan-globals/jjquarto.scss"]
+    # css: "/dsan-globals/jjstyles.css"
     toc: true
     include-in-header:
-      text: "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js' integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==' crossorigin='anonymous' referrerpolicy='no-referrer'></script><script src='/sidebar.js'></script>"
+      text: "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js' integrity='sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==' crossorigin='anonymous' referrerpolicy='no-referrer'></script><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css'><script src='/sidebar.js'></script>"

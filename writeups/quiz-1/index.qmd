@@ -10,7 +10,7 @@ categories:
   - "Extra Writeups"
 format:
   html:
-    embed-resources: true
+    # embed-resources: true
     echo: true
     code-fold: true
     html-math-method: mathjax
