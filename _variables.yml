@@ -20,11 +20,11 @@ w04:
   title: "The Scourge of Overfitting"
   footer: "The Scourge of Overfitting"
   date-md: "Feb 3"
-# w05:
-#   weeknum: 5
-#   title: "Context-Sensitive Fairness"
-#   footer: "Context-Sensitive Fairness"
-#   date-md: "Feb 5"
+w05:
+  weeknum: 5
+  title: "Cross-Validation for Model Assessment"
+  footer: "CV for Model Assessment"
+  date-md: "Feb 10"
 # w06:
 #   weeknum: 6
 #   title: "Causality in Ethics and Policy"

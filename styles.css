@@ -1,5 +1,9 @@
 /* css styles */
 
+body {
+    font-family: "Computer Modern Sans", sans-serif;
+}
+
 a.disabled {
     /* Make the disabled links grayish*/
     color: gray;

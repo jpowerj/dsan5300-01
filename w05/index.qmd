@@ -1,0 +1,390 @@
+---
+title: "Week 5: Cross-Validation for Model Assessment"
+subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
+author: "Jeff Jacobs"
+institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
+bibliography: "../_DSAN5300.bib"
+date: 2025-02-10
+date-format: full
+lecnum: 5
+categories:
+  - "Class Sessions"
+format:
+  revealjs:
+    df-print: kable
+    footer: "DSAN 5300-01 Week 5: {{< var w05.footer >}}"
+    output-file: "slides.html"
+    html-math-method: mathjax
+    scrollable: true
+    theme: [default, "../dsan-globals/jjquarto.scss"]
+    slide-number: true
+    echo: true
+    code-fold: true
+    link-external-icon: true
+    link-external-newwindow: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css'>"
+    simplemenu:
+      flat: true
+      barhtml:
+        header: "<div class='menubar'><span style='position: absolute; left: 8; padding-left: 8px;'><a href='./index.html'>&larr; Return to Notes</a></span><ul class='menu'></ul></div>"
+      scale: 0.5
+    revealjs-plugins:
+      - simplemenu
+  html:
+    df-print: kable
+    output-file: "index.html"
+    html-math-method: mathjax
+    echo: true
+    code-fold: true
+    css: "../dsan-globals/jjstyles.css"
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'>"
+---
+
+::: {.content-visible unless-format="revealjs"}
+
+<center class='mb-3'>
+<a class="h2" href="./slides.html" target="_blank">Open slides in new tab &rarr;</a>
+</center>
+
+:::
+
+
+# Schedule {.smaller .small-title .crunch-title .crunch-callout data-name="Schedule"}
+
+Today's Planned Schedule:
+
+| | Start | End | Topic |
+|:- |:- |:- |:- |
+| **Lecture** | 6:30pm | 6:40pm | [Roadmap: Week 4 $\leadsto$ Week 6 &rarr;](#roadmap) |
+| | 6:40pm | 8:00pm | [Cross-Validation: Evaluating Non-Linear Models &rarr;](#cross-validation-evaluating-non-linear-models) |
+| **Break!** | 8:00pm | 8:10pm | |
+| | 8:10pm | 9:00pm | [Regularization: Penalizing Complexity &rarr;](#regularization-penalizing-complexity) |
+
+: {tbl-colwidths="[12,12,12,64]"}
+
+
+::: {.hidden}
+
+```{r}
+#| label: r-source-globals
+source("../dsan-globals/_globals.r")
+set.seed(5300)
+```
+
+:::
+
+{{< include ../dsan-globals/_globals-tex.qmd >}}
+
+# Roadmap {.smaller .title-10 data-name="Roadmap"}
+
+* [Week 4] Oh no! When we go beyond linear models, we have to worry about **overfitting**!
+    * $\implies$ New goal! Maximize **generalizability** rather than **accuracy**
+    * $\implies$ Evaluate models on ***unseen* test data** rather than training data
+* [Week 5] **Cross-Validation (CV)** as a tool for **Model Assessment**: For more complex, non-linear models, is there some way we can try to... "foresee" how well a trained model will **generalize?**
+    * Answer: **Yes!** Cross-validation!
+* [Week 6] **Regularization** as a tool for **Model Selection**: Now that we have a method (CV) for *imperfectly* measuring "generalizability", is there some way we can try to... **allow** models to optimize CV but **penalize** them for unnecessary complexity?
+    * Answer: **Yes!** Regularization methods like LASSO and Elastic Net!
+
+# A Non-Linear Data-Generating Process (DGP) {data-stack-name="Non-Linear DGP"}
+
+## Our Working DGP {.smaller .crunch-title .math-80 .plotly-340 .crunch-math}
+
+* Each country $i$ has a certain $x_i = \texttt{gdp\_per\_capita}_i$
+* They spend some portion of it on **healthcare** each year, which translates (based on the country's healthcare system) into **health outcomes** $y_i$
+* We *operationalize* these health outcomes as $y_i = \texttt{DALY}_i$: **[Disability Adjusted Life Years](https://ourworldindata.org/burden-of-disease)**, cross-nationally-standardized "lost years of minimally-healthy life"
+
+:::: {.columns}
+::: {.column width="60%"}
+
+```{r}
+#| label: cubic-dgp
+#| fig-align: center
+library(tidyverse) |> suppressPackageStartupMessages()
+library(plotly) |> suppressPackageStartupMessages()
+daly_df <- read_csv("assets/dalys_cleaned.csv")
+daly_df <- daly_df |> mutate(
+  gdp_pc_1k=gdp_pc_clean/1000
+)
+model_labels <- labs(
+  x="GDP per capita ($1K PPP, 2021)",
+  y="Log(DALYs/n)",
+  title="Decrease in DALYs as GDP/n Increases"
+)
+daly_plot <- daly_df |> ggplot(aes(x=gdp_pc_1k, y=log_dalys_pc, label=name)) +
+  geom_point() +
+  # geom_smooth(method="loess", formula=y ~ x) +
+  geom_smooth(method="lm", formula=y ~ poly(x,5), se=FALSE) +
+  theme_dsan(base_size=14) +
+  model_labels
+ggplotly(daly_plot)
+```
+
+:::
+::: {.column width="40%"}
+
+$$
+\begin{align*}
+\leadsto Y = &10.58 - 0.2346 X + 0.01396 X^2 \\
+&- 0.0004 X^3 + 0.000005 X^4 \\
+&- 0.00000002 X^5 + \varepsilon
+\end{align*}
+$$
+
+```{r}
+eval_fitted_poly <- function(x) {
+  coefs <- c(
+    10.58,  -0.2346, 0.01396,
+    -0.0004156, 0.0000053527, -0.0000000244
+  )
+  x_terms <- c(x^0, x^1, x^2, x^3, x^4, x^5)
+  dot_prod <- sum(coefs * x_terms)
+  return(dot_prod)
+}
+N <- 500
+x_vals <- runif(N, min=0, max=90)
+y_vals <- sapply(X=x_vals, FUN=eval_fitted_poly)
+sim_df <- tibble(gdpc=x_vals, ldalys=y_vals)
+ggplot() +
+  geom_line(data=sim_df, aes(x=gdpc, y=ldalys)) +
+  geom_point(data=daly_df, aes(x=gdp_pc_1k, y=log_dalys_pc)) +
+  theme_dsan() +
+  model_labels
+```
+
+:::
+::::
+
+## The "True" Model {.smaller .crunch-title .crunch-ul .crunch-quarto-figure .crunch-li-6}
+
+* From here onwards, we adopt this as our "true" model, for **pedagogical** purposes!
+* Meaning: we use this model to get a sense for how...
+  * CV can "foresee" **test error** $\leadsto$ confidence in CV
+  * Regularization can **penalize** overly-complex models $\leadsto$ confidence in LASSO
+* In the real world we **don't know the DGP!**
+  * $\implies$ We **build our confidence** here, then **take off the training wheels** irl: use CV/Regularization in hopes they can help us "uncover" the **unknown DGP**
+
+```{r}
+#| label: dgp-realizations
+#| fig-width: 15
+run_dgp <- function(world_label="Sim", N=60, x_max=90) {
+  x_vals <- runif(N, min=0, max=x_max)
+  y_raw <- sapply(X=x_vals, FUN=eval_fitted_poly)
+  y_noise <- rnorm(N, mean=0, sd=0.8)
+  y_vals <- y_raw + y_noise
+  sim_df <- tibble(
+    gdpc=x_vals,
+    ldalys=y_vals,
+    world=world_label
+  )
+  return(sim_df)
+}
+df1 <- run_dgp("World 1")
+df2 <- run_dgp("World 2")
+df3 <- run_dgp("World 3")
+dgp_df <- bind_rows(df1, df2, df3)
+dgp_df |> ggplot(aes(x=gdpc, y=ldalys)) +
+  geom_point(aes(color=world)) +
+  facet_wrap(vars(world)) +
+  theme_dsan(base_size=22) +
+  remove_legend() +
+  model_labels +
+  labs(title="Three Possible Realizations of our DGP")
+```
+
+# Cross-Validation: Evaluating Non-Linear Models {.title-09 data-stack-name="Cross-Validation"}
+
+* Validation Set
+* LOOCV
+* $K$-Fold CV
+
+## Training vs. Test Data
+
+* We introduced this as a first step towards tackling the **scourge of overfitting!**
+
+```{dot}
+//| fig-size: 3
+//| echo: false
+graph grid
+{
+    graph [
+        overlap=true
+    ]
+    nodesep=0.0
+    ranksep=0.0
+    rankdir="TB"
+    node [
+        style="filled",
+        color=black,
+        fillcolor=lightblue,
+        shape=box
+    ]
+
+	// uncomment to hide the grid
+	edge [style=invis]
+	
+	subgraph cluster_01 {
+	    label="Training Set (80%)"
+	N1[label="20%"] N2[label="20%"] N3[label="20%"] N4[label="20%"]
+	}
+	subgraph cluster_02 {
+	    label="Test Set (20%)"
+	N5[label="20%",fillcolor=orange]
+	}
+}
+```
+
+## The Validation Set Approach {.crunch-title .crunch-ul .crunch-li-8}
+
+* ⚠️ Remember: under our new goal, **"good" models** = models that **generalize well!**
+* What if we could leverage this insight to optimize **over our training data**? Enter the **Validation Set**:
+
+```{dot}
+//| fig-height: 3
+graph grid
+{
+    graph [
+        overlap=true,
+        scale=0.2
+    ]
+    nodesep=0.0
+    ranksep=0.0
+    rankdir="LR"
+    scale=0.2
+    node [
+        style="filled",
+        color=black,
+        fillcolor=lightblue,
+        shape=box
+    ]
+
+	// uncomment to hide the grid
+	edge [style=invis]
+	
+	subgraph cluster_01 {
+	    label="Training Set (80%)"
+	    subgraph cluster_02 {
+	        label="Training Fold (80%)"
+	        A1[label="16%"] A2[label="16%"] A3[label="16%"] A4[label="16%"]
+	    }
+	    subgraph cluster_03 {
+	        label="Validation Fold (20%)"
+	        B1[label="16%",fillcolor=lightgreen]
+	    }
+	}
+	subgraph cluster_04 {
+	    label="Test Set (20%)"
+	C1[label="20%",fillcolor=orange]
+	}
+	A1 -- A2 -- A3 -- A4 -- B1 -- C1;
+}
+```
+
+## The Validation Set Algorithm {.crunch-title}
+
+* <i class='bi bi-1-circle'></i> Let $\mathfrak{M} = (\mathcal{M}_1, \ldots, \mathcal{M}_D)$ be a set of $D$ different models
+  * Ex: $\mathcal{M}_1$ could be a linear model, $\mathcal{M}_2$ a quadratic model, $\mathcal{M}_3$ a cubic model, and so on...
+* <i class='bi bi-2-circle'></i> For each $\mathcal{M}_i \in \mathfrak{M}$ (and for given **training** data $\mathbf{X}_{\text{Tr}}$):
+  * Randomly pick 50% of $\mathbf{X}_{\text{train}}$ as **sub-training set** $\mathbf{X}_{\text{SubTr}}$
+  * The other $50\%$ becomes **validation set** $\mathbf{X}_{\text{Val}}$
+  * Train model on $\mathbf{X}_{\text{SubTr}}$, then evaluate using $\mathbf{X}_{\text{Val}}$, to produce **validation error** $\varepsilon_i$
+* <i class='bi bi-3-circle'></i> Model $\mathcal{M}_i$ with **lowest $\varepsilon_i$ wins!**
+
+## How Does It Do for Our Model?
+
+* Recall that the "true" degree is **5**, but that you're not supposed to know that!
+
+:::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+library(boot)
+set.seed(5300)
+sim200_df <- run_dgp(
+  world_label="N=200", N=200, x_max=100
+)
+sim1k_df <- run_dgp(
+  world_label="N=1000", N=1000, x_max=100
+)
+compute_deltas <- function(df, min_deg=1, max_deg=12) {
+  cv_deltas <- c()
+  for (i in min_deg:max_deg) {
+    cur_poly <- glm(ldalys ~ poly(gdpc, i), data=df)
+    cur_poly_cv_result <- cv.glm(data=df, glmfit=cur_poly, K=5)
+    cur_cv_adj <- cur_poly_cv_result$delta[1]
+    cv_deltas <- c(cv_deltas, cur_cv_adj)
+  }
+  return(cv_deltas)
+}
+sim200_deltas <- compute_deltas(sim200_df)
+sim200_delta_df <- tibble(degree=1:12, delta=sim200_deltas)
+sim200_delta_df |> ggplot(aes(x=degree, y=delta)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept=5, linetype="dashed") +
+  scale_x_continuous(
+    breaks=seq(from=1,to=12,by=1)
+  ) +
+  theme_dsan(base_size=22) +
+  labs(title="N = 200")
+```
+
+:::
+::: {.column width="50%"}
+
+```{r}
+#| label: n-1k-delta-plot
+sim1k_deltas <- compute_deltas(sim1k_df)
+sim1k_delta_df <- tibble(degree=1:12, delta=sim1k_deltas)
+sim1k_delta_df |> ggplot(aes(x=degree, y=delta)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept=5, linetype="dashed") +
+  scale_x_continuous(
+    breaks=seq(from=1,to=12,by=1)
+  ) +
+  theme_dsan(base_size=22) +
+  labs(title="N = 1000")
+```
+
+:::
+::::
+
+## Leave-One-Out Cross-Validation (LOOCV)
+
+## $K$-Fold Cross-Validation
+
+# Regularization: Penalizing Complexity {data-stack-name="Regularization"}
+
+## LASSO
+
+
+
+## Hyperparameter Tuning
+
+-   The unspoken (but highly consequential!) "settings" for our learning procedure (that we *haven't* optimized via gradient descent)
+-   There are several you've already seen in e.g. 5000 -- can you name them?
+
+## Hyperparameters You've Already Seen
+
+-   Unsupervised Clustering: The number of clusters we want $K$
+-   Gradient Descent: The **step size** $\gamma$
+-   LASSO/Elastic Net: $\lambda$
+-   The train/validation/test split!
+
+## Hyperparameter Selection {.crunch-title .crunch-ul}
+
+-   Every model comes with its own hyperparameters:
+    -   Neural Networks: Number of layers, nodes per layer
+    -   Decision Trees: Max tree depth, max features to include
+    -   Topic Models: Number of topics, document/topic **priors**
+-   So, how do we choose?
+    -   Often more art than science
+    -   Principled, universally applicable, but slow: grid search
+    -   Specific methods for specific algorithms: ADAM [@kingma_adam_2017] for Neural Network learning rates)
+
+## References
+
+::: {#refs}
+:::
