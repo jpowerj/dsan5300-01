@@ -312,7 +312,7 @@ graph grid
 
 * <i class='bi bi-1-circle'></i> Randomly pick 20% of $\mathbf{D}_{\text{train}}$ as **sub-training set** $\mathbf{D}_{\text{SubTr}}$
 * <i class='bi bi-2-circle'></i> The other 80% becomes **validation set** $\mathbf{D}_{\text{Val}}$
-* <i class='bi bi-3-circle'></i> Train model on $\mathbf{D}_{\text{SubTr}}$, then evaluate using $\mathbf{D}_{\text{Val}}$, to produce **validation error** $\varepsilon_{\text{Val}} = \widehat{\text{Err}}_{\text{Test}}$
+* <i class='bi bi-3-circle'></i> Train model on $\mathbf{D}_{\text{SubTr}}$, then evaluate using $\mathbf{D}_{\text{Val}}$, to produce **validation error** $\boxed{\varepsilon_{\text{Val}} = \widehat{\text{Err}}_{\text{Test}}}$
 * $\varepsilon_{\text{Val}}$ gives us an **estimate of the test error**
   * $\implies$ this is what we want to **optimize**, in place of **training error**, for our new goal 😎!
 
