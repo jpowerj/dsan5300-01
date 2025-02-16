@@ -1,6 +1,8 @@
 ---
 title: "Using Python to Plot... Whatever's Going On in 3D"
 subtitle: "DSAN 5300: Statistical Learning"
+author: "Jeff Jacobs"
+affiliation: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
 sidebar: mainnav
 weeknum: 3
 assignment: "General"

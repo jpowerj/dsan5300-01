@@ -25,11 +25,11 @@ w05:
   title: "Cross-Validation for Model Assessment"
   footer: "CV for Model Assessment"
   date-md: "Feb 10"
-# w06:
-#   weeknum: 6
-#   title: "Causality in Ethics and Policy"
-#   footer: "Causality in Ethics and Policy"
-#   date-md: "Feb 12"
+w06:
+  weeknum: 6
+  title: "Regularization for Model Selection"
+  footer: "Regularization for Model Selection"
+  date-md: "Feb 18"
 # w07:
 #   weeknum: 7
 #   title: "Privacy Policies, Incomplete Contracts, and Power"

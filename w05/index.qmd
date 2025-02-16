@@ -47,7 +47,6 @@ format:
 
 :::
 
-
 # Schedule {.smaller .small-title .crunch-title .crunch-callout data-name="Schedule"}
 
 Today's Planned Schedule:
@@ -61,7 +60,6 @@ Today's Planned Schedule:
 | | 8:10pm | 9:00pm | [$K$-Fold Cross-Validation: Cooking with Gas &rarr;](#k-fold-cross-validation) |
 
 : {tbl-colwidths="[12,12,12,64]"}
-
 
 ::: {.hidden}
 

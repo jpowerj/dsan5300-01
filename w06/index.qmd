@@ -1,0 +1,244 @@
+---
+title: "Week 6: Regularization for Model Selection"
+subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
+author: "Jeff Jacobs"
+institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
+bibliography: "../_DSAN5300.bib"
+date: 2025-02-18
+date-format: full
+lecnum: 6
+categories:
+  - "Class Sessions"
+format:
+  revealjs:
+    df-print: kable
+    footer: "DSAN 5300-01 Week 6: {{< var w06.footer >}}"
+    output-file: "slides.html"
+    html-math-method: mathjax
+    scrollable: true
+    theme: [default, "../dsan-globals/jjquarto.scss"]
+    slide-number: true
+    echo: true
+    code-fold: true
+    link-external-icon: true
+    link-external-newwindow: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css'>"
+    simplemenu:
+      flat: true
+      barhtml:
+        header: "<div class='menubar'><span style='position: absolute; left: 8; padding-left: 8px;'><a href='./index.html'>&larr; Return to Notes</a></span><ul class='menu'></ul></div>"
+      scale: 0.5
+    revealjs-plugins:
+      - simplemenu
+  html:
+    df-print: kable
+    output-file: "index.html"
+    html-math-method: mathjax
+    echo: true
+    code-fold: true
+---
+
+::: {.content-visible unless-format="revealjs"}
+
+<center class='mb-3'>
+<a class="h2" href="./slides.html" target="_blank">Open slides in new tab &rarr;</a>
+</center>
+
+:::
+
+# Schedule {.smaller .small-title .crunch-title .crunch-callout data-name="Schedule"}
+
+Today's Planned Schedule:
+
+| | Start | End | Topic |
+|:- |:- |:- |:- |
+| **Lecture** | 6:30pm | 6:50pm | [Recap / Clarification &rarr;](#roadmap) |
+| | 6:50pm | 7:00pm | [CV as "Subroutine" for Model Selection &rarr;](#a-non-linear-data-generating-process-(dgp)) |
+| | 7:00pm | 7:20pm | 
+| | 7:20pm | 8:00pm | [Validation: Evaluating Non-Linear Models &rarr;](#cross-validation-evaluating-non-linear-models) |
+| **Break!** | 8:00pm | 8:10pm | |
+| | 8:10pm | 9:00pm | [$K$-Fold Cross-Validation: Cooking with Gas &rarr;](#k-fold-cross-validation) |
+
+: {tbl-colwidths="[12,12,12,64]"}
+
+::: {.hidden}
+
+```{r}
+#| label: r-source-globals
+source("../dsan-globals/_globals.r")
+set.seed(5300)
+```
+
+:::
+
+{{< include ../dsan-globals/_globals-tex.qmd >}}
+
+# Roadmap {.smaller .title-10 data-stack-name="Extended Recap"}
+
+* [Week 4] Oh no! When we go beyond linear models, we have to worry about **overfitting**!
+    * $\implies$ New goal! Maximize **generalizability** rather than **accuracy**
+    * $\implies$ Evaluate models on ***unseen* test data** rather than training data
+* [Week 5] **Cross-Validation (CV)** as a tool for **Model Assessment**: For more complex, non-linear models, is there some way we can try to... "foresee" how well a trained model will **generalize?**
+    * Answer: **Yes!** Cross-validation!
+* [Week 6] **Regularization** as a tool for **Model Selection**: Now that we have a method (CV) for *imperfectly* measuring "generalizability", is there some way we can try to... **allow** models to optimize CV but **penalize** them for unnecessary complexity?
+    * Answer: **Yes!** Regularization methods like LASSO and Elastic Net!
+
+## [Reminder (W04)] New Goal: *Generalizability* {.smaller .crunch-title .crunch-callout .crunch-ul .title-11}
+
+::: {.callout-tip .r-fit-text title="<i class='bi bi-info-circle'></i> Goal 2.0: Statistical Learning" icon="false"}
+
+Find...
+
+* A function $\widehat{y} = f(x)$ ✅
+* That best predicts $Y$ for given values of $X$ ✅
+* For data that has not yet been observed! 😳❓
+
+:::
+
+## Clarification: Target Diagrams {.smaller .table-va}
+
+::: {#fig-bias-variance}
+
+| | **Low Variance** | **High Variance** |
+| -:|:-:|:-:|
+| **Low Bias** | ![](images/var-low-bias-low.svg) | ![](images/var-high-bias-low.svg) |
+| **High Bias**  | ![](images/var-low-bias-high.svg) | ![](images/var-high-bias-high.svg) |
+
+Adapted from Fortmann-Roe (2012), <a href='https://scott.fortmann-roe.com/docs/BiasVariance.html' target='_blank'>"Understanding the Bias-Variance Tradeoff"</a>
+:::
+
+## Why Was This Helpful for 5100? {.crunch-title .crunch-ul}
+
+* Law of Large Numbers:
+    * Avg(many sample means $s$) $\leadsto$ true mean $\mu$
+* $\widehat{\theta}$ **unbiased** estimator for $\theta$:
+    * Avg(Estimates $\widehat{\theta}$) $\leadsto$ true $\theta$
+
+![The Low Bias, High Variance case](images/var-high-bias-low.svg){fig-align="center"}
+
+## Relevance for CV Error {.smaller .crunch-title .crunch-ul}
+
+* In Goal 2.0 world, we **choose** models on the basis of **estimated test error** (before, with Goal 1.0, we only used e.g. MSE, RSS, $R^2$, which was fine for linear regression)
+* Data $\mathbf{D}$ = single realization of DGP [(for 5300, only relevance is why we don't look at test set)]{style="font-size: 16pt;"}
+* $\left[ \mathbf{D}_{\text{Train}} \middle| \mathbf{D}_{\text{Test}} \right]$ = random permutation of $\mathbf{D}$
+* Bullseye on target = **true** test error<br>[(We *could* compute this, but then we'd have to end the study, collect more data... better alternative on next slide!)]{style="font-size: 14pt;"}
+* Darts thrown around bullseye = **estimated** test errors (CV fold errors!)
+    * They don't hit bullseye because we're **inferring DGP from from *sample***
+* True test error = $f(\mathbf{D}) = f\left( \left[ \mathbf{D}_{\text{Train}} \middle| \mathbf{D}_{\text{Test}} \right] \right)$
+* Validation error = $f(\mathbf{D}_{\text{Train}}) = f\left( \left[ \mathbf{D}_{\text{SubTr}} \middle| \mathbf{D}_{\text{Val}} \right] \right)$,
+    * $\implies$ Validation error is an *estimate*, using a **smaller sample** $\mathbf{D}_{\text{Train}}$ drawn from the **same distribution (DGP)** as true test error!
+
+## True Test Error vs. CV Error {.smaller .crunch-title .crunch-img .crunch-p-5 .crunch-p-bpad .crunch-callout .inline-95}
+
+[*Note the icons! **Test set** = **Lake monster**: pulling out of water to evaluate kills it* 😵]{style="margin-top: 0px; margin-bottom: 0px; font-size: 80%"}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+::: {.callout-note title="![](images/ogopogo_crop.svg) True Test Error $\varepsilon_{\text{Test}} = \text{Err}_{\text{Test}}$" icon="false"}
+
+<i class='bi bi-1-circle'></i> Data $\mathbf{D}$ "arises" out of (unobservable) DGP
+
+<i class='bi bi-2-circle'></i> Randomly chop $\mathbf{D}$ into $\left[ \mathbf{D}_{\text{Train}} \mid \mathbf{D}_{\text{Test}} \right]$
+
+<i class='bi bi-3-circle'></i> $\underbrace{\text{Err}_{\text{Test}}}_{\substack{\text{Test error,} \\ \text{no cap}}} = f(\mathbf{D}_{\text{Train}} \overset{\text{fit}}{\longrightarrow} \underbrace{\mathcal{M}_{\theta} \overset{\text{eval}}{\longrightarrow} \mathbf{D}_{\text{Test}}}_{\text{This kills monster 😢}})$
+
+**Issue: can only be evaluated *once*, ever 😱**
+
+:::
+
+:::
+::: {.column width="50%"}
+
+::: {.callout-note title="<i class='bi bi-water'></i> Validation Set Error $\varepsilon_{\text{Val}} = \widehat{\varepsilon}_{\text{Test}} = \widehat{\text{Err}}_{\text{Test}}$" icon="false"}
+
+<i class='bi bi-1-circle'></i> $\text{DGP} \rightarrow \mathbf{D}$; <i class='bi bi-2-circle'></i> Randomly chop into $[\mathbf{D}_{\text{Train}} \mid \mathbf{D}_{\text{Test}}]$
+
+<i class='bi bi-3-circle'></i> Leave $\mathbf{D}_{\text{Test}}$ alone until end of study
+
+<i class='bi bi-4-circle'></i> Randomly chop $\mathbf{D}_{\text{Train}}$ into $[\mathbf{D}_{\text{SubTr}} \mid \mathbf{D}_{\text{Val}}]$
+
+<i class='bi bi-5-circle'></i> $\underbrace{\widehat{\text{Err}}_{\text{Test}}}_{\substack{\text{Test error,} \\ \text{capping a bit}}} = f(\mathbf{D}_{\text{SubTr}} \overset{\text{fit}}{\longrightarrow} \underbrace{\mathcal{M}_{\theta} \overset{\text{eval}}{\longrightarrow} \mathbf{D}_{\text{Val}}}_{\text{Monster still alive!}})$
+
+:::
+
+:::
+::::
+
+::: {.callout-note title="<i class='bi bi-water'></i> $K$-Fold Cross-Validation Error $\varepsilon_{(K)} = \widehat{\varepsilon}_{\text{Test}} = \widehat{\text{E}}\text{rr}_{\text{Test}}$" icon="false"}
+
+<i class='bi bi-1-circle'></i> $\text{DGP} \rightarrow \mathbf{D}$; <i class='bi bi-2-circle'></i> Randomly chop into $[\mathbf{D}_{\text{Train}} \mid \mathbf{D}_{\text{Test}}]$; <i class='bi bi-3-circle'></i> Leave $\mathbf{D}_{\text{Test}}$ for end of study
+
+<i class='bi bi-4-circle'></i> Randomly chop $\mathbf{D}_{\text{Train}}$ into $\left[ \mathbf{D}_{\text{TrFold}}^{(1)} \middle| \mathbf{D}_{\text{TrFold}}^{(2)} \middle| \cdots \middle| \mathbf{D}_{\text{TrFold}}^{(K)} \right]$
+
+<i class='bi bi-5-circle'></i> **For** $i \in \{1, \ldots, K\}$:
+
+&nbsp;&nbsp;&nbsp;&nbsp;<i class='bi bi-6-circle'></i> $\varepsilon_{\text{ValFold}}^{(i)} = f\left( \mathbf{D}_{\text{TrFold}}^{(-i)} \overset{\text{fit}}{\longrightarrow} \mathcal{M}_{\theta} \overset{\text{eval}}{\longrightarrow} \mathbf{D}_{\text{TrFold}}^{(i)} \right)$
+
+<i class='bi bi-7-circle'></i> $\underbrace{\widehat{\text{E}}\text{rr}_{\text{Test}}}_{\substack{\text{Test error,} \\ \text{less cap!}}} = \boxed{\frac{1}{K}\sum_{i=1}^{K}\varepsilon^{(i)}_{\text{ValFold}}}~$ (*...monster still alive, even after all that!*)
+
+:::
+
+## General Issue with CV: It's... Halfway There {.smaller .crunch-title .title-11 .crunch-ul .crunch-p}
+
+CV plots will often look like (complexity on $x$-axis and CV error on $y$-axis):
+
+```{r}
+#| label: cv-plot-general
+library(tidyverse)
+library(latex2exp)
+cpl_label <- TeX("$M_0$")
+sim1k_delta_df <- tibble(
+    complexity=1:7,
+    cv_err=c(8, 2, 1, 1, 1, 1, 2),
+    label=c("","",TeX("$M_3$"),"","",TeX("$M_6$"),"")
+)
+sim1k_delta_df |> ggplot(aes(x=complexity, y=cv_err, label=label)) +
+  geom_line(linewidth=1) +
+  geom_point(size=(2/3)*g_pointsize) +
+  geom_text(vjust=-0.7, size=10, parse=TRUE) +
+  scale_x_continuous(
+    breaks=seq(from=1,to=7,by=1)
+  ) +
+  theme_dsan(base_size=22) +
+  labs(
+    title="Generic CV Error Plot",
+    x = "Complexity",
+    y = "CV Error"
+  )
+```
+
+* We "know" $\mathcal{M}_3$ preferable to $\mathcal{M}_6$ (same error yet, less overfitting) $\implies$ "1SE rule"
+* But... heuristic $\;\nimplies$ optimal! What are we gaining/losing as we move $\mathcal{M}_6 \rightarrow \mathcal{M}_3$?
+* Enter **REGULARIZATION!**
+
+## CV Now Goes Into Your Toolbox {.smaller}
+
+![](images/sin_bin.jpg){fig-align="center"}
+
+*(We will take it back out later, I promise!)*
+
+# Model Selection {data-stack-name="Model Selection"}
+
+## Contractual Obligation: "Stepwise" Model Selection
+
+## Way Cooler and More Useful: *Automatic* Model Selection
+
+* Ridge Regression
+* Lasso
+* Elastic Net
+
+## Week 7 Preview: Basis Functions
+
+* Q: What do **polynomial regression** and **piecewise regression** have in common?
+* A: They can both be written in the form
+  
+  $$
+  Y = \beta_0 + \beta_1 b(x_1) + \beta_2 b(x_2) + \cdots + \beta_J b(x_J)
+  $$
+
+## References
+
+::: {#refs}
+:::
