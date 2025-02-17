@@ -560,7 +560,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <h2>Regularized Regression (Finally!)</h2>
 <p>Ridge Regression:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
 \]</span></p>
 <p>LASSO:</p>
 <p><span class="math display">\[
@@ -568,7 +568,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 \]</span></p>
 <p>Elastic Net:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
 \]</span></p>
 </section>
 <section id="the-key-plot" class="slide level2 smaller crunch-title title-11">
@@ -689,8 +689,8 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb4-2"><a></a><span class="fu">library</span>(latex2exp)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb4-2"><a></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
 <span id="cb4-3"><a></a>prior_labs <span class="ot">&lt;-</span> <span class="fu">labs</span>(</span>
 <span id="cb4-4"><a></a>  <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_j$"</span>),</span>
 <span id="cb4-5"><a></a>  <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$f(</span><span class="sc">\\</span><span class="st">beta_j)$"</span>)</span>
@@ -745,6 +745,13 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 <li>Laplacian prior <span class="math inline">\(\leadsto\)</span> <strong>Lasso!</strong><br>(High complexity penalty <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leftrightarrow\)</span> low <span class="math inline">\(b\)</span>)</li>
 </ul>
 </div></div>
+</section>
+<section id="ok-so-how-do-we-find-these-magical-lambda-values" class="slide level2">
+<h2>Ok So… How Do We Find These Magical <span class="math inline">\(\lambda\)</span> Values?</h2>
+<ul>
+<li>Cross-Validation!</li>
+<li>(…that’s, uh, that’s it! That’s the whole slide!)</li>
+</ul>
 </section>
 <section id="week-7-preview-basis-functions" class="slide level2">
 <h2>Week 7 Preview: Basis Functions</h2>

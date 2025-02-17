@@ -234,7 +234,7 @@ sim1k_delta_df |> ggplot(aes(x=complexity, y=cv_err, label=label)) +
 Ridge Regression:
 
 $$
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
 $$
 
 LASSO:
@@ -246,7 +246,7 @@ $$
 Elastic Net:
 
 $$
-\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
 $$
 
 ## The Key Plot {.smaller .crunch-title .title-11}
@@ -410,6 +410,11 @@ ggplot() +
 
 :::
 ::::
+
+## Ok So... How Do We Find These Magical $\lambda$ Values?
+
+* Cross-Validation!
+* (...that's, uh, that's it! That's the whole slide!)
 
 ## Week 7 Preview: Basis Functions
 

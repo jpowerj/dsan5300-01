@@ -271,7 +271,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-02-17, 12:51:54 AM</em></p>
+<p><em>Updated 2025-02-17, 12:56:55 AM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -298,6 +298,7 @@ window.Quarto = {
   <li><a href="#regularized-regression-finally" id="toc-regularized-regression-finally" class="nav-link" data-scroll-target="#regularized-regression-finally">Regularized Regression (Finally!)</a></li>
   <li><a href="#the-key-plot" id="toc-the-key-plot" class="nav-link" data-scroll-target="#the-key-plot">The Key Plot</a></li>
   <li><a href="#bayesian-interpretation" id="toc-bayesian-interpretation" class="nav-link" data-scroll-target="#bayesian-interpretation">Bayesian Interpretation</a></li>
+  <li><a href="#ok-so-how-do-we-find-these-magical-lambda-values" id="toc-ok-so-how-do-we-find-these-magical-lambda-values" class="nav-link" data-scroll-target="#ok-so-how-do-we-find-these-magical-lambda-values">Ok So… How Do We Find These Magical <span class="math inline">\(\lambda\)</span> Values?</a></li>
   <li><a href="#week-7-preview-basis-functions" id="toc-week-7-preview-basis-functions" class="nav-link" data-scroll-target="#week-7-preview-basis-functions">Week 7 Preview: Basis Functions</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -696,7 +697,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <h2 class="smaller anchored" data-anchor-id="regularized-regression-finally">Regularized Regression (Finally!)</h2>
 <p>Ridge Regression:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
 \]</span></p>
 <p>LASSO:</p>
 <p><span class="math display">\[
@@ -704,7 +705,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 \]</span></p>
 <p>Elastic Net:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
 \]</span></p>
 </section>
 <section id="the-key-plot" class="level2 smaller crunch-title title-11">
@@ -831,8 +832,8 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>prior_labs <span class="ot">&lt;-</span> <span class="fu">labs</span>(</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_j$"</span>),</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$f(</span><span class="sc">\\</span><span class="st">beta_j)$"</span>)</span>
@@ -888,6 +889,13 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 </ul>
 </div>
 </div>
+</section>
+<section id="ok-so-how-do-we-find-these-magical-lambda-values" class="level2">
+<h2 class="anchored" data-anchor-id="ok-so-how-do-we-find-these-magical-lambda-values">Ok So… How Do We Find These Magical <span class="math inline">\(\lambda\)</span> Values?</h2>
+<ul>
+<li>Cross-Validation!</li>
+<li>(…that’s, uh, that’s it! That’s the whole slide!)</li>
+</ul>
 </section>
 <section id="week-7-preview-basis-functions" class="level2">
 <h2 class="anchored" data-anchor-id="week-7-preview-basis-functions">Week 7 Preview: Basis Functions</h2>
