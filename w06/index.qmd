@@ -367,8 +367,8 @@ $$
 #| label: gaussian-prior
 #| fig-width: 11
 #| crop: false
-library(tidyverse)
-library(latex2exp)
+library(tidyverse) |> suppressPackageStartupMessages()
+library(latex2exp) |> suppressPackageStartupMessages()
 prior_labs <- labs(
   x = TeX("$\\beta_j$"),
   y = TeX("$f(\\beta_j)$")
