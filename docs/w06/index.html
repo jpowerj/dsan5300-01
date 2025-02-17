@@ -271,7 +271,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-02-16, 07:22:41 PM</em></p>
+<p><em>Updated 2025-02-17, 12:47:16 AM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -295,6 +295,9 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#contractual-obligation-stepwise-model-selection" id="toc-contractual-obligation-stepwise-model-selection" class="nav-link" data-scroll-target="#contractual-obligation-stepwise-model-selection">Contractual Obligation: “Stepwise” Model Selection</a></li>
   <li><a href="#way-cooler-and-more-useful-automatic-model-selection" id="toc-way-cooler-and-more-useful-automatic-model-selection" class="nav-link" data-scroll-target="#way-cooler-and-more-useful-automatic-model-selection">Way Cooler and More Useful: <em>Automatic</em> Model Selection</a></li>
+  <li><a href="#regularized-regression-finally" id="toc-regularized-regression-finally" class="nav-link" data-scroll-target="#regularized-regression-finally">Regularized Regression (Finally!)</a></li>
+  <li><a href="#the-key-plot" id="toc-the-key-plot" class="nav-link" data-scroll-target="#the-key-plot">The Key Plot</a></li>
+  <li><a href="#bayesian-interpretation" id="toc-bayesian-interpretation" class="nav-link" data-scroll-target="#bayesian-interpretation">Bayesian Interpretation</a></li>
   <li><a href="#week-7-preview-basis-functions" id="toc-week-7-preview-basis-functions" class="nav-link" data-scroll-target="#week-7-preview-basis-functions">Week 7 Preview: Basis Functions</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -702,6 +705,215 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <li>Lasso</li>
 <li>Elastic Net</li>
 </ul>
+</section>
+<section id="regularized-regression-finally" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="regularized-regression-finally">Regularized Regression (Finally!)</h2>
+<p>Ridge Regression:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+\]</span></p>
+<p>LASSO:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
+\]</span></p>
+<p>Elastic Net:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\]</span></p>
+</section>
+<section id="the-key-plot" class="level2 smaller crunch-title title-11">
+<h2 class="smaller crunch-title title-11 anchored" data-anchor-id="the-key-plot">The Key Plot</h2>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bounding the space</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>xbound <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>ybound <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.65</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>stepsize <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>dx <span class="ot">&lt;-</span> <span class="fl">0.605</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> <span class="fl">1.6</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># The actual function we're plotting contours for</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>b_inter <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>my_f <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y) <span class="dv">8</span><span class="sc">^</span>(b_inter<span class="sc">*</span>(x<span class="sc">-</span>dx)<span class="sc">*</span>(y<span class="sc">-</span>dy) <span class="sc">-</span> (x<span class="sc">-</span>dx)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> (y<span class="sc">-</span>dy)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>x_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span>xbound[<span class="dv">1</span>], <span class="at">to=</span>xbound[<span class="dv">2</span>], <span class="at">by=</span>stepsize)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>y_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span>ybound[<span class="dv">1</span>], <span class="at">to=</span>ybound[<span class="dv">2</span>], <span class="at">by=</span>stepsize)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>data_df <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">x=</span>x_vals, <span class="at">y=</span>y_vals)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>data_df <span class="ot">&lt;-</span> data_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> <span class="fu">my_f</span>(x, y)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimal beta df</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>beta_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="dv">121</span><span class="sc">/</span><span class="dv">200</span>, <span class="at">y=</span><span class="dv">8</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{OLS}$"</span>))</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge optimal beta</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>ridge_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">x=</span><span class="fl">0.111</span>, <span class="at">y=</span><span class="fl">0.998</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{ridge}$"</span>))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Lasso diamond</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>lasso_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">y=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="dv">0</span>), <span class="at">z=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>lasso_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">1</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{lasso}$"</span>)))</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># And plot</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>base_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour_filled</span>(</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>data_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">z=</span>z),</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">binwidth =</span> <span class="fl">0.04</span>, <span class="at">color=</span><span class="st">'black'</span>, <span class="at">linewidth=</span><span class="fl">0.65</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># y-axis</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">xend=</span><span class="dv">0</span>, <span class="at">y=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">yend=</span><span class="cn">Inf</span>), <span class="at">color=</span><span class="st">'white'</span>, <span class="at">linewidth=</span><span class="fl">0.5</span>, <span class="at">linetype=</span><span class="st">"solid"</span>) <span class="sc">+</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Unconstrained optimal beta</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>beta_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>beta_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.45</span>, <span class="at">vjust=</span><span class="fl">0.65</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option=</span><span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#coord_equal() +</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">#title = "Model Selection: Ridge vs. Lasso Constraints",</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_1$"</span>),</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_2$"</span>)</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>ridge_plot <span class="ot">&lt;-</span> base_plot <span class="sc">+</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_circle</span>(</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x0=</span><span class="dv">0</span>, <span class="at">y0=</span><span class="dv">0</span>, <span class="at">r=</span><span class="dv">1</span>, <span class="at">alpha=</span><span class="fu">I</span>(<span class="fl">0.1</span>), <span class="at">linetype=</span><span class="st">"circ"</span>, <span class="at">color=</span><span class="st">'circ'</span>), <span class="at">fill=</span><span class="cn">NA</span>, <span class="at">linewidth=</span><span class="fl">0.5</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_point(</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   data=data.frame(x=0, y=0), aes(x=x, y=y),</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   shape=21, size=135.8, color='white', stroke=1.2, linestyle="dashed"</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>lasso_plot <span class="ot">&lt;-</span> ridge_plot <span class="sc">+</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>lasso_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">linetype=</span><span class="st">"diamond"</span>, <span class="at">color=</span><span class="st">"diamond"</span>),</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill=</span><span class="st">'white'</span>,</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha=</span><span class="fl">0.5</span>,</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth=</span><span class="dv">1</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ridge beta</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>ridge_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>ridge_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust=</span><span class="dv">2</span>, <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.15</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Lasso beta</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>lasso_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>lasso_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.75</span>, <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.15</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(ybound[<span class="dv">1</span>], ybound[<span class="dv">2</span>]) <span class="sc">+</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>  <span class="co"># xlim(xbound[1], xbound[2]) +</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="st">"Line"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="st">"diamond"</span><span class="ot">=</span><span class="st">"solid"</span>, <span class="st">"circ"</span><span class="ot">=</span><span class="st">"dashed"</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"b"</span>)) <span class="sc">+</span></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Color"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="st">"diamond"</span><span class="ot">=</span><span class="st">"white"</span>, <span class="st">"circ"</span><span class="ot">=</span><span class="st">"white"</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"c"</span>,<span class="st">"d"</span>)) <span class="sc">+</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  <span class="co"># scale_fill_manual("Test") +</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>  <span class="co"># x-axis</span></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">xend=</span><span class="cn">Inf</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span><span class="dv">0</span>), <span class="at">color=</span><span class="st">'white'</span>) <span class="sc">+</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.line =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>lasso_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/lasso-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="bayesian-interpretation" class="level2 smaller crunch-title crunch-quarto-figure crunch-ul math-90 crunch-math inline-90 crunch-p title-11 crunch-li-8">
+<h2 class="smaller crunch-title crunch-quarto-figure crunch-ul math-90 crunch-math inline-90 crunch-p title-11 crunch-li-8 anchored" data-anchor-id="bayesian-interpretation">Bayesian Interpretation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Belief <span class="math inline">\(A\)</span>: <strong>Most/all of</strong> the features you included have important effect on <span class="math inline">\(Y\)</span></li>
+<li><span class="math inline">\(A \implies\)</span> <strong>Gaussian prior</strong> on <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(\mu = 0\)</span></li>
+<li>If <span class="math inline">\(X \sim \mathcal{N}(\mu, \sigma^2)\)</span>, pdf of <span class="math inline">\(X\)</span> is</li>
+</ul>
+<p><span class="math display">\[
+f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right)^2 \right]
+\]</span></p>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>prior_labs <span class="ot">&lt;-</span> <span class="fu">labs</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_j$"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$f(</span><span class="sc">\\</span><span class="st">beta_j)$"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun=</span>dnorm, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/gaussian-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Gaussian prior <span class="math inline">\(\leadsto\)</span> <strong>Ridge Regression!</strong><br>(High complexity penalty <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leftrightarrow\)</span> low <span class="math inline">\(\sigma^2\)</span>)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Belief <span class="math inline">\(B\)</span>: <strong>Only a few</strong> of the features you included have important effect on <span class="math inline">\(Y\)</span></li>
+<li><span class="math inline">\(B \implies\)</span> <strong>Laplacian prior</strong> on <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(\mu = 0\)</span></li>
+<li>If <span class="math inline">\(X \sim \mathcal{L}(\mu, b)\)</span>, pdf of <span class="math inline">\(X\)</span> is</li>
+</ul>
+<p><span class="math display">\[
+f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
+\]</span></p>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extraDistr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'extraDistr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    rdunif</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun=</span>dlaplace, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/laplace-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Laplacian prior <span class="math inline">\(\leadsto\)</span> <strong>Lasso!</strong><br>(High complexity penalty <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leftrightarrow\)</span> low <span class="math inline">\(b\)</span>)</li>
+</ul>
+</div>
+</div>
 </section>
 <section id="week-7-preview-basis-functions" class="level2">
 <h2 class="anchored" data-anchor-id="week-7-preview-basis-functions">Week 7 Preview: Basis Functions</h2>

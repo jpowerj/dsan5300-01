@@ -229,6 +229,188 @@ sim1k_delta_df |> ggplot(aes(x=complexity, y=cv_err, label=label)) +
 * Lasso
 * Elastic Net
 
+## Regularized Regression (Finally!) {.smaller}
+
+Ridge Regression:
+
+$$
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+$$
+
+LASSO:
+
+$$
+\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
+$$
+
+Elastic Net:
+
+$$
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+$$
+
+## The Key Plot {.smaller .crunch-title .title-11}
+
+```{r}
+#| label: lasso-plot
+#| crop: false
+library(tidyverse) |> suppressPackageStartupMessages()
+library(latex2exp) |> suppressPackageStartupMessages()
+library(ggforce) |> suppressPackageStartupMessages()
+library(patchwork) |> suppressPackageStartupMessages()
+# Bounding the space
+xbound <- c(-1, 1)
+ybound <- c(0, 1.65)
+stepsize <- 0.05
+dx <- 0.605
+dy <- 1.6
+# The actual function we're plotting contours for
+b_inter <- 1.5
+my_f <- function(x,y) 8^(b_inter*(x-dx)*(y-dy) - (x-dx)^2 - (y-dy)^2)
+x_vals <- seq(from=xbound[1], to=xbound[2], by=stepsize)
+y_vals <- seq(from=ybound[1], to=ybound[2], by=stepsize)
+data_df <- expand_grid(x=x_vals, y=y_vals)
+data_df <- data_df |> mutate(
+  z = my_f(x, y)
+)
+# Optimal beta df
+beta_opt_df <- tibble(
+  x=121/200, y=8/5, label=c(TeX("$\\beta^*_{OLS}$"))
+)
+# Ridge optimal beta
+ridge_opt_df <- tibble(
+  x=0.111, y=0.998, label=c(TeX("$\\beta^*_{ridge}$"))
+)
+# Lasso diamond
+lasso_df <- tibble(x=c(1,0,-1,0,1), y=c(0,1,0,-1,0), z=c(1,1,1,1,1))
+lasso_opt_df <- tibble(x=0, y=1, label=c(TeX("$\\beta^*_{lasso}$")))
+
+# And plot
+base_plot <- ggplot() +
+  geom_contour_filled(
+    data=data_df, aes(x=x, y=y, z=z),
+    alpha=0.8, binwidth = 0.04, color='black', linewidth=0.65
+  ) +
+  # y-axis
+  geom_segment(aes(x=0, xend=0, y=-Inf, yend=Inf), color='white', linewidth=0.5, linetype="solid") +
+  # Unconstrained optimal beta
+  geom_point(data=beta_opt_df, aes(x=x, y=y), size=2) +
+  geom_label(
+    data=beta_opt_df, aes(x=x, y=y, label=label),
+    hjust=-0.45, vjust=0.65, parse=TRUE, alpha=0.9
+  ) +
+  scale_fill_viridis_d(option="C") +
+  #coord_equal() +
+  labs(
+    #title = "Model Selection: Ridge vs. Lasso Constraints",
+    x = TeX("$\\beta_1$"),
+    y = TeX("$\\beta_2$")
+  )
+ridge_plot <- base_plot +
+  geom_circle(
+    aes(x0=0, y0=0, r=1, alpha=I(0.1), linetype="circ", color='circ'), fill=NA, linewidth=0.5
+  )
+  # geom_point(
+  #   data=data.frame(x=0, y=0), aes(x=x, y=y),
+  #   shape=21, size=135.8, color='white', stroke=1.2, linestyle="dashed"
+  # )
+lasso_plot <- ridge_plot +
+  geom_polygon(
+    data=lasso_df, aes(x=x, y=y, linetype="diamond", color="diamond"),
+    fill='white',
+    alpha=0.5,
+    linewidth=1
+  ) +
+  # Ridge beta
+  geom_point(data=ridge_opt_df, aes(x=x, y=y), size=2) +
+  geom_label(
+    data=ridge_opt_df, aes(x=x, y=y, label=label),
+    hjust=2, vjust=-0.15, parse=TRUE, alpha=0.9
+  ) +
+  # Lasso beta
+  geom_point(data=lasso_opt_df, aes(x=x, y=y), size=2) +
+  geom_label(
+    data=lasso_opt_df, aes(x=x, y=y, label=label),
+    hjust=-0.75, vjust=-0.15, parse=TRUE, alpha=0.9
+  ) +
+  ylim(ybound[1], ybound[2]) +
+  # xlim(xbound[1], xbound[2]) +
+  scale_linetype_manual("Line", values=c("diamond"="solid", "circ"="dashed"), labels=c("a","b")) +
+  scale_color_manual("Color", values=c("diamond"="white", "circ"="white"), labels=c("c","d")) +
+  # scale_fill_manual("Test") +
+  # x-axis
+  geom_segment(aes(x=-Inf, xend=Inf, y=0, yend=0), color='white') +
+  theme_dsan(base_size=16) +
+  coord_fixed() +
+  theme(
+    legend.position = "none",
+    axis.line = element_blank(),
+    axis.ticks = element_blank()
+  )
+lasso_plot
+```
+
+## Bayesian Interpretation {.smaller .crunch-title .crunch-quarto-figure .crunch-ul .math-90 .crunch-math .inline-90 .crunch-p .title-11 .crunch-li-8}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+* Belief $A$: **Most/all of** the features you included have important effect on $Y$
+* $A \implies$ **Gaussian prior** on $\beta_j$, $\mu = 0$
+* If $X \sim \mathcal{N}(\mu, \sigma^2)$, pdf of $X$ is
+
+$$
+f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right)^2 \right]
+$$
+
+```{r}
+#| label: gaussian-prior
+#| fig-width: 11
+#| crop: false
+library(tidyverse)
+library(latex2exp)
+prior_labs <- labs(
+  x = TeX("$\\beta_j$"),
+  y = TeX("$f(\\beta_j)$")
+)
+ggplot() +
+  stat_function(fun=dnorm, linewidth=1) +
+  xlim(-3, 3) +
+  theme_dsan(base_size=28) +
+  prior_labs
+```
+
+* Gaussian prior $\leadsto$ **Ridge Regression!**<br>(High complexity penalty $\lambda$ $\leftrightarrow$ low $\sigma^2$)
+
+:::
+::: {.column width="50%"}
+
+* Belief $B$: **Only a few** of the features you included have important effect on $Y$
+* $B \implies$ **Laplacian prior** on $\beta_j$, $\mu = 0$
+* If $X \sim \mathcal{L}(\mu, b)$, pdf of $X$ is
+
+$$
+f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
+$$
+
+```{r}
+#| label: laplace-prior
+#| crop: false
+library(tidyverse)
+library(latex2exp)
+library(extraDistr)
+ggplot() +
+  stat_function(fun=dlaplace, linewidth=1) +
+  xlim(-3, 3) +
+  theme_dsan(base_size=28) +
+  prior_labs
+```
+
+* Laplacian prior $\leadsto$ **Lasso!**<br>(High complexity penalty $\lambda$ $\leftrightarrow$ low $b$)
+
+:::
+::::
+
 ## Week 7 Preview: Basis Functions
 
 * Q: What do **polynomial regression** and **piecewise regression** have in common?

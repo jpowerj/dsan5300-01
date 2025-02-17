@@ -556,6 +556,196 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <li>Elastic Net</li>
 </ul>
 </section>
+<section id="regularized-regression-finally" class="slide level2 smaller">
+<h2>Regularized Regression (Finally!)</h2>
+<p>Ridge Regression:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2} \right]
+\]</span></p>
+<p>LASSO:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
+\]</span></p>
+<p>Elastic Net:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\]</span></p>
+</section>
+<section id="the-key-plot" class="slide level2 smaller crunch-title title-11">
+<h2>The Key Plot</h2>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb3-2"><a></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb3-3"><a></a><span class="fu">library</span>(ggforce) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb3-4"><a></a><span class="fu">library</span>(patchwork) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb3-5"><a></a><span class="co"># Bounding the space</span></span>
+<span id="cb3-6"><a></a>xbound <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb3-7"><a></a>ybound <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.65</span>)</span>
+<span id="cb3-8"><a></a>stepsize <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb3-9"><a></a>dx <span class="ot">&lt;-</span> <span class="fl">0.605</span></span>
+<span id="cb3-10"><a></a>dy <span class="ot">&lt;-</span> <span class="fl">1.6</span></span>
+<span id="cb3-11"><a></a><span class="co"># The actual function we're plotting contours for</span></span>
+<span id="cb3-12"><a></a>b_inter <span class="ot">&lt;-</span> <span class="fl">1.5</span></span>
+<span id="cb3-13"><a></a>my_f <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y) <span class="dv">8</span><span class="sc">^</span>(b_inter<span class="sc">*</span>(x<span class="sc">-</span>dx)<span class="sc">*</span>(y<span class="sc">-</span>dy) <span class="sc">-</span> (x<span class="sc">-</span>dx)<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> (y<span class="sc">-</span>dy)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-14"><a></a>x_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span>xbound[<span class="dv">1</span>], <span class="at">to=</span>xbound[<span class="dv">2</span>], <span class="at">by=</span>stepsize)</span>
+<span id="cb3-15"><a></a>y_vals <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span>ybound[<span class="dv">1</span>], <span class="at">to=</span>ybound[<span class="dv">2</span>], <span class="at">by=</span>stepsize)</span>
+<span id="cb3-16"><a></a>data_df <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">x=</span>x_vals, <span class="at">y=</span>y_vals)</span>
+<span id="cb3-17"><a></a>data_df <span class="ot">&lt;-</span> data_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb3-18"><a></a>  <span class="at">z =</span> <span class="fu">my_f</span>(x, y)</span>
+<span id="cb3-19"><a></a>)</span>
+<span id="cb3-20"><a></a><span class="co"># Optimal beta df</span></span>
+<span id="cb3-21"><a></a>beta_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-22"><a></a>  <span class="at">x=</span><span class="dv">121</span><span class="sc">/</span><span class="dv">200</span>, <span class="at">y=</span><span class="dv">8</span><span class="sc">/</span><span class="dv">5</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{OLS}$"</span>))</span>
+<span id="cb3-23"><a></a>)</span>
+<span id="cb3-24"><a></a><span class="co"># Ridge optimal beta</span></span>
+<span id="cb3-25"><a></a>ridge_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-26"><a></a>  <span class="at">x=</span><span class="fl">0.111</span>, <span class="at">y=</span><span class="fl">0.998</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{ridge}$"</span>))</span>
+<span id="cb3-27"><a></a>)</span>
+<span id="cb3-28"><a></a><span class="co"># Lasso diamond</span></span>
+<span id="cb3-29"><a></a>lasso_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">y=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="dv">0</span>), <span class="at">z=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb3-30"><a></a>lasso_opt_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">y=</span><span class="dv">1</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta^*_{lasso}$"</span>)))</span>
+<span id="cb3-31"><a></a></span>
+<span id="cb3-32"><a></a><span class="co"># And plot</span></span>
+<span id="cb3-33"><a></a>base_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb3-34"><a></a>  <span class="fu">geom_contour_filled</span>(</span>
+<span id="cb3-35"><a></a>    <span class="at">data=</span>data_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">z=</span>z),</span>
+<span id="cb3-36"><a></a>    <span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">binwidth =</span> <span class="fl">0.04</span>, <span class="at">color=</span><span class="st">'black'</span>, <span class="at">linewidth=</span><span class="fl">0.65</span></span>
+<span id="cb3-37"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb3-38"><a></a>  <span class="co"># y-axis</span></span>
+<span id="cb3-39"><a></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="dv">0</span>, <span class="at">xend=</span><span class="dv">0</span>, <span class="at">y=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">yend=</span><span class="cn">Inf</span>), <span class="at">color=</span><span class="st">'white'</span>, <span class="at">linewidth=</span><span class="fl">0.5</span>, <span class="at">linetype=</span><span class="st">"solid"</span>) <span class="sc">+</span></span>
+<span id="cb3-40"><a></a>  <span class="co"># Unconstrained optimal beta</span></span>
+<span id="cb3-41"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>beta_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-42"><a></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb3-43"><a></a>    <span class="at">data=</span>beta_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb3-44"><a></a>    <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.45</span>, <span class="at">vjust=</span><span class="fl">0.65</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb3-45"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb3-46"><a></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option=</span><span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb3-47"><a></a>  <span class="co">#coord_equal() +</span></span>
+<span id="cb3-48"><a></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-49"><a></a>    <span class="co">#title = "Model Selection: Ridge vs. Lasso Constraints",</span></span>
+<span id="cb3-50"><a></a>    <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_1$"</span>),</span>
+<span id="cb3-51"><a></a>    <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_2$"</span>)</span>
+<span id="cb3-52"><a></a>  )</span>
+<span id="cb3-53"><a></a>ridge_plot <span class="ot">&lt;-</span> base_plot <span class="sc">+</span></span>
+<span id="cb3-54"><a></a>  <span class="fu">geom_circle</span>(</span>
+<span id="cb3-55"><a></a>    <span class="fu">aes</span>(<span class="at">x0=</span><span class="dv">0</span>, <span class="at">y0=</span><span class="dv">0</span>, <span class="at">r=</span><span class="dv">1</span>, <span class="at">alpha=</span><span class="fu">I</span>(<span class="fl">0.1</span>), <span class="at">linetype=</span><span class="st">"circ"</span>, <span class="at">color=</span><span class="st">'circ'</span>), <span class="at">fill=</span><span class="cn">NA</span>, <span class="at">linewidth=</span><span class="fl">0.5</span></span>
+<span id="cb3-56"><a></a>  )</span>
+<span id="cb3-57"><a></a>  <span class="co"># geom_point(</span></span>
+<span id="cb3-58"><a></a>  <span class="co">#   data=data.frame(x=0, y=0), aes(x=x, y=y),</span></span>
+<span id="cb3-59"><a></a>  <span class="co">#   shape=21, size=135.8, color='white', stroke=1.2, linestyle="dashed"</span></span>
+<span id="cb3-60"><a></a>  <span class="co"># )</span></span>
+<span id="cb3-61"><a></a>lasso_plot <span class="ot">&lt;-</span> ridge_plot <span class="sc">+</span></span>
+<span id="cb3-62"><a></a>  <span class="fu">geom_polygon</span>(</span>
+<span id="cb3-63"><a></a>    <span class="at">data=</span>lasso_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">linetype=</span><span class="st">"diamond"</span>, <span class="at">color=</span><span class="st">"diamond"</span>),</span>
+<span id="cb3-64"><a></a>    <span class="at">fill=</span><span class="st">'white'</span>,</span>
+<span id="cb3-65"><a></a>    <span class="at">alpha=</span><span class="fl">0.5</span>,</span>
+<span id="cb3-66"><a></a>    <span class="at">linewidth=</span><span class="dv">1</span></span>
+<span id="cb3-67"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb3-68"><a></a>  <span class="co"># Ridge beta</span></span>
+<span id="cb3-69"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>ridge_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-70"><a></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb3-71"><a></a>    <span class="at">data=</span>ridge_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb3-72"><a></a>    <span class="at">hjust=</span><span class="dv">2</span>, <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.15</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb3-73"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb3-74"><a></a>  <span class="co"># Lasso beta</span></span>
+<span id="cb3-75"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>lasso_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb3-76"><a></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb3-77"><a></a>    <span class="at">data=</span>lasso_opt_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>label),</span>
+<span id="cb3-78"><a></a>    <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.75</span>, <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.15</span>, <span class="at">parse=</span><span class="cn">TRUE</span>, <span class="at">alpha=</span><span class="fl">0.9</span></span>
+<span id="cb3-79"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb3-80"><a></a>  <span class="fu">ylim</span>(ybound[<span class="dv">1</span>], ybound[<span class="dv">2</span>]) <span class="sc">+</span></span>
+<span id="cb3-81"><a></a>  <span class="co"># xlim(xbound[1], xbound[2]) +</span></span>
+<span id="cb3-82"><a></a>  <span class="fu">scale_linetype_manual</span>(<span class="st">"Line"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="st">"diamond"</span><span class="ot">=</span><span class="st">"solid"</span>, <span class="st">"circ"</span><span class="ot">=</span><span class="st">"dashed"</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"a"</span>,<span class="st">"b"</span>)) <span class="sc">+</span></span>
+<span id="cb3-83"><a></a>  <span class="fu">scale_color_manual</span>(<span class="st">"Color"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="st">"diamond"</span><span class="ot">=</span><span class="st">"white"</span>, <span class="st">"circ"</span><span class="ot">=</span><span class="st">"white"</span>), <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"c"</span>,<span class="st">"d"</span>)) <span class="sc">+</span></span>
+<span id="cb3-84"><a></a>  <span class="co"># scale_fill_manual("Test") +</span></span>
+<span id="cb3-85"><a></a>  <span class="co"># x-axis</span></span>
+<span id="cb3-86"><a></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">xend=</span><span class="cn">Inf</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">yend=</span><span class="dv">0</span>), <span class="at">color=</span><span class="st">'white'</span>) <span class="sc">+</span></span>
+<span id="cb3-87"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb3-88"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb3-89"><a></a>  <span class="fu">theme</span>(</span>
+<span id="cb3-90"><a></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb3-91"><a></a>    <span class="at">axis.line =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb3-92"><a></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb3-93"><a></a>  )</span>
+<span id="cb3-94"><a></a>lasso_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+
+</div>
+<img data-src="index_files/figure-revealjs/lasso-plot-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="bayesian-interpretation" class="slide level2 smaller crunch-title crunch-quarto-figure crunch-ul math-90 crunch-math inline-90 crunch-p title-11 crunch-li-8">
+<h2>Bayesian Interpretation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Belief <span class="math inline">\(A\)</span>: <strong>Most/all of</strong> the features you included have important effect on <span class="math inline">\(Y\)</span></li>
+<li><span class="math inline">\(A \implies\)</span> <strong>Gaussian prior</strong> on <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(\mu = 0\)</span></li>
+<li>If <span class="math inline">\(X \sim \mathcal{N}(\mu, \sigma^2)\)</span>, pdf of <span class="math inline">\(X\)</span> is</li>
+</ul>
+<p><span class="math display">\[
+f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right)^2 \right]
+\]</span></p>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb4-3"><a></a>prior_labs <span class="ot">&lt;-</span> <span class="fu">labs</span>(</span>
+<span id="cb4-4"><a></a>  <span class="at">x =</span> <span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">beta_j$"</span>),</span>
+<span id="cb4-5"><a></a>  <span class="at">y =</span> <span class="fu">TeX</span>(<span class="st">"$f(</span><span class="sc">\\</span><span class="st">beta_j)$"</span>)</span>
+<span id="cb4-6"><a></a>)</span>
+<span id="cb4-7"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb4-8"><a></a>  <span class="fu">stat_function</span>(<span class="at">fun=</span>dnorm, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/gaussian-prior-1.png" class="quarto-figure quarto-figure-center" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Gaussian prior <span class="math inline">\(\leadsto\)</span> <strong>Ridge Regression!</strong><br>(High complexity penalty <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leftrightarrow\)</span> low <span class="math inline">\(\sigma^2\)</span>)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Belief <span class="math inline">\(B\)</span>: <strong>Only a few</strong> of the features you included have important effect on <span class="math inline">\(Y\)</span></li>
+<li><span class="math inline">\(B \implies\)</span> <strong>Laplacian prior</strong> on <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(\mu = 0\)</span></li>
+<li>If <span class="math inline">\(X \sim \mathcal{L}(\mu, b)\)</span>, pdf of <span class="math inline">\(X\)</span> is</li>
+</ul>
+<p><span class="math display">\[
+f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
+\]</span></p>
+<div class="cell" data-layout-align="center" data-crop="false">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-2"><a></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb5-3"><a></a><span class="fu">library</span>(extraDistr)</span>
+<span id="cb5-4"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a></a>  <span class="fu">stat_function</span>(<span class="at">fun=</span>dlaplace, <span class="at">linewidth=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-7"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="index_files/figure-revealjs/laplace-prior-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Laplacian prior <span class="math inline">\(\leadsto\)</span> <strong>Lasso!</strong><br>(High complexity penalty <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leftrightarrow\)</span> low <span class="math inline">\(b\)</span>)</li>
+</ul>
+</div></div>
+</section>
 <section id="week-7-preview-basis-functions" class="slide level2">
 <h2>Week 7 Preview: Basis Functions</h2>
 <ul>
