@@ -186,8 +186,8 @@ CV plots will often look like (complexity on $x$-axis and CV error on $y$-axis):
 
 ```{r}
 #| label: cv-plot-general
-library(tidyverse)
-library(latex2exp)
+library(tidyverse) |> suppressPackageStartupMessages()
+library(latex2exp) |> suppressPackageStartupMessages()
 cpl_label <- TeX("$M_0$")
 sim1k_delta_df <- tibble(
     complexity=1:7,
@@ -396,9 +396,9 @@ $$
 ```{r}
 #| label: laplace-prior
 #| crop: false
-library(tidyverse)
-library(latex2exp)
-library(extraDistr)
+library(tidyverse) |> suppressPackageStartupMessages()
+library(latex2exp) |> suppressPackageStartupMessages()
+library(extraDistr) |> suppressPackageStartupMessages()
 ggplot() +
   stat_function(fun=dlaplace, linewidth=1) +
   xlim(-3, 3) +
