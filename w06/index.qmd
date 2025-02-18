@@ -328,7 +328,7 @@ $$
 \| \boldsymbol\beta \|_p = \left( \sum_{j=1}^{J} |\beta_j|^p \right)^{1/p}
 $$
 
-## $L^1$ and $L^2$ Norms {.smaller .crunch-title .crunch-math .crunch-ul .title-12}
+## $L^1$ and $L^2$ Norms {.smaller .crunch-title .crunch-math .crunch-ul .title-12 .math-90}
 
 * $L^1$ norm has a nice closed form expression as a sum (efficient, vectorizable!):
 
@@ -375,7 +375,7 @@ $$
 :::
 ::::
 
-## Regularized Regression (Finally!)
+## Regularized Regression (Finally!) {.crunch-title .math-95}
 
 General Form:
 
@@ -388,7 +388,7 @@ $$
 Ridge Regression:
 
 $$
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \overbrace{\lambda}^{\mathclap{\text{Penalty}}} \| \boldsymbol\beta \|_{2}^{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
 $$
 
 LASSO:
@@ -597,16 +597,134 @@ ggplot() +
 * (...that's, uh, that's it! That's the whole slide!)
 * (But let's look at what we find when we use CV...)
 
-## Week 7 Preview: Basis Functions
+## Varying $\lambda$ $\leadsto$ Tradeoff Curve! {.smaller .inline-90}
 
-* Q: What do **polynomial regression** and **piecewise regression** have in common?
-* A: They can both be written in the form
+<center>
+**Ridge Regression Case:**
+</center>
+
+![](images/islr_6-4.svg){fig-align="center"}
+
+:::: {.columns}
+::: {.column width="48%"}
+
+<center>
+Increasing $\lambda$ in $\displaystyle \min_{\boldsymbol\beta}\left[\text{RSS} + \lambda \| \boldsymbol\beta \|_2^2 \right]$
+</center>
+
+:::
+::: {.column width="4%"}
+
+<center>
+$\equiv$
+</center>
+
+:::
+::: {.column width="48%"}
+
+<center>
+Decreasing $s$ in $\displaystyle \min_{\boldsymbol\beta}\left[ \text{RSS} \right] \text{ s.t. }\|\boldsymbol\beta\|_2^2 \leq s$
+</center>
+
+:::
+::::
+
+## Only Change: $L^1$ instead of $L^2$ Norm 🤯 {.smaller .inline-90 .title-12}
+
+<center>
+**Lasso Case:**
+</center>
+
+![](images/islr_6-6.svg){fig-align="center"}
+
+:::: {.columns}
+::: {.column width="48%"}
+
+<center>
+Increasing $\lambda$ in $\displaystyle \min_{\boldsymbol\beta}\left[\text{RSS} + \lambda \| \boldsymbol\beta \|_1\right]$
+</center>
+
+:::
+::: {.column width="4%"}
+
+<center>
+$\equiv$
+</center>
+
+:::
+::: {.column width="48%"}
+
+<center>
+Decreasing $s$ in $\displaystyle \min_{\boldsymbol\beta}\left[ \text{RSS} \right] \text{ s.t. }\|\boldsymbol\beta\|_1 \leq s$
+</center>
+
+:::
+::::
+
+## Week 7 Preview: [Linear]{.noodle-jj} Functions {.crunch-title .crunch-ul .crunch-math .math-80}
+
+```{=html}
+<style>
+@font-face {
+    font-family: Noodle;
+    src: url('/assets/Kbnoodlemonster.ttf');
+}
+.workbench-jj {
+  font-family: "Workbench", serif;
+  /* font-optical-sizing: auto; */
+  font-weight: 400;
+  font-style: normal;
+  font-size: 96pt !important;
+}
+.noodle-jj {
+    font-family: "Noodle", serif;
+    font-size: 56pt !important;
+}
+</style>
+```
+
+* You've already seen **polynomial regression**:
+
+$$
+Y = \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \cdots + \beta_d X^d
+$$
+
+* Plus (technically) [**"Fourier regression"**](https://www.youtube.com/watch?v=r6sGWTCMz2k&t=21s):
+
+$$
+\begin{align*}
+Y = \beta_0 + \beta_1 \cos(\pi X) + \beta_2 \sin(\pi X) + \cdots + \beta_{2d-1}\cos(\pi d X) + \beta_{2d}\sin(\pi d X)
+\end{align*}
+$$
+
+![[Image source](https://www.cs.princeton.edu/courses/archive/fall18/cos324/files/basis-functions.pdf)](images/fourier.svg){fig-align="center"}
+
+## New Regression Just Dropped {.crunch-title .inline-90 .crunch-ul .crunch-quarto-figure}
+
+**Piecewise** regression:
+
+<i class='bi bi-1-circle'></i> Choose $K$ cutpoints $c_1, \ldots, c_K$
+
+<i class='bi bi-2-circle'></i> Let $C_k(X) = \mathbb{1}[c_{k-1} \leq X < c_k]$, ($c_0 \equiv -\infty$, $c_{K+1} \equiv \infty$)
+
+$$
+Y = \beta_0 + \beta_1C_1(X) + \beta_2C_2(X) + \cdots + \beta_KC_K(X)
+$$
+
+![](images/islr_7-2.svg){fig-align="center"}
+
+## Decomposing Fancy Regressions into Core "Pieces" {.crunch-title .crunch-ul .inline-90 .math-90}
+
+* Q: What do **all** these types of regression have in common?
+* A: They can all be written in the form
   
   $$
-  Y = \beta_0 + \beta_1 b(x_1) + \beta_2 b(x_2) + \cdots + \beta_J b(x_J)
+  Y = \beta_0 + \beta_1 b_1(X) + \beta_2 b_2(X) + \cdots + \beta_d b_d(X)
   $$
 
-## References
+* Where $b(\cdot)$ is called a **basis function**
+  * Linear ($d = 1$): $b_1(X) = X$
+  * Polynomial: $b_j(X) = X^j$
+  * Piecewise: $b_j(X) = \mathbb{1}[c_{j-1} \leq X < c_j]$
 
-::: {#refs}
-:::
+

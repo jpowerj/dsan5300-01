@@ -94,26 +94,7 @@
     code span.va { color: #111111; } /* Variable */
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
-    /* CSS for citations */
-    div.csl-bib-body { }
-    div.csl-entry {
-      clear: both;
-    }
-    .hanging-indent div.csl-entry {
-      margin-left:2em;
-      text-indent:-2em;
-    }
-    div.csl-left-margin {
-      min-width:2em;
-      float:left;
-    }
-    div.csl-right-inline {
-      margin-left:2em;
-      padding-left:1em;
-    }
-    div.csl-indent {
-      margin-left: 2em;
-    }  </style>
+  </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-fd0cb9550b46acfdb9b2d2c682ae8afe.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
@@ -688,7 +669,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 \| \boldsymbol\beta \|_p = \left( \sum_{j=1}^{J} |\beta_j|^p \right)^{1/p}
 \]</span></p>
 </section>
-<section id="l1-and-l2-norms" class="slide level2 smaller crunch-title crunch-math crunch-ul title-12">
+<section id="l1-and-l2-norms" class="slide level2 smaller crunch-title crunch-math crunch-ul title-12 math-90">
 <h2><span class="math inline">\(L^1\)</span> and <span class="math inline">\(L^2\)</span> Norms</h2>
 <ul>
 <li><span class="math inline">\(L^1\)</span> norm has a nice closed form expression as a sum (efficient, vectorizable!):</li>
@@ -738,7 +719,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 </div>
 </div></div>
 </section>
-<section id="regularized-regression-finally" class="slide level2">
+<section id="regularized-regression-finally" class="slide level2 crunch-title math-95">
 <h2>Regularized Regression (Finally!)</h2>
 <p>General Form:</p>
 <p><span class="math display">\[
@@ -749,7 +730,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <h2>Three Main Types of Regularized Regression</h2>
 <p>Ridge Regression:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \overbrace{\lambda}^{\mathclap{\text{Penalty}}} \| \boldsymbol\beta \|_{2}^{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
 \]</span></p>
 <p>LASSO:</p>
 <p><span class="math display">\[
@@ -963,21 +944,108 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 <li>(But let’s look at what we find when we use CV…)</li>
 </ul>
 </section>
-<section id="week-7-preview-basis-functions" class="slide level2">
-<h2>Week 7 Preview: Basis Functions</h2>
-<ul>
-<li><p>Q: What do <strong>polynomial regression</strong> and <strong>piecewise regression</strong> have in common?</p></li>
-<li><p>A: They can both be written in the form</p>
-<p><span class="math display">\[
-Y = \beta_0 + \beta_1 b(x_1) + \beta_2 b(x_2) + \cdots + \beta_J b(x_J)
-\]</span></p></li>
-</ul>
-</section>
-<section id="references" class="slide level2 smaller scrollable">
-<h2>References</h2>
-<div id="refs" role="list">
+<section id="varying-lambda-leadsto-tradeoff-curve" class="slide level2 smaller inline-90">
+<h2>Varying <span class="math inline">\(\lambda\)</span> <span class="math inline">\(\leadsto\)</span> Tradeoff Curve!</h2>
+<center>
+<strong>Ridge Regression Case:</strong>
+</center>
 
-</div>
+<img data-src="images/islr_6-4.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="columns">
+<div class="column" style="width:48%;">
+<center>
+Increasing <span class="math inline">\(\lambda\)</span> in <span class="math inline">\(\displaystyle \min_{\boldsymbol\beta}\left[\text{RSS} + \lambda \| \boldsymbol\beta \|_2^2 \right]\)</span>
+</center>
+</div><div class="column" style="width:4%;">
+<center>
+<span class="math inline">\(\equiv\)</span>
+</center>
+</div><div class="column" style="width:48%;">
+<center>
+Decreasing <span class="math inline">\(s\)</span> in <span class="math inline">\(\displaystyle \min_{\boldsymbol\beta}\left[ \text{RSS} \right] \text{ s.t. }\|\boldsymbol\beta\|_2^2 \leq s\)</span>
+</center>
+</div></div>
+</section>
+<section id="only-change-l1-instead-of-l2-norm" class="slide level2 smaller inline-90 title-12">
+<h2>Only Change: <span class="math inline">\(L^1\)</span> instead of <span class="math inline">\(L^2\)</span> Norm 🤯</h2>
+<center>
+<strong>Lasso Case:</strong>
+</center>
+
+<img data-src="images/islr_6-6.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="columns">
+<div class="column" style="width:48%;">
+<center>
+Increasing <span class="math inline">\(\lambda\)</span> in <span class="math inline">\(\displaystyle \min_{\boldsymbol\beta}\left[\text{RSS} + \lambda \| \boldsymbol\beta \|_1\right]\)</span>
+</center>
+</div><div class="column" style="width:4%;">
+<center>
+<span class="math inline">\(\equiv\)</span>
+</center>
+</div><div class="column" style="width:48%;">
+<center>
+Decreasing <span class="math inline">\(s\)</span> in <span class="math inline">\(\displaystyle \min_{\boldsymbol\beta}\left[ \text{RSS} \right] \text{ s.t. }\|\boldsymbol\beta\|_1 \leq s\)</span>
+</center>
+</div></div>
+</section>
+<section id="week-7-preview-linear-functions" class="slide level2 crunch-title crunch-ul crunch-math math-80">
+<h2>Week 7 Preview: <span class="noodle-jj">Linear</span> Functions</h2>
+<style>
+@font-face {
+    font-family: Noodle;
+    src: url('../assets/Kbnoodlemonster.ttf');
+}
+.workbench-jj {
+  font-family: "Workbench", serif;
+  /* font-optical-sizing: auto; */
+  font-weight: 400;
+  font-style: normal;
+  font-size: 96pt !important;
+}
+.noodle-jj {
+    font-family: "Noodle", serif;
+    font-size: 56pt !important;
+}
+</style>
+<ul>
+<li>You’ve already seen <strong>polynomial regression</strong>:</li>
+</ul>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \cdots + \beta_d X^d
+\]</span></p>
+<ul>
+<li>Plus (technically) <a href="https://www.youtube.com/watch?v=r6sGWTCMz2k&amp;t=21s"><strong>“Fourier regression”</strong></a>:</li>
+</ul>
+<p><span class="math display">\[
+\begin{align*}
+Y = \beta_0 + \beta_1 \cos(\pi X) + \beta_2 \sin(\pi X) + \cdots + \beta_{2d-1}\cos(\pi d X) + \beta_{2d}\sin(\pi d X)
+\end{align*}
+\]</span></p>
+
+<img data-src="images/fourier.svg" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://www.cs.princeton.edu/courses/archive/fall18/cos324/files/basis-functions.pdf">Image source</a></p></section>
+<section id="new-regression-just-dropped" class="slide level2 crunch-title inline-90 crunch-ul crunch-quarto-figure">
+<h2>New Regression Just Dropped</h2>
+<p><strong>Piecewise</strong> regression:</p>
+<p><i class="bi bi-1-circle"></i> Choose <span class="math inline">\(K\)</span> cutpoints <span class="math inline">\(c_1, \ldots, c_K\)</span></p>
+<p><i class="bi bi-2-circle"></i> Let <span class="math inline">\(C_k(X) = \mathbb{1}[c_{k-1} \leq X &lt; c_k]\)</span>, (<span class="math inline">\(c_0 \equiv -\infty\)</span>, <span class="math inline">\(c_{K+1} \equiv \infty\)</span>)</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1C_1(X) + \beta_2C_2(X) + \cdots + \beta_KC_K(X)
+\]</span></p>
+
+<img data-src="images/islr_7-2.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="decomposing-fancy-regressions-into-core-pieces" class="slide level2 crunch-title crunch-ul inline-90 math-90">
+<h2>Decomposing Fancy Regressions into Core “Pieces”</h2>
+<ul>
+<li><p>Q: What do <strong>all</strong> these types of regression have in common?</p></li>
+<li><p>A: They can all be written in the form</p>
+<p><span class="math display">\[
+Y = \beta_0 + \beta_1 b_1(X) + \beta_2 b_2(X) + \cdots + \beta_d b_d(X)
+\]</span></p></li>
+<li><p>Where <span class="math inline">\(b(\cdot)\)</span> is called a <strong>basis function</strong></p>
+<ul>
+<li>Linear (<span class="math inline">\(d = 1\)</span>): <span class="math inline">\(b_1(X) = X\)</span></li>
+<li>Polynomial: <span class="math inline">\(b_j(X) = X^j\)</span></li>
+<li>Piecewise: <span class="math inline">\(b_j(X) = \mathbb{1}[c_{j-1} \leq X &lt; c_j]\)</span></li>
+</ul></li>
+</ul>
 
 
 </section></section>
