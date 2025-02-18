@@ -428,7 +428,7 @@ Jeff Jacobs
 &amp;- 0.00000002 X^5 + \varepsilon
 \end{align*}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>eval_fitted_poly <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
@@ -451,9 +451,9 @@ Jeff Jacobs
 <span id="cb3-18"><a></a>  model_labels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-3-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -474,7 +474,7 @@ Jeff Jacobs
 <li><span class="math inline">\(\implies\)</span> We <strong>build our confidence</strong> here, then <strong>take off the training wheels</strong> irl: use CV/Regularization in hopes they can help us “uncover” the <strong>unknown DGP</strong></li>
 </ul></li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>run_dgp <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">world_label=</span><span class="st">"Sim"</span>, <span class="at">N=</span><span class="dv">60</span>, <span class="at">x_max=</span><span class="dv">90</span>) {</span>
@@ -503,7 +503,7 @@ Jeff Jacobs
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/dgp-realizations-1.png" class="quarto-figure quarto-figure-center r-stretch" width="1440"></section></section>
+<img data-src="index_files/figure-revealjs/dgp-realizations-1.png" width="1440" class="r-stretch"></section></section>
 <section>
 <section id="cross-validation-evaluating-non-linear-models" class="title-slide slide level1 title-09 center" data-stack-name="Cross-Validation">
 <h1>Cross-Validation: Evaluating Non-Linear Models</h1>
@@ -737,7 +737,7 @@ Jeff Jacobs
 </ul>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">library</span>(boot)</span>
@@ -783,7 +783,7 @@ Jeff Jacobs
 <li>Possible resolution: <em>[See coming slides!]</em></li>
 </ul>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>sim1k_deltas <span class="ot">&lt;-</span> <span class="fu">compute_deltas</span>(sim1k_df)</span>

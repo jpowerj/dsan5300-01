@@ -53,12 +53,13 @@ Today's Planned Schedule:
 
 | | Start | End | Topic |
 |:- |:- |:- |:- |
-| **Lecture** | 6:30pm | 6:50pm | [Recap / Clarification &rarr;](#roadmap) |
-| | 6:50pm | 7:00pm | [CV as "Subroutine" for Model Selection &rarr;](#a-non-linear-data-generating-process-(dgp)) |
-| | 7:00pm | 7:20pm | 
-| | 7:20pm | 8:00pm | [Validation: Evaluating Non-Linear Models &rarr;](#cross-validation-evaluating-non-linear-models) |
+| **Lecture** | 6:30pm | 7:00pm | [Extended Recap / Clarification &rarr;](#roadmap) |
+| | 7:00pm | 7:20pm | ["Manual" Model Selection: Subsets &rarr;](#model-selection) | 
+| | 7:20pm | 7:40pm | [Key Regularization Building Block: $L^p$ Norm &rarr;](#regularization-for-automatic-model-selection) |
+| | 7:40pm | 8:00pm | [Regularized Regression Intro &rarr;](#regularized-regression-(finally)) |
 | **Break!** | 8:00pm | 8:10pm | |
-| | 8:10pm | 9:00pm | [$K$-Fold Cross-Validation: Cooking with Gas &rarr;](#k-fold-cross-validation) |
+| | 8:10pm | 8:50pm | [Basically Lasso is the Coolest Thing Ever &rarr;](#the-key-plot) |
+| | 8:50pm | 9:00pm | [Scary-Looking But Actually-Fun W07 Preview &rarr;](#week-7-preview-linear.noodle-jj-functions) |
 
 : {tbl-colwidths="[12,12,12,64]"}
 
