@@ -543,32 +543,241 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <section>
 <section id="model-selection" class="title-slide slide level1 center" data-stack-name="Model Selection">
 <h1>Model Selection</h1>
+<ul>
+<li>[Week 5 ✅] We have a metric (CV error) for <strong>evaluating</strong> different models w.r.t. Goal 2.0…</li>
+<li>[Week 6 so far] It gets us halfway to what we want, by showing us a “basin” of models with low CV error</li>
+<li>[Now] <strong>Statistically-principled approach</strong> to overfitting that
+<ul>
+<li><i class="bi bi-1-circle"></i> Shows us <strong>why</strong> the 1SE rule “works”</li>
+<li><i class="bi bi-2-circle"></i> Quantifies tradeoff: if I only have enough data to estimate <span class="math inline">\(\beta_j\)</span> for <span class="math inline">\(J_0 &lt; J\)</span> feats, which <span class="math inline">\(J_0\)</span> should I choose?</li>
+</ul></li>
+</ul>
+</section>
+<section id="optimal-but-infeasible-best-subset-selection" class="slide level2 title-07">
+<h2>Optimal but Infeasible: Best Subset Selection</h2>
+<div title="Algorithm: Best Subset Selection">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Algorithm: Best Subset Selection</strong></p>
+</div>
+<div class="callout-content">
+<p><i class="bi bi-1-circle"></i> Let <span class="math inline">\(\mathcal{M}^*_0\)</span> be <em>null model</em>: Predicts <span class="math inline">\(\widehat{y}(x_i) = \overline{y}\)</span> for any <span class="math inline">\(x_i\)</span></p>
+<p><i class="bi bi-2-circle"></i> For <span class="math inline">\(k = 1, 2, \ldots, J\)</span>:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-3-circle"></i> Fit all <span class="math inline">\(\binom{J}{k}\)</span> possible models with <span class="math inline">\(k\)</span> predictors, <span class="math inline">\(\mathcal{M}^*_k\)</span> is model with lowest RSS</p>
+<p><i class="bi bi-4-circle"></i> Choose from <span class="math inline">\(\mathcal{M}^*_0, \ldots, \mathcal{M}^*_J\)</span> using <strong>CV</strong> or heuristics: AIC, BIC, adjusted <span class="math inline">\(R^2\)</span></p>
+</div>
+</div>
+</div>
+</div>
 
+<img data-src="images/islr_6-1.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="feasible-but-suboptimal-stepwise-selection" class="slide level2 crunch-title title-08">
+<h2>Feasible but Suboptimal: Stepwise Selection</h2>
+<div title="Algorithm: *Forward* Stepwise Selection">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Algorithm: <em>Forward</em> Stepwise Selection</strong></p>
+</div>
+<div class="callout-content">
+<p><i class="bi bi-1-circle"></i> Let <span class="math inline">\(\mathcal{M}_0\)</span> be <em>null model</em>: Predicts <span class="math inline">\(\widehat{y}(x_i) = \overline{y}\)</span> for any <span class="math inline">\(x_i\)</span></p>
+<p><i class="bi bi-2-circle"></i> For <span class="math inline">\(k = 0, 1, \ldots, J - 1\)</span>:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-3-circle"></i> Fit <span class="math inline">\(J - k\)</span> models, each adds single feature to <span class="math inline">\(\mathcal{M}_k\)</span>; call “best” model <span class="math inline">\(\mathcal{M}_{k+1}\)</span></p>
+<p><i class="bi bi-4-circle"></i> Choose from <span class="math inline">\(\mathcal{M}_0, \ldots, \mathcal{M}_J\)</span> using CV error (or heuristics: AIC, BIC, adjusted <span class="math inline">\(R^2\)</span>)</p>
+</div>
+</div>
+</div>
+</div>
+<div title="Algorithm: *Backward* Stepwise Selection">
+<div class="callout callout-none no-icon callout-titled callout-style-simple">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Algorithm: <em>Backward</em> Stepwise Selection</strong></p>
+</div>
+<div class="callout-content">
+<p><i class="bi bi-1-circle"></i> Let <span class="math inline">\(\mathcal{M}_J\)</span> be <em>full model</em>: Contains all features</p>
+<p><i class="bi bi-2-circle"></i> For <span class="math inline">\(k = J, J - 1, \ldots, 1\)</span>:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-3-circle"></i> Fit <span class="math inline">\(k\)</span> models, each removes single feature from <span class="math inline">\(\mathcal{M}_k\)</span>; call “best” model <span class="math inline">\(\mathcal{M}_{k-1}\)</span></p>
+<p><i class="bi bi-4-circle"></i> Choose from <span class="math inline">\(\mathcal{M}_0, \ldots, \mathcal{M}_J\)</span> using CV error (or heuristics: AIC, BIC, adjusted <span class="math inline">\(R^2\)</span>)</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-<section id="contractual-obligation-stepwise-model-selection" class="slide level2">
-<h2>Contractual Obligation: “Stepwise” Model Selection</h2>
-</section>
-<section id="way-cooler-and-more-useful-automatic-model-selection" class="slide level2">
-<h2>Way Cooler and More Useful: <em>Automatic</em> Model Selection</h2>
+<section id="stepwise-selection-algorithms-are-greedy" class="slide level2 title-08 crunch-title table-80 inline-90 crunch-ul crunch-quarto-figure code-80 crunch-li-8 crunch-img crunch-p">
+<h2>Stepwise Selection Algorithms are <em>Greedy</em></h2>
+<style>
+#mousetrap {
+  vertical-align: bottom !important;
+}
+</style>
+<div class="columns">
+<div class="column" style="width:60%;">
+<ul>
+<li>Like a mouse who chases <em>closest</em> cheese <span class="math inline">\(\neq\)</span> path with <em>most</em> cheese</li>
+<li>Can get “trapped” in sub-optimal model, if (e.g.) feature is in <span class="math inline">\(\mathcal{M}^*_4\)</span> but <strong>not</strong> in <span class="math inline">\(\mathcal{M}^*_1, \mathcal{M}^*_2, \mathcal{M}^*_3\)</span>!</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<p><img data-src="images/mouse_cheese.png"></p>
+</div></div>
+<table class="caption-top">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 48%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(k\)</span></th>
+<th><span class="math inline">\(\mathcal{M}^*_k\)</span> (Best Subset)</th>
+<th><span class="math inline">\(\mathcal{M}_k\)</span> (Forward Stepwise) <img data-src="images/cheese.jpg" id="mousetrap" width="45"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>rating</code></td>
+<td><code>rating</code></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>rating</code>, <code>income</code></td>
+<td><code>rating</code>, <code>income</code></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>rating</code>, <code>income</code>, <code>student</code></td>
+<td><code>rating</code>, <code>income</code>, <code>student</code></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><strong><code>cards</code></strong>, <code>income</code>, <code>student</code>, <code>limit</code></td>
+<td><code>rating</code>, <code>income</code>, <code>student</code>, <code>limit</code></td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="regularization-for-automatic-model-selection" class="title-slide slide level1 center" data-stack-name="Regularization">
+<h1>Regularization for <em>Automatic</em> Model Selection</h1>
 <ul>
 <li>Ridge Regression</li>
 <li>Lasso</li>
 <li>Elastic Net</li>
 </ul>
 </section>
-<section id="regularized-regression-finally" class="slide level2 smaller">
+<section id="key-building-block-lp-norms" class="slide level2 crunch-title crunch-ul math-90 inline-90 smaller crunch-math">
+<h2>Key Building Block: <span class="math inline">\(L^p\)</span> Norms</h2>
+<ul>
+<li>Technically you have seen these before: <strong>distance metrics!</strong></li>
+</ul>
+<p><span class="math display">\[
+\textsf{sim}(\mathbf{u}, \mathbf{v}) \triangleq \underbrace{\| \mathbf{v} - \mathbf{u} \|_p}_{L^p\text{ norm of }\mathbf{u} - \mathbf{v}} = \left( \sum_{i=1}^{n} |v_i - u_i|^p \right)^{1/p}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\implies\)</span> <strong>Euclidean</strong> distance is <span class="math inline">\(L^2\)</span> norm: if <span class="math inline">\(\mathbf{u} = (0,0)\)</span> and <span class="math inline">\(\mathbf{v} = (3,4)\)</span>,</li>
+</ul>
+<p><span class="math display">\[
+\| \mathbf{v} - \mathbf{u} \|_2 = \left( |3-0|^2 + |4-0|^2 \right)^{1/2} = 25^{1/2} = \sqrt{25} = 5
+\]</span></p>
+<ul>
+<li>We’ll use even simpler form: <strong>distance of coefficients <span class="math inline">\(\boldsymbol\beta\)</span> from zero</strong> (so, <span class="math inline">\(\mathbf{u} = \vec{\mathbf{0}}\)</span>)</li>
+</ul>
+<p><span class="math display">\[
+\| \boldsymbol\beta \|_p = \left( \sum_{j=1}^{J} |\beta_j|^p \right)^{1/p}
+\]</span></p>
+</section>
+<section id="l1-and-l2-norms" class="slide level2 smaller crunch-title crunch-math crunch-ul title-12">
+<h2><span class="math inline">\(L^1\)</span> and <span class="math inline">\(L^2\)</span> Norms</h2>
+<ul>
+<li><span class="math inline">\(L^1\)</span> norm has a nice closed form expression as a sum (efficient, vectorizable!):</li>
+</ul>
+<p><span class="math display">\[
+\| \boldsymbol\beta \|_1 = \left( \sum_{j=1}^{J}|\beta_j|^1 \right)^{1/1} = \boxed{\sum_{j=1}^{J}|\beta_j|}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(L^2\)</span> norm <em>almost</em> a similarly nice expression, besides this zigzag line thing (<span class="math inline">\(\sqrt{~}\)</span>)</li>
+</ul>
+<p><span class="math display">\[
+\| \boldsymbol\beta \|_2 = \left( \sum_{j=1}^{J}|\beta_j|^2 \right)^{1/2} = \sqrt{\sum_{j=1}^{J}\beta_j^2} \; \; 🤨
+\]</span></p>
+<ul>
+<li>Can always convert bound on <em>true</em> Euclidean distance like <span class="math inline">\(\| \boldsymbol\beta \|_2 \leq 10\)</span> into bound on <em>squared</em> Euclidean distance like <span class="math inline">\(\| \boldsymbol\beta \|_2^2 \leq 100\)</span>. Hence we’ll use <strong>squared <span class="math inline">\(L^p\)</span> norm</strong>:</li>
+</ul>
+<p><span class="math display">\[
+\| \boldsymbol\beta \|_2^2 = \left( \left( \sum_{j=1}^{J}|\beta_j|^p \right)^{1/2} \right)^{2} = \boxed{\sum_{j=1}^{J}\beta_j^2} \; \; 💆
+\]</span></p>
+</section>
+<section id="different-norms-leftrightarrow-different-distances-from-vecmathbf0" class="slide level2 smaller crunch-title title-10">
+<h2>Different Norms <span class="math inline">\(\leftrightarrow\)</span> Different Distances from <span class="math inline">\(\vec{\mathbf{0}}\)</span></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Unit Disk in <span class="math inline">\(L^2\)</span>: All points <span class="math inline">\(\mathbf{v} = (v_x,v_y) \in \mathbb{R}^2\)</span> such that</li>
+</ul>
+<p><span class="math display">\[
+\| \mathbf{v} \|_2 \leq 1 \iff \| \mathbf{v} \|_2^2 \leq 1
+\]</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/unit_circle_l2.svg" class="quarto-figure quarto-figure-center" width="380"></p>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Unit Disk in <span class="math inline">\(L^1\)</span>: All points <span class="math inline">\(\mathbf{v} = (v_x, v_y) \in \mathbf{R}^2\)</span> such that</li>
+</ul>
+<p><span class="math display">\[
+\| \mathbf{v} \|_1 \leq 1
+\]</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/unit_circle_l1.svg" class="quarto-figure quarto-figure-center" width="380"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="regularized-regression-finally" class="slide level2">
 <h2>Regularized Regression (Finally!)</h2>
+<p>General Form:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{reg}} = \argmin_{\boldsymbol\beta}\left[ \overbrace{\frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2}^{\text{MSE from before}} \; \; + \; \; \overbrace{\lambda}^{\mathclap{\text{Penalty for}}} \underbrace{\| \boldsymbol\beta \|_{2}^{2}}_{\mathclap{\text{Dist from }\mathbf{0}}} \; \; \; \right]
+\]</span></p>
+</section>
+<section id="three-main-types-of-regularized-regression" class="slide level2 smaller crunch-title title-11">
+<h2>Three Main Types of Regularized Regression</h2>
 <p>Ridge Regression:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \overbrace{\lambda}^{\mathclap{\text{Penalty}}} \| \boldsymbol\beta \|_{2}^{2} \right]
 \]</span></p>
 <p>LASSO:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
 \]</span></p>
 <p>Elastic Net:</p>
 <p><span class="math display">\[
-\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\]</span></p>
+<p><em>(Does anyone recognize <span class="math inline">\(\lambda\)</span> from <strong>Lagrange multipliers</strong>?)</em></p>
+</section>
+<section id="top-secret-equivalent-forms" class="slide level2 smaller">
+<h2>Top Secret Equivalent Forms</h2>
+<p>Ridge Regression:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{ridge}} = \arg \left\{\min_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \| \boldsymbol\beta \|_{2}^{2} \leq s \right\}
+\]</span></p>
+<p>LASSO:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{lasso}} = \arg \left\{\min_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \| \boldsymbol\beta \|_{1} \leq s \right\}
+\]</span></p>
+<p>Elastic Net:</p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{EN}} = \arg \left\{\min_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \begin{matrix}
+  \| \boldsymbol\beta \|_{2}^{2} \leq s_2 \\
+  \| \boldsymbol\beta \|_{1} \leq s_1
+  \end{matrix}
+\right\}
 \]</span></p>
 </section>
 <section id="the-key-plot" class="slide level2 smaller crunch-title title-11">
@@ -751,6 +960,7 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 <ul>
 <li>Cross-Validation!</li>
 <li>(…that’s, uh, that’s it! That’s the whole slide!)</li>
+<li>(But let’s look at what we find when we use CV…)</li>
 </ul>
 </section>
 <section id="week-7-preview-basis-functions" class="slide level2">

@@ -221,32 +221,212 @@ sim1k_delta_df |> ggplot(aes(x=complexity, y=cv_err, label=label)) +
 
 # Model Selection {data-stack-name="Model Selection"}
 
-## Contractual Obligation: "Stepwise" Model Selection
+* [Week 5 ✅] We have a metric (CV error) for **evaluating** different models w.r.t. Goal 2.0...
+* [Week 6 so far] It gets us halfway to what we want, by showing us a "basin" of models with low CV error
+* [Now] **Statistically-principled approach** to overfitting that
+  * <i class='bi bi-1-circle'></i> Shows us **why** the 1SE rule "works"
+  * <i class='bi bi-2-circle'></i> Quantifies tradeoff: if I only have enough data to estimate $\beta_j$ for $J_0 < J$ feats, which $J_0$ should I choose?
 
-## Way Cooler and More Useful: *Automatic* Model Selection
+## Optimal but Infeasible: Best Subset Selection {.title-07}
+
+::: {.callout title="Algorithm: Best Subset Selection"}
+
+<i class='bi bi-1-circle'></i> Let $\mathcal{M}^*_0$ be *null model*: Predicts $\widehat{y}(x_i) = \overline{y}$ for any $x_i$
+
+<i class='bi bi-2-circle'></i> For $k = 1, 2, \ldots, J$:
+
+&nbsp;&nbsp;&nbsp;&nbsp;<i class='bi bi-3-circle'></i> Fit all $\binom{J}{k}$ possible models with $k$ predictors, $\mathcal{M}^*_k$ is model with lowest RSS
+
+<i class='bi bi-4-circle'></i> Choose from $\mathcal{M}^*_0, \ldots, \mathcal{M}^*_J$ using **CV** or heuristics: AIC, BIC, adjusted $R^2$
+
+:::
+
+![](images/islr_6-1.svg){fig-align="center"}
+
+## Feasible but Suboptimal: Stepwise Selection {.crunch-title .title-08}
+
+::: {.callout title="Algorithm: *Forward* Stepwise Selection"}
+
+<i class='bi bi-1-circle'></i> Let $\mathcal{M}_0$ be *null model*: Predicts $\widehat{y}(x_i) = \overline{y}$ for any $x_i$
+
+<i class='bi bi-2-circle'></i> For $k = 0, 1, \ldots, J - 1$:
+
+&nbsp;&nbsp;&nbsp;&nbsp;<i class='bi bi-3-circle'></i> Fit $J - k$ models, each adds single feature to $\mathcal{M}_k$; call "best" model $\mathcal{M}_{k+1}$
+
+<i class='bi bi-4-circle'></i> Choose from $\mathcal{M}_0, \ldots, \mathcal{M}_J$ using CV error (or heuristics: AIC, BIC, adjusted $R^2$)
+
+:::
+
+::: {.callout title="Algorithm: *Backward* Stepwise Selection"}
+
+<i class='bi bi-1-circle'></i> Let $\mathcal{M}_J$ be *full model*: Contains all features
+
+<i class='bi bi-2-circle'></i> For $k = J, J - 1, \ldots, 1$:
+
+&nbsp;&nbsp;&nbsp;&nbsp;<i class='bi bi-3-circle'></i> Fit $k$ models, each removes single feature from $\mathcal{M}_k$; call "best" model $\mathcal{M}_{k-1}$
+
+<i class='bi bi-4-circle'></i> Choose from $\mathcal{M}_0, \ldots, \mathcal{M}_J$ using CV error (or heuristics: AIC, BIC, adjusted $R^2$)
+
+:::
+
+## Stepwise Selection Algorithms are *Greedy* {.title-08 .crunch-title .table-80 .inline-90 .crunch-ul .crunch-quarto-figure .code-80 .crunch-li-8 .crunch-img .crunch-p}
+
+```{=html}
+<style>
+#mousetrap {
+  vertical-align: bottom !important;
+}
+</style>
+```
+
+:::: {.columns}
+::: {.column width="60%"}
+
+* Like a mouse who chases *closest* cheese $\neq$ path with *most* cheese
+* Can get "trapped" in sub-optimal model, if (e.g.) feature is in $\mathcal{M}^*_4$ but **not** in $\mathcal{M}^*_1, \mathcal{M}^*_2, \mathcal{M}^*_3$!
+
+:::
+::: {.column width="40%"}
+
+![](images/mouse_cheese.png)
+
+:::
+::::
+
+| $k$ | $\mathcal{M}^*_k$ (Best Subset) | $\mathcal{M}_k$ (Forward Stepwise) ![](images/cheese.jpg){#mousetrap width="45"} |
+| - | - | - |
+| 1 | `rating` | `rating` |
+| 2 | `rating`, `income` | `rating`, `income` |
+| 3 | `rating`, `income`, `student` | `rating`, `income`, `student` |
+| 4 | **`cards`**, `income`, `student`, `limit` | `rating`, `income`, `student`, `limit` |
+
+: {tbl-colwidths="[4,48,48]"}
+
+# Regularization for *Automatic* Model Selection {data-stack-name="Regularization"}
 
 * Ridge Regression
 * Lasso
 * Elastic Net
 
-## Regularized Regression (Finally!) {.smaller}
+## Key Building Block: $L^p$ Norms {.crunch-title .crunch-ul .math-90 .inline-90 .smaller .crunch-math}
+
+* Technically you have seen these before: **distance metrics!**
+
+$$
+\textsf{sim}(\mathbf{u}, \mathbf{v}) \triangleq \underbrace{\| \mathbf{v} - \mathbf{u} \|_p}_{L^p\text{ norm of }\mathbf{u} - \mathbf{v}} = \left( \sum_{i=1}^{n} |v_i - u_i|^p \right)^{1/p}
+$$
+
+* $\implies$ **Euclidean** distance is $L^2$ norm: if $\mathbf{u} = (0,0)$ and $\mathbf{v} = (3,4)$,
+
+$$
+\| \mathbf{v} - \mathbf{u} \|_2 = \left( |3-0|^2 + |4-0|^2 \right)^{1/2} = 25^{1/2} = \sqrt{25} = 5
+$$
+
+* We'll use even simpler form: **distance of coefficients $\boldsymbol\beta$ from zero** (so, $\mathbf{u} = \vec{\mathbf{0}}$)
+
+$$
+\| \boldsymbol\beta \|_p = \left( \sum_{j=1}^{J} |\beta_j|^p \right)^{1/p}
+$$
+
+## $L^1$ and $L^2$ Norms {.smaller .crunch-title .crunch-math .crunch-ul .title-12}
+
+* $L^1$ norm has a nice closed form expression as a sum (efficient, vectorizable!):
+
+$$
+\| \boldsymbol\beta \|_1 = \left( \sum_{j=1}^{J}|\beta_j|^1 \right)^{1/1} = \boxed{\sum_{j=1}^{J}|\beta_j|}
+$$
+
+* $L^2$ norm *almost* a similarly nice expression, besides this zigzag line thing ($\sqrt{~}$)
+
+$$
+\| \boldsymbol\beta \|_2 = \left( \sum_{j=1}^{J}|\beta_j|^2 \right)^{1/2} = \sqrt{\sum_{j=1}^{J}\beta_j^2} \; \; 🤨
+$$
+
+* Can always convert bound on *true* Euclidean distance like $\| \boldsymbol\beta \|_2 \leq 10$ into bound on *squared* Euclidean distance like $\| \boldsymbol\beta \|_2^2 \leq 100$. Hence we'll use **squared $L^p$ norm**:
+
+$$
+\| \boldsymbol\beta \|_2^2 = \left( \left( \sum_{j=1}^{J}|\beta_j|^p \right)^{1/2} \right)^{2} = \boxed{\sum_{j=1}^{J}\beta_j^2} \; \; 💆
+$$
+
+## Different Norms $\leftrightarrow$ Different Distances from $\vec{\mathbf{0}}$ {.smaller .crunch-title .title-10}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+* Unit Disk in $L^2$: All points $\mathbf{v} = (v_x,v_y) \in \mathbb{R}^2$ such that
+
+$$
+\| \mathbf{v} \|_2 \leq 1 \iff \| \mathbf{v} \|_2^2 \leq 1
+$$
+
+![](images/unit_circle_l2.svg){fig-align="center" width="380"}
+
+:::
+::: {.column width="50%"}
+
+* Unit Disk in $L^1$: All points $\mathbf{v} = (v_x, v_y) \in \mathbf{R}^2$ such that
+
+$$
+\| \mathbf{v} \|_1 \leq 1
+$$
+
+![](images/unit_circle_l1.svg){fig-align="center" width="380"}
+
+:::
+::::
+
+## Regularized Regression (Finally!)
+
+General Form:
+
+$$
+\boldsymbol\beta^*_{\text{reg}} = \argmin_{\boldsymbol\beta}\left[ \overbrace{\frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2}^{\text{MSE from before}} \; \; + \; \; \overbrace{\lambda}^{\mathclap{\text{Penalty for}}} \underbrace{\| \boldsymbol\beta \|_{2}^{2}}_{\mathclap{\text{Dist from }\mathbf{0}}} \; \; \; \right]
+$$
+
+## Three Main Types of Regularized Regression {.smaller .crunch-title .title-11}
 
 Ridge Regression:
 
 $$
-\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{2}^{2} \right]
+\boldsymbol\beta^*_{\text{ridge}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \overbrace{\lambda}^{\mathclap{\text{Penalty}}} \| \boldsymbol\beta \|_{2}^{2} \right]
 $$
 
 LASSO:
 
 $$
-\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{lasso}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \| \boldsymbol\beta \|_{1} \right]
 $$
 
 Elastic Net:
 
 $$
-\boldsymbol\beta^*_{\text{EN}} = \argmin_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+\boldsymbol\beta^*_{\text{EN}} = \argmin_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda_2 \| \boldsymbol\beta \|_{2}^{2} + \lambda_1 \| \boldsymbol\beta \|_{1} \right]
+$$
+
+*(Does anyone recognize $\lambda$ from **Lagrange multipliers**?)*
+
+## Top Secret Equivalent Forms {.smaller}
+
+Ridge Regression:
+
+$$
+\boldsymbol\beta^*_{\text{ridge}} = \arg \left\{\min_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \| \boldsymbol\beta \|_{2}^{2} \leq s \right\}
+$$
+
+LASSO:
+
+$$
+\boldsymbol\beta^*_{\text{lasso}} = \arg \left\{\min_{\boldsymbol\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \| \boldsymbol\beta \|_{1} \leq s \right\}
+$$
+
+Elastic Net:
+
+$$
+\boldsymbol\beta^*_{\text{EN}} = \arg \left\{\min_{\beta}\left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right] \; \text{ subject to } \; \begin{matrix}
+  \| \boldsymbol\beta \|_{2}^{2} \leq s_2 \\
+  \| \boldsymbol\beta \|_{1} \leq s_1
+  \end{matrix}
+\right\}
 $$
 
 ## The Key Plot {.smaller .crunch-title .title-11}
@@ -415,6 +595,7 @@ ggplot() +
 
 * Cross-Validation!
 * (...that's, uh, that's it! That's the whole slide!)
+* (But let's look at what we find when we use CV...)
 
 ## Week 7 Preview: Basis Functions
 
