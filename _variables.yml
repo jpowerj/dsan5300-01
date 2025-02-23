@@ -30,11 +30,11 @@ w06:
   title: "Regularization for Model Selection"
   footer: "Regularization for Model Selection"
   date-md: "Feb 18"
-# w07:
-#   weeknum: 7
-#   title: "Privacy Policies, Incomplete Contracts, and Power"
-#   footer: "Privacy Policies, Incomplete Contracts, and Power"
-#   date-md: "Feb 19"
+w07:
+  weeknum: 7
+  title: "Basis Functions and Splines"
+  footer: "Basis Functions and Splines"
+  date-md: "Feb 24"
 # w08:
 #   weeknum: 8
 #   title: "In-Class Midterm: Data Ethics, Fairness, Privacy, Causality"
