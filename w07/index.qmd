@@ -641,7 +641,7 @@ ggplot() +
   theme_dsan(base_size=22)
 ```
 
-## Why Not Stop There? {.smaller .crunch-title .crunch-ul}
+## Natural Splines: Why Not Stop There? {.smaller .crunch-title .crunch-ul .title-12}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -659,15 +659,31 @@ y_noise = rnorm(N_sparse, mean=0, sd=1.0)
 y_vals <- y_raw + y_noise
 sparse_df <- tibble(x=x_vals, y=y_vals)
 knot_sparse <- (xmin + xmax) / 2
+knot_vec <- c(-1.8,-1.7,-1.6,-1.5,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4,-0.2,0,knot_sparse,1,1.5,2)
+knot_df <- tibble(knot=knot_vec)
+# Boundary lines
+left_bound_line <- geom_vline(
+  xintercept = xmin + 0.1, linewidth=1,
+  color="red", alpha=0.8
+)
+right_bound_line <- geom_vline(
+  xintercept = xmax - 0.1,
+  linewidth=1, color="red", alpha=0.8
+)
 ggplot() +
   geom_point(data=sparse_df, aes(x=x, y=y), size=0.5) +
-  geom_vline(xintercept=knot, linetype="dashed") +
+  geom_vline(
+    data=knot_df, aes(xintercept=knot),
+    linetype="dashed"
+  ) +
   stat_smooth(
     data=sparse_df, aes(x=x, y=y),
     method='lm',
     formula=y ~ bs(x, knots=c(knot_sparse), degree=25),
     n=300
   ) +
+  left_bound_line +
+  right_bound_line +
   theme_dsan(base_size=22)
 ```
 
@@ -689,18 +705,138 @@ sparse_df <- tibble(x=x_vals, y=y_vals)
 knot_sparse <- (xmin + xmax) / 2
 ggplot() +
   geom_point(data=sparse_df, aes(x=x, y=y), size=0.5) +
-  geom_vline(xintercept=knot, linetype="dashed") +
   stat_smooth(
     data=sparse_df, aes(x=x, y=y),
     method='lm',
-    formula=y ~ ns(x, knots=c(-1.8,-1.7,-1.6,-1.5,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4,-0.2,0,knot_sparse,1,1.5,2), Boundary.knots=c(xmin + 0.1, xmax - 0.1)),
+    formula=y ~ ns(x, knots=knot_vec, Boundary.knots=c(xmin + 0.1, xmax - 0.1)),
     n=300
   ) +
+  geom_vline(
+    data=knot_df, aes(xintercept=knot),
+    linetype="dashed"
+  ) +
+  left_bound_line +
+  right_bound_line +
   theme_dsan(base_size=22)
 ```
 
 :::
 ::::
+
+## How Do We Find The Magical Knot Points?
+
+* Hyperparameter 0: Number of knots $K$
+* Hyperparameters 1 to $K$: **Location** $\xi_k$ for each knot
+* Fear: Seems like we're going to need a bunch of slides/lectures talking about this, right?
+  * (e.g., if you really do have to manually choose them, heuristic is to place them in more "volatile" parts of $D_X$)
+* Reality: Nope, just use **CV**! 😉😎
+
+# Even Cooler Alternative Approach: Smoothing Splines {data-stack-name="Smoothing Splines"}
+
+*(Where "cooler" here really means "more statistically-principled")*
+
+## Reminder (W04): Penalizing Complexity {.smaller .title-12 .crunch-img .crunch-quarto-figure .math-95}
+
+:::: {.columns}
+::: {.column width="70%"}
+
+*Week 4 (General Form):*
+
+$$
+\boldsymbol\theta^* = \underset{\boldsymbol\theta}{\operatorname{argmin}} \left[ \mathcal{L}(y, \widehat{y}; \boldsymbol\theta) + \lambda \cdot \mathsf{Complexity}(\boldsymbol\theta) \right]
+$$
+
+:::
+::: {.column width="30%"}
+
+![](images/porygon.png){fig-align="center" width="160"}
+
+:::
+::::
+
+:::: {.columns}
+::: {.column width="70%"}
+
+*Last Week (Penalizing Polynomials):*
+
+$$
+\boldsymbol\beta^*_{\text{lasso}} = \underset{\boldsymbol\beta, \lambda}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \|\boldsymbol\beta\|_1 \right]
+$$
+
+:::
+::: {.column width="30%"}
+
+![](images/exeggcute.png){fig-align="center" width="180"}
+
+:::
+::::
+
+:::: {.columns}
+::: {.column width="70%"}
+
+*Now (Penalizing Sharp Change / Wigglyness):*
+
+$$
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+$$
+
+:::
+::: {.column width="30%"}
+
+![](images/wigglytuff.jpg){fig-align="center" width="170"}
+
+:::
+::::
+
+::: {.notes}
+
+Restricting the *first* derivative would optimize for a function that **doesn't change much at all**. Restricting the *second* derivative just constrains **sharpness** of the changes.
+
+Think of an Uber driver: penalizing **speed** would just make them go slowly (ensuring slow ride). Penalizing **acceleration** ensures that they can travel whatever speed they want, as long as they smoothly accelerate and decelerate between those speeds (ensuring non-bumpy ride!).
+
+:::
+
+## Penalizing Wiggles {.smaller .crunch-title .crunch-ul .math-90 .crunch-li-8}
+
+$$
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+$$
+
+* *(Note that we do **not** assume it's a spline! We optimize over $g$ itself, not $K$, $\xi_k$)*
+* Penalizing $[g'(t)]^2$ would mean: penalize function for **changing** over its domain
+* Penalizing $[g''(t)]^2$ means: it's ok to change, but do so **smoothly**
+* Uber ride metaphor: remember how $g'(t)$ gives **speed** while $g''(t)$ gives **acceleration**
+* Penalizing **speed**... would just make driver go slowly (ensuring slow ride)
+* Penalizing **acceleration**... 
+  * Ensures that they can fit the traffic pattern (can drive whatever speed they want)
+  * As long as they **smoothly accelerate and decelerate** between those speeds (ensuring non-bumpy ride!)
+
+## Three Mind-Blowing Math Facts
+
+<i class='bi bi-1-circle'></i> As $\lambda \rightarrow 0$, $g^*$ will grow as wiggly as necessary to achieve **zero** RSS / MSE / $R^2$
+
+<i class='bi bi-2-circle'></i> As $\lambda \rightarrow \infty$, $g^*$ converges to **OLS linear regression line**
+
+<i class='bi bi-3-circle'></i> We didn't optimize over splines, yet **optimal $g$ is a spline!**
+
+Specifically, a **Natural Cubic Spline** with...
+
+* Knots at **every data point** ($K = N$, $\xi_i = x_i$), but
+* Penalized via (optimal) $\lambda^*$, so not as wiggly as "free to wiggle" splines from previous approach: **shrunken natural cubic spline**
+
+## Related (Important!) Local Regression at $X = x_0$ {.smaller}
+
+<i class='bi bi-1-circle'></i> Identify $k$ points closest to $x_0$
+
+<i class='bi bi-2-circle'></i> Compute weights $K_i = K(x_0, x_i)$, such that $K_i = 0$ for furthest $i$, and $K_i$ increases as $x_i$ gets closer to $x_0$
+
+<i class='bi bi-3-circle'></i> Compute **Weighted Least Squares Estimate**
+
+$$
+\boldsymbol\beta^*_{\text{WLS}} = \underset{\boldsymbol\beta}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}K_i(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right]
+$$
+
+<i class='bi bi-4-circle'></i> Estimate is ready! $\widehat{f}(x_0) = \beta^{\text{WLS}}_0 + \beta^{\text{WLS}}_1 x_0$.
 
 ## References
 

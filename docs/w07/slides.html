@@ -114,7 +114,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-d721d6a0f4e081445c8cf358dea28702.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-1889c9a344571465e675240d2365231c.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -1057,8 +1057,8 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 
 </div>
 <img data-src="index_files/figure-revealjs/cubic-spline-plot-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
-<section id="why-not-stop-there" class="slide level2 smaller crunch-title crunch-ul">
-<h2>Why Not Stop There?</h2>
+<section id="natural-splines-why-not-stop-there" class="slide level2 smaller crunch-title crunch-ul title-12">
+<h2>Natural Splines: Why Not Stop There?</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>Polynomials start to BEHAVE BADLY as they go to <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span></p>
@@ -1074,16 +1074,32 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb19-7"><a></a>y_vals <span class="ot">&lt;-</span> y_raw <span class="sc">+</span> y_noise</span>
 <span id="cb19-8"><a></a>sparse_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span>x_vals, <span class="at">y=</span>y_vals)</span>
 <span id="cb19-9"><a></a>knot_sparse <span class="ot">&lt;-</span> (xmin <span class="sc">+</span> xmax) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb19-10"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb19-11"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb19-12"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>knot, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb19-13"><a></a>  <span class="fu">stat_smooth</span>(</span>
-<span id="cb19-14"><a></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
-<span id="cb19-15"><a></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
-<span id="cb19-16"><a></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">bs</span>(x, <span class="at">knots=</span><span class="fu">c</span>(knot_sparse), <span class="at">degree=</span><span class="dv">25</span>),</span>
-<span id="cb19-17"><a></a>    <span class="at">n=</span><span class="dv">300</span></span>
-<span id="cb19-18"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb19-19"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-10"><a></a>knot_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.8</span>,<span class="sc">-</span><span class="fl">1.7</span>,<span class="sc">-</span><span class="fl">1.6</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="sc">-</span><span class="fl">1.4</span>,<span class="sc">-</span><span class="fl">1.2</span>,<span class="sc">-</span><span class="fl">1.0</span>,<span class="sc">-</span><span class="fl">0.8</span>,<span class="sc">-</span><span class="fl">0.6</span>,<span class="sc">-</span><span class="fl">0.4</span>,<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">0</span>,knot_sparse,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>)</span>
+<span id="cb19-11"><a></a>knot_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">knot=</span>knot_vec)</span>
+<span id="cb19-12"><a></a><span class="co"># Boundary lines</span></span>
+<span id="cb19-13"><a></a>left_bound_line <span class="ot">&lt;-</span> <span class="fu">geom_vline</span>(</span>
+<span id="cb19-14"><a></a>  <span class="at">xintercept =</span> xmin <span class="sc">+</span> <span class="fl">0.1</span>, <span class="at">linewidth=</span><span class="dv">1</span>,</span>
+<span id="cb19-15"><a></a>  <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb19-16"><a></a>)</span>
+<span id="cb19-17"><a></a>right_bound_line <span class="ot">&lt;-</span> <span class="fu">geom_vline</span>(</span>
+<span id="cb19-18"><a></a>  <span class="at">xintercept =</span> xmax <span class="sc">-</span> <span class="fl">0.1</span>,</span>
+<span id="cb19-19"><a></a>  <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb19-20"><a></a>)</span>
+<span id="cb19-21"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb19-22"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb19-23"><a></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb19-24"><a></a>    <span class="at">data=</span>knot_df, <span class="fu">aes</span>(<span class="at">xintercept=</span>knot),</span>
+<span id="cb19-25"><a></a>    <span class="at">linetype=</span><span class="st">"dashed"</span></span>
+<span id="cb19-26"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb19-27"><a></a>  <span class="fu">stat_smooth</span>(</span>
+<span id="cb19-28"><a></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
+<span id="cb19-29"><a></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
+<span id="cb19-30"><a></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">bs</span>(x, <span class="at">knots=</span><span class="fu">c</span>(knot_sparse), <span class="at">degree=</span><span class="dv">25</span>),</span>
+<span id="cb19-31"><a></a>    <span class="at">n=</span><span class="dv">300</span></span>
+<span id="cb19-32"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb19-33"><a></a>  left_bound_line <span class="sc">+</span></span>
+<span id="cb19-34"><a></a>  right_bound_line <span class="sc">+</span></span>
+<span id="cb19-35"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1109,14 +1125,19 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb20-9"><a></a>knot_sparse <span class="ot">&lt;-</span> (xmin <span class="sc">+</span> xmax) <span class="sc">/</span> <span class="dv">2</span></span>
 <span id="cb20-10"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb20-11"><a></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-12"><a></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>knot, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb20-13"><a></a>  <span class="fu">stat_smooth</span>(</span>
-<span id="cb20-14"><a></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
-<span id="cb20-15"><a></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
-<span id="cb20-16"><a></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">knots=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.8</span>,<span class="sc">-</span><span class="fl">1.7</span>,<span class="sc">-</span><span class="fl">1.6</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="sc">-</span><span class="fl">1.4</span>,<span class="sc">-</span><span class="fl">1.2</span>,<span class="sc">-</span><span class="fl">1.0</span>,<span class="sc">-</span><span class="fl">0.8</span>,<span class="sc">-</span><span class="fl">0.6</span>,<span class="sc">-</span><span class="fl">0.4</span>,<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">0</span>,knot_sparse,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>), <span class="at">Boundary.knots=</span><span class="fu">c</span>(xmin <span class="sc">+</span> <span class="fl">0.1</span>, xmax <span class="sc">-</span> <span class="fl">0.1</span>)),</span>
-<span id="cb20-17"><a></a>    <span class="at">n=</span><span class="dv">300</span></span>
-<span id="cb20-18"><a></a>  ) <span class="sc">+</span></span>
-<span id="cb20-19"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-12"><a></a>  <span class="fu">stat_smooth</span>(</span>
+<span id="cb20-13"><a></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
+<span id="cb20-14"><a></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
+<span id="cb20-15"><a></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">knots=</span>knot_vec, <span class="at">Boundary.knots=</span><span class="fu">c</span>(xmin <span class="sc">+</span> <span class="fl">0.1</span>, xmax <span class="sc">-</span> <span class="fl">0.1</span>)),</span>
+<span id="cb20-16"><a></a>    <span class="at">n=</span><span class="dv">300</span></span>
+<span id="cb20-17"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb20-18"><a></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb20-19"><a></a>    <span class="at">data=</span>knot_df, <span class="fu">aes</span>(<span class="at">xintercept=</span>knot),</span>
+<span id="cb20-20"><a></a>    <span class="at">linetype=</span><span class="st">"dashed"</span></span>
+<span id="cb20-21"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb20-22"><a></a>  left_bound_line <span class="sc">+</span></span>
+<span id="cb20-23"><a></a>  right_bound_line <span class="sc">+</span></span>
+<span id="cb20-24"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1127,6 +1148,118 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 </div>
 </div>
 </div></div>
+</section>
+<section id="how-do-we-find-the-magical-knot-points" class="slide level2">
+<h2>How Do We Find The Magical Knot Points?</h2>
+<ul>
+<li>Hyperparameter 0: Number of knots <span class="math inline">\(K\)</span></li>
+<li>Hyperparameters 1 to <span class="math inline">\(K\)</span>: <strong>Location</strong> <span class="math inline">\(\xi_k\)</span> for each knot</li>
+<li>Fear: Seems like we’re going to need a bunch of slides/lectures talking about this, right?
+<ul>
+<li>(e.g., if you really do have to manually choose them, heuristic is to place them in more “volatile” parts of <span class="math inline">\(D_X\)</span>)</li>
+</ul></li>
+<li>Reality: Nope, just use <strong>CV</strong>! 😉😎</li>
+</ul>
+</section></section>
+<section>
+<section id="even-cooler-alternative-approach-smoothing-splines" class="title-slide slide level1 center" data-stack-name="Smoothing Splines">
+<h1>Even Cooler Alternative Approach: Smoothing Splines</h1>
+<p><em>(Where “cooler” here really means “more statistically-principled”)</em></p>
+</section>
+<section id="reminder-w04-penalizing-complexity" class="slide level2 smaller title-12 crunch-img crunch-quarto-figure math-95">
+<h2>Reminder (W04): Penalizing Complexity</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Week 4 (General Form):</em></p>
+<p><span class="math display">\[
+\boldsymbol\theta^* = \underset{\boldsymbol\theta}{\operatorname{argmin}} \left[ \mathcal{L}(y, \widehat{y}; \boldsymbol\theta) + \lambda \cdot \mathsf{Complexity}(\boldsymbol\theta) \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/porygon.png" class="quarto-figure quarto-figure-center" width="160"></p>
+</figure>
+</div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Last Week (Penalizing Polynomials):</em></p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{lasso}} = \underset{\boldsymbol\beta, \lambda}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \|\boldsymbol\beta\|_1 \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/exeggcute.png" class="quarto-figure quarto-figure-center" width="180"></p>
+</figure>
+</div>
+</div></div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Now (Penalizing Sharp Change / Wigglyness):</em></p>
+<p><span class="math display">\[
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/wigglytuff.jpg" class="quarto-figure quarto-figure-center" width="170"></p>
+</figure>
+</div>
+</div></div>
+<aside class="notes">
+<p>Restricting the <em>first</em> derivative would optimize for a function that <strong>doesn’t change much at all</strong>. Restricting the <em>second</em> derivative just constrains <strong>sharpness</strong> of the changes.</p>
+<p>Think of an Uber driver: penalizing <strong>speed</strong> would just make them go slowly (ensuring slow ride). Penalizing <strong>acceleration</strong> ensures that they can travel whatever speed they want, as long as they smoothly accelerate and decelerate between those speeds (ensuring non-bumpy ride!).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="penalizing-wiggles" class="slide level2 smaller crunch-title crunch-ul math-90 crunch-li-8">
+<h2>Penalizing Wiggles</h2>
+<p><span class="math display">\[
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+\]</span></p>
+<ul>
+<li><em>(Note that we do <strong>not</strong> assume it’s a spline! We optimize over <span class="math inline">\(g\)</span> itself, not <span class="math inline">\(K\)</span>, <span class="math inline">\(\xi_k\)</span>)</em></li>
+<li>Penalizing <span class="math inline">\([g'(t)]^2\)</span> would mean: penalize function for <strong>changing</strong> over its domain</li>
+<li>Penalizing <span class="math inline">\([g''(t)]^2\)</span> means: it’s ok to change, but do so <strong>smoothly</strong></li>
+<li>Uber ride metaphor: remember how <span class="math inline">\(g'(t)\)</span> gives <strong>speed</strong> while <span class="math inline">\(g''(t)\)</span> gives <strong>acceleration</strong></li>
+<li>Penalizing <strong>speed</strong>… would just make driver go slowly (ensuring slow ride)</li>
+<li>Penalizing <strong>acceleration</strong>…
+<ul>
+<li>Ensures that they can fit the traffic pattern (can drive whatever speed they want)</li>
+<li>As long as they <strong>smoothly accelerate and decelerate</strong> between those speeds (ensuring non-bumpy ride!)</li>
+</ul></li>
+</ul>
+</section>
+<section id="three-mind-blowing-math-facts" class="slide level2">
+<h2>Three Mind-Blowing Math Facts</h2>
+<p><i class="bi bi-1-circle"></i> As <span class="math inline">\(\lambda \rightarrow 0\)</span>, <span class="math inline">\(g^*\)</span> will grow as wiggly as necessary to achieve <strong>zero</strong> RSS / MSE / <span class="math inline">\(R^2\)</span></p>
+<p><i class="bi bi-2-circle"></i> As <span class="math inline">\(\lambda \rightarrow \infty\)</span>, <span class="math inline">\(g^*\)</span> converges to <strong>OLS linear regression line</strong></p>
+<p><i class="bi bi-3-circle"></i> We didn’t optimize over splines, yet <strong>optimal <span class="math inline">\(g\)</span> is a spline!</strong></p>
+<p>Specifically, a <strong>Natural Cubic Spline</strong> with…</p>
+<ul>
+<li>Knots at <strong>every data point</strong> (<span class="math inline">\(K = N\)</span>, <span class="math inline">\(\xi_i = x_i\)</span>), but</li>
+<li>Penalized via (optimal) <span class="math inline">\(\lambda^*\)</span>, so not as wiggly as “free to wiggle” splines from previous approach: <strong>shrunken natural cubic spline</strong></li>
+</ul>
+</section>
+<section id="related-important-local-regression-at-x-x_0" class="slide level2 smaller">
+<h2>Related (Important!) Local Regression at <span class="math inline">\(X = x_0\)</span></h2>
+<p><i class="bi bi-1-circle"></i> Identify <span class="math inline">\(k\)</span> points closest to <span class="math inline">\(x_0\)</span></p>
+<p><i class="bi bi-2-circle"></i> Compute weights <span class="math inline">\(K_i = K(x_0, x_i)\)</span>, such that <span class="math inline">\(K_i = 0\)</span> for furthest <span class="math inline">\(i\)</span>, and <span class="math inline">\(K_i\)</span> increases as <span class="math inline">\(x_i\)</span> gets closer to <span class="math inline">\(x_0\)</span></p>
+<p><i class="bi bi-3-circle"></i> Compute <strong>Weighted Least Squares Estimate</strong></p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{WLS}} = \underset{\boldsymbol\beta}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}K_i(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right]
+\]</span></p>
+<p><i class="bi bi-4-circle"></i> Estimate is ready! <span class="math inline">\(\widehat{f}(x_0) = \beta^{\text{WLS}}_0 + \beta^{\text{WLS}}_1 x_0\)</span>.</p>
 </section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>

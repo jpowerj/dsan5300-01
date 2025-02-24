@@ -94,8 +94,8 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ea72dc5fed832574809a9c94082fbbb.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-af726485512aca9beb0a157f94a4ad2d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-916dece0b7fc38aa4980f0c2d4759d74.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-b62c91e3efa69498452457b19e550583.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-28765e9daef75cd530424965524f483e.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -277,7 +277,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-02-23, 01:14:16 AM</em></p>
+<p><em>Updated 2025-02-24, 06:24:59 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -308,7 +308,15 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#constrained-derivatives-quadratic-splines" id="toc-constrained-derivatives-quadratic-splines" class="nav-link" data-scroll-target="#constrained-derivatives-quadratic-splines">Constrained Derivatives: “Quadratic Splines” (⚠️)</a></li>
   <li><a href="#cubic-splines-aka-splines" id="toc-cubic-splines-aka-splines" class="nav-link" data-scroll-target="#cubic-splines-aka-splines">Cubic Splines (aka, Splines)</a></li>
-  <li><a href="#why-not-stop-there" id="toc-why-not-stop-there" class="nav-link" data-scroll-target="#why-not-stop-there">Why Not Stop There?</a></li>
+  <li><a href="#natural-splines-why-not-stop-there" id="toc-natural-splines-why-not-stop-there" class="nav-link" data-scroll-target="#natural-splines-why-not-stop-there">Natural Splines: Why Not Stop There?</a></li>
+  <li><a href="#how-do-we-find-the-magical-knot-points" id="toc-how-do-we-find-the-magical-knot-points" class="nav-link" data-scroll-target="#how-do-we-find-the-magical-knot-points">How Do We Find The Magical Knot Points?</a></li>
+  </ul></li>
+  <li><a href="#even-cooler-alternative-approach-smoothing-splines" id="toc-even-cooler-alternative-approach-smoothing-splines" class="nav-link" data-scroll-target="#even-cooler-alternative-approach-smoothing-splines">Even Cooler Alternative Approach: Smoothing Splines</a>
+  <ul class="collapse">
+  <li><a href="#reminder-w04-penalizing-complexity" id="toc-reminder-w04-penalizing-complexity" class="nav-link" data-scroll-target="#reminder-w04-penalizing-complexity">Reminder (W04): Penalizing Complexity</a></li>
+  <li><a href="#penalizing-wiggles" id="toc-penalizing-wiggles" class="nav-link" data-scroll-target="#penalizing-wiggles">Penalizing Wiggles</a></li>
+  <li><a href="#three-mind-blowing-math-facts" id="toc-three-mind-blowing-math-facts" class="nav-link" data-scroll-target="#three-mind-blowing-math-facts">Three Mind-Blowing Math Facts</a></li>
+  <li><a href="#related-important-local-regression-at-x-x_0" id="toc-related-important-local-regression-at-x-x_0" class="nav-link" data-scroll-target="#related-important-local-regression-at-x-x_0">Related (Important!) Local Regression at <span class="math inline">\(X = x_0\)</span></a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -1219,8 +1227,8 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 </div>
 </div>
 </section>
-<section id="why-not-stop-there" class="level2 smaller crunch-title crunch-ul">
-<h2 class="smaller crunch-title crunch-ul anchored" data-anchor-id="why-not-stop-there">Why Not Stop There?</h2>
+<section id="natural-splines-why-not-stop-there" class="level2 smaller crunch-title crunch-ul title-12">
+<h2 class="smaller crunch-title crunch-ul title-12 anchored" data-anchor-id="natural-splines-why-not-stop-there">Natural Splines: Why Not Stop There?</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>Polynomials start to BEHAVE BADLY as they go to <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span></p>
@@ -1236,16 +1244,32 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>y_vals <span class="ot">&lt;-</span> y_raw <span class="sc">+</span> y_noise</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>sparse_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x=</span>x_vals, <span class="at">y=</span>y_vals)</span>
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>knot_sparse <span class="ot">&lt;-</span> (xmin <span class="sc">+</span> xmax) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>knot, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">bs</span>(x, <span class="at">knots=</span><span class="fu">c</span>(knot_sparse), <span class="at">degree=</span><span class="dv">25</span>),</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="dv">300</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>knot_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.8</span>,<span class="sc">-</span><span class="fl">1.7</span>,<span class="sc">-</span><span class="fl">1.6</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="sc">-</span><span class="fl">1.4</span>,<span class="sc">-</span><span class="fl">1.2</span>,<span class="sc">-</span><span class="fl">1.0</span>,<span class="sc">-</span><span class="fl">0.8</span>,<span class="sc">-</span><span class="fl">0.6</span>,<span class="sc">-</span><span class="fl">0.4</span>,<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">0</span>,knot_sparse,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>knot_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">knot=</span>knot_vec)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Boundary lines</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>left_bound_line <span class="ot">&lt;-</span> <span class="fu">geom_vline</span>(</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">xintercept =</span> xmin <span class="sc">+</span> <span class="fl">0.1</span>, <span class="at">linewidth=</span><span class="dv">1</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>right_bound_line <span class="ot">&lt;-</span> <span class="fu">geom_vline</span>(</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">xintercept =</span> xmax <span class="sc">-</span> <span class="fl">0.1</span>,</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">linewidth=</span><span class="dv">1</span>, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">alpha=</span><span class="fl">0.8</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>knot_df, <span class="fu">aes</span>(<span class="at">xintercept=</span>knot),</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype=</span><span class="st">"dashed"</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">bs</span>(x, <span class="at">knots=</span><span class="fu">c</span>(knot_sparse), <span class="at">degree=</span><span class="dv">25</span>),</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="dv">300</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  left_bound_line <span class="sc">+</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>  right_bound_line <span class="sc">+</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1271,14 +1295,19 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>knot_sparse <span class="ot">&lt;-</span> (xmin <span class="sc">+</span> xmax) <span class="sc">/</span> <span class="dv">2</span></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>knot, <span class="at">linetype=</span><span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">knots=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.8</span>,<span class="sc">-</span><span class="fl">1.7</span>,<span class="sc">-</span><span class="fl">1.6</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="sc">-</span><span class="fl">1.4</span>,<span class="sc">-</span><span class="fl">1.2</span>,<span class="sc">-</span><span class="fl">1.0</span>,<span class="sc">-</span><span class="fl">0.8</span>,<span class="sc">-</span><span class="fl">0.6</span>,<span class="sc">-</span><span class="fl">0.4</span>,<span class="sc">-</span><span class="fl">0.2</span>,<span class="dv">0</span>,knot_sparse,<span class="dv">1</span>,<span class="fl">1.5</span>,<span class="dv">2</span>), <span class="at">Boundary.knots=</span><span class="fu">c</span>(xmin <span class="sc">+</span> <span class="fl">0.1</span>, xmax <span class="sc">-</span> <span class="fl">0.1</span>)),</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="dv">300</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>sparse_df, <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">method=</span><span class="st">'lm'</span>,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula=</span>y <span class="sc">~</span> <span class="fu">ns</span>(x, <span class="at">knots=</span>knot_vec, <span class="at">Boundary.knots=</span><span class="fu">c</span>(xmin <span class="sc">+</span> <span class="fl">0.1</span>, xmax <span class="sc">-</span> <span class="fl">0.1</span>)),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="dv">300</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>knot_df, <span class="fu">aes</span>(<span class="at">xintercept=</span>knot),</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype=</span><span class="st">"dashed"</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  left_bound_line <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  right_bound_line <span class="sc">+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1290,6 +1319,110 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 </div>
 </div>
 </div>
+</section>
+<section id="how-do-we-find-the-magical-knot-points" class="level2">
+<h2 class="anchored" data-anchor-id="how-do-we-find-the-magical-knot-points">How Do We Find The Magical Knot Points?</h2>
+<ul>
+<li>Hyperparameter 0: Number of knots <span class="math inline">\(K\)</span></li>
+<li>Hyperparameters 1 to <span class="math inline">\(K\)</span>: <strong>Location</strong> <span class="math inline">\(\xi_k\)</span> for each knot</li>
+<li>Fear: Seems like we’re going to need a bunch of slides/lectures talking about this, right?
+<ul>
+<li>(e.g., if you really do have to manually choose them, heuristic is to place them in more “volatile” parts of <span class="math inline">\(D_X\)</span>)</li>
+</ul></li>
+<li>Reality: Nope, just use <strong>CV</strong>! 😉😎</li>
+</ul>
+</section>
+</section>
+<section id="even-cooler-alternative-approach-smoothing-splines" class="level1" data-stack-name="Smoothing Splines">
+<h1 data-stack-name="Smoothing Splines">Even Cooler Alternative Approach: Smoothing Splines</h1>
+<p><em>(Where “cooler” here really means “more statistically-principled”)</em></p>
+<section id="reminder-w04-penalizing-complexity" class="level2 smaller title-12 crunch-img crunch-quarto-figure math-95">
+<h2 class="smaller title-12 crunch-img crunch-quarto-figure math-95 anchored" data-anchor-id="reminder-w04-penalizing-complexity">Reminder (W04): Penalizing Complexity</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Week 4 (General Form):</em></p>
+<p><span class="math display">\[
+\boldsymbol\theta^* = \underset{\boldsymbol\theta}{\operatorname{argmin}} \left[ \mathcal{L}(y, \widehat{y}; \boldsymbol\theta) + \lambda \cdot \mathsf{Complexity}(\boldsymbol\theta) \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/porygon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="160"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Last Week (Penalizing Polynomials):</em></p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{lasso}} = \underset{\boldsymbol\beta, \lambda}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 + \lambda \|\boldsymbol\beta\|_1 \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/exeggcute.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="180"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p><em>Now (Penalizing Sharp Change / Wigglyness):</em></p>
+<p><span class="math display">\[
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/wigglytuff.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="170"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="notes">
+<p>Restricting the <em>first</em> derivative would optimize for a function that <strong>doesn’t change much at all</strong>. Restricting the <em>second</em> derivative just constrains <strong>sharpness</strong> of the changes.</p>
+<p>Think of an Uber driver: penalizing <strong>speed</strong> would just make them go slowly (ensuring slow ride). Penalizing <strong>acceleration</strong> ensures that they can travel whatever speed they want, as long as they smoothly accelerate and decelerate between those speeds (ensuring non-bumpy ride!).</p>
+</div>
+</section>
+<section id="penalizing-wiggles" class="level2 smaller crunch-title crunch-ul math-90 crunch-li-8">
+<h2 class="smaller crunch-title crunch-ul math-90 crunch-li-8 anchored" data-anchor-id="penalizing-wiggles">Penalizing Wiggles</h2>
+<p><span class="math display">\[
+g^* = \underset{g, \lambda}{\operatorname{argmin}} \left[ \sum_{i=1}^{N}(g(x_i) - y_i)^2 + \lambda \overbrace{\int}^{\mathclap{\text{Sum of}}} [\underbrace{g''(t)}_{\mathclap{\text{Change in }g'(t)}}]^2 \mathrm{d}t \right]
+\]</span></p>
+<ul>
+<li><em>(Note that we do <strong>not</strong> assume it’s a spline! We optimize over <span class="math inline">\(g\)</span> itself, not <span class="math inline">\(K\)</span>, <span class="math inline">\(\xi_k\)</span>)</em></li>
+<li>Penalizing <span class="math inline">\([g'(t)]^2\)</span> would mean: penalize function for <strong>changing</strong> over its domain</li>
+<li>Penalizing <span class="math inline">\([g''(t)]^2\)</span> means: it’s ok to change, but do so <strong>smoothly</strong></li>
+<li>Uber ride metaphor: remember how <span class="math inline">\(g'(t)\)</span> gives <strong>speed</strong> while <span class="math inline">\(g''(t)\)</span> gives <strong>acceleration</strong></li>
+<li>Penalizing <strong>speed</strong>… would just make driver go slowly (ensuring slow ride)</li>
+<li>Penalizing <strong>acceleration</strong>…
+<ul>
+<li>Ensures that they can fit the traffic pattern (can drive whatever speed they want)</li>
+<li>As long as they <strong>smoothly accelerate and decelerate</strong> between those speeds (ensuring non-bumpy ride!)</li>
+</ul></li>
+</ul>
+</section>
+<section id="three-mind-blowing-math-facts" class="level2">
+<h2 class="anchored" data-anchor-id="three-mind-blowing-math-facts">Three Mind-Blowing Math Facts</h2>
+<p><i class="bi bi-1-circle"></i> As <span class="math inline">\(\lambda \rightarrow 0\)</span>, <span class="math inline">\(g^*\)</span> will grow as wiggly as necessary to achieve <strong>zero</strong> RSS / MSE / <span class="math inline">\(R^2\)</span></p>
+<p><i class="bi bi-2-circle"></i> As <span class="math inline">\(\lambda \rightarrow \infty\)</span>, <span class="math inline">\(g^*\)</span> converges to <strong>OLS linear regression line</strong></p>
+<p><i class="bi bi-3-circle"></i> We didn’t optimize over splines, yet <strong>optimal <span class="math inline">\(g\)</span> is a spline!</strong></p>
+<p>Specifically, a <strong>Natural Cubic Spline</strong> with…</p>
+<ul>
+<li>Knots at <strong>every data point</strong> (<span class="math inline">\(K = N\)</span>, <span class="math inline">\(\xi_i = x_i\)</span>), but</li>
+<li>Penalized via (optimal) <span class="math inline">\(\lambda^*\)</span>, so not as wiggly as “free to wiggle” splines from previous approach: <strong>shrunken natural cubic spline</strong></li>
+</ul>
+</section>
+<section id="related-important-local-regression-at-x-x_0" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="related-important-local-regression-at-x-x_0">Related (Important!) Local Regression at <span class="math inline">\(X = x_0\)</span></h2>
+<p><i class="bi bi-1-circle"></i> Identify <span class="math inline">\(k\)</span> points closest to <span class="math inline">\(x_0\)</span></p>
+<p><i class="bi bi-2-circle"></i> Compute weights <span class="math inline">\(K_i = K(x_0, x_i)\)</span>, such that <span class="math inline">\(K_i = 0\)</span> for furthest <span class="math inline">\(i\)</span>, and <span class="math inline">\(K_i\)</span> increases as <span class="math inline">\(x_i\)</span> gets closer to <span class="math inline">\(x_0\)</span></p>
+<p><i class="bi bi-3-circle"></i> Compute <strong>Weighted Least Squares Estimate</strong></p>
+<p><span class="math display">\[
+\boldsymbol\beta^*_{\text{WLS}} = \underset{\boldsymbol\beta}{\operatorname{argmin}} \left[ \frac{1}{N}\sum_{i=1}^{N}K_i(\widehat{y}_i(\boldsymbol\beta) - y_i)^2 \right]
+\]</span></p>
+<p><i class="bi bi-4-circle"></i> Estimate is ready! <span class="math inline">\(\widehat{f}(x_0) = \beta^{\text{WLS}}_0 + \beta^{\text{WLS}}_1 x_0\)</span>.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
