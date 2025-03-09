@@ -258,7 +258,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-02-24, 06:24:59 PM</em></p>
+<p><em>Updated 2025-03-09, 04:53:02 AM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -430,7 +430,7 @@ window.Quarto = {
 \DeclareMathOperator*{\argmin}{argmin}
 \newcommand{\bigexp}[1]{\exp\mkern-4mu\left[ #1 \right]}
 \newcommand{\bigexpect}[1]{\mathbb{E}\mkern-4mu \left[ #1 \right]}
-\newcommand{\definedas}{\overset{\text{defn}}{=}}
+\newcommand{\definedas}{\overset{\small\text{def}}{=}}
 \newcommand{\definedalign}{\overset{\phantom{\text{defn}}}{=}}
 \newcommand{\eqeventual}{\overset{\text{eventually}}{=}}
 \newcommand{\Err}{\text{Err}}
@@ -636,7 +636,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <section id="general-issue-with-cv-its-halfway-there" class="level2 smaller crunch-title title-11 crunch-ul crunch-p">
 <h2 class="smaller crunch-title title-11 crunch-ul crunch-p anchored" data-anchor-id="general-issue-with-cv-its-halfway-there">General Issue with CV: It’s… Halfway There</h2>
 <p>CV plots will often look like (complexity on <span class="math inline">\(x\)</span>-axis and CV error on <span class="math inline">\(y\)</span>-axis):</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -662,9 +662,9 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cv-plot-general-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="index_files/figure-html/cv-plot-general-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -933,7 +933,7 @@ Algorithm: <em>Backward</em> Stepwise Selection
 </section>
 <section id="the-key-plot" class="level2 smaller crunch-title title-11">
 <h2 class="smaller crunch-title title-11 anchored" data-anchor-id="the-key-plot">The Key Plot</h2>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1032,9 +1032,9 @@ Algorithm: <em>Backward</em> Stepwise Selection
 <span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>lasso_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="index_files/figure-html/lasso-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="index_files/figure-html/lasso-plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1052,7 +1052,7 @@ Algorithm: <em>Backward</em> Stepwise Selection
 <p><span class="math display">\[
 f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right)^2 \right]
 \]</span></p>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1068,9 +1068,9 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="index_files/figure-html/gaussian-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="1056"></p>
+<p><img src="index_files/figure-html/gaussian-prior-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -1087,7 +1087,7 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <p><span class="math display">\[
 f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 \]</span></p>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1100,9 +1100,9 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="index_files/figure-html/laplace-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672"></p>
+<p><img src="index_files/figure-html/laplace-prior-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>

@@ -35,11 +35,11 @@ w07:
   title: "Basis Functions and Splines"
   footer: "Basis Functions and Splines"
   date-md: "Feb 24"
-# w08:
-#   weeknum: 8
-#   title: "In-Class Midterm: Data Ethics, Fairness, Privacy, Causality"
-#   footer: "In-Class Midterm"
-#   date-md: "Feb 26"
+w08:
+  weeknum: 8
+  title: "Support Vector Machines (SVMs)"
+  footer: "Support Vector Machines (SVMs)"
+  date-md: "Mar 10"
 # w09:
 #   weeknum: 9
 #   title: "From Data Ethics to Data Policy"

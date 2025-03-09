@@ -6,7 +6,7 @@ institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
 bibliography: "../_DSAN5300.bib"
 date: 2025-02-24
 date-format: full
-lecnum: 6
+lecnum: 7
 categories:
   - "Class Sessions"
 format:

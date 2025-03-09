@@ -290,7 +290,7 @@ Jeff Jacobs
 \DeclareMathOperator*{\argmin}{argmin}
 \newcommand{\bigexp}[1]{\exp\mkern-4mu\left[ #1 \right]}
 \newcommand{\bigexpect}[1]{\mathbb{E}\mkern-4mu \left[ #1 \right]}
-\newcommand{\definedas}{\overset{\text{defn}}{=}}
+\newcommand{\definedas}{\overset{\small\text{def}}{=}}
 \newcommand{\definedalign}{\overset{\phantom{\text{defn}}}{=}}
 \newcommand{\eqeventual}{\overset{\text{eventually}}{=}}
 \newcommand{\Err}{\text{Err}}
@@ -489,7 +489,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <section id="general-issue-with-cv-its-halfway-there" class="slide level2 smaller crunch-title title-11 crunch-ul crunch-p">
 <h2>General Issue with CV: It’s… Halfway There</h2>
 <p>CV plots will often look like (complexity on <span class="math inline">\(x\)</span>-axis and CV error on <span class="math inline">\(y\)</span>-axis):</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -516,7 +516,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/cv-plot-general-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><ul>
+<img data-src="index_files/figure-revealjs/cv-plot-general-1.png" width="960" class="r-stretch"><ul>
 <li>We “know” <span class="math inline">\(\mathcal{M}_3\)</span> preferable to <span class="math inline">\(\mathcal{M}_6\)</span> (same error yet, less overfitting) <span class="math inline">\(\implies\)</span> “1SE rule”</li>
 <li>But… heuristic <span class="math inline">\(\;\nimplies\)</span> optimal! What are we gaining/losing as we move <span class="math inline">\(\mathcal{M}_6 \rightarrow \mathcal{M}_3\)</span>?</li>
 <li>Enter <strong>REGULARIZATION!</strong></li>
@@ -769,7 +769,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 </section>
 <section id="the-key-plot" class="slide level2 smaller crunch-title title-11">
 <h2>The Key Plot</h2>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -869,7 +869,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/lasso-plot-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/lasso-plot-1.png" width="960" class="r-stretch"></section>
 <section id="bayesian-interpretation" class="slide level2 smaller crunch-title crunch-quarto-figure crunch-ul math-90 crunch-math inline-90 crunch-p title-11 crunch-li-8">
 <h2>Bayesian Interpretation</h2>
 <div class="columns">
@@ -882,7 +882,7 @@ Figure&nbsp;1: Adapted from Fortmann-Roe (2012), <a href="https://scott.fortmann
 <p><span class="math display">\[
 f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu}{\sigma}\right)^2 \right]
 \]</span></p>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -898,9 +898,9 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <span id="cb4-11"><a></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/gaussian-prior-1.png" class="quarto-figure quarto-figure-center" width="1056"></p>
+<p><img data-src="index_files/figure-revealjs/gaussian-prior-1.png" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -917,7 +917,7 @@ f_X(x) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp\left[ -\frac{1}{2}\left( \frac{x-\mu
 <p><span class="math display">\[
 f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 \]</span></p>
-<div class="cell" data-layout-align="center" data-crop="false">
+<div class="cell" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -930,9 +930,9 @@ f(x) = \frac{1}{2b}\exp\left[ -\left| \frac{x - \mu}{b} \right| \right]
 <span id="cb5-8"><a></a>  prior_labs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/laplace-prior-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/laplace-prior-1.png" width="960"></p>
 </figure>
 </div>
 </div>

@@ -1,0 +1,468 @@
+---
+title: "Week 8: Support Vector Machines"
+subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
+author: "Jeff Jacobs"
+institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
+bibliography: "../_DSAN5300.bib"
+date: 2025-03-10
+date-format: full
+lecnum: 8
+categories:
+  - "Class Sessions"
+format:
+  revealjs:
+    df-print: kable
+    footer: "DSAN 5300-01 Week 8: {{< var w08.footer >}}"
+    output-file: "slides.html"
+    html-math-method: mathjax
+    scrollable: true
+    theme: [default, "../dsan-globals/jjquarto.scss"]
+    slide-number: true
+    echo: true
+    code-fold: true
+    link-external-icon: true
+    link-external-newwindow: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css'>"
+    simplemenu:
+      flat: true
+      barhtml:
+        header: "<div class='menubar'><span style='position: absolute; left: 8; padding-left: 8px;'><a href='./index.html'>&larr; Return to Notes</a></span><ul class='menu'></ul></div>"
+      scale: 0.5
+    revealjs-plugins:
+      - simplemenu
+  html:
+    df-print: kable
+    output-file: "index.html"
+    html-math-method: mathjax
+    echo: true
+    code-fold: true
+---
+
+::: {.content-visible unless-format="revealjs"}
+
+<center class='mb-3'>
+<a class="h2" href="./slides.html" target="_blank">Open slides in new tab &rarr;</a>
+</center>
+
+:::
+
+# Schedule {.smaller .small-title .crunch-title .crunch-callout data-name="Schedule"}
+
+Today's Planned Schedule:
+
+| | Start | End | Topic |
+|:- |:- |:- |:- |
+| **Lecture** | 6:30pm | 7:00pm | [Separating Hyperplanes &rarr;](#learning-decision-boundaries) |
+| | 7:00pm | 7:20pm | [Max-Margin Classifier &rarr;](#the-max-margin-classifier) | 
+| | 7:20pm | 8:00pm | [Support Vector *Classifiers* &rarr;](#support-vector-classifiers) |
+| **Break!** | 8:00pm | 8:10pm | |
+| | 8:10pm | 9:00pm | [Support Vector *Machines* &rarr;](#support-vector-machines) |
+
+: {tbl-colwidths="[12,12,12,64]"}
+
+::: {.hidden}
+
+```{r}
+#| label: r-source-globals
+source("../dsan-globals/_globals.r")
+set.seed(5300)
+```
+
+:::
+
+{{< include ../dsan-globals/_globals-tex.qmd >}}
+
+## Quick Roadmap
+
+* Weeks 1-7: **Regression** was central motivating problem
+  * (Even when we looked at classification *via* Logistic Regression, it was regression and then a final **thresholding** step on the regression result)
+* This Week:
+  * On the one hand, we shift focus to **binary classification** through learning **decision boundaries**
+  * On the other hand, **everything we've discussed about handling non-linearity** will come into play!
+
+# Max-Margin Classifiers {data-stack-name="Max-Margin Classifiers"}
+
+* Most important **building block** for SVMs...
+* But should **not** be used on its own! For reasons we'll see shortly
+  * (Like "Linear Probability Models" or "Quadratic Splines", MMCs highlight problem that [usable method] solves!)
+* MMC $\leadsto$ Support Vector Classifiers (can be used)
+* MMC $\leadsto$ Support Vector Machines (can be used)
+
+## Learning Decision Boundaries {.title-09 .crunch-title .crunch-quarto-figure .crunch-ul .crunch-li-8 .crunch-p}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+* How can we get our computer to "learn" which houses I like?
+
+```{r}
+#| label: sup-data-plot
+#| crop: false
+#| fig-width: 4.5
+#| fig-height: 4.5
+library(tidyverse)
+house_df <- tibble::tribble(
+  ~sqm, ~yrs, ~Rating,
+  10, 5, "Disliked",
+  10, 20, "Disliked",
+  20, 22, "Liked",
+  25, 12, "Liked",
+  11, 15, "Disliked",
+  22.1, 5, "Liked"
+) |> mutate(
+  label = ifelse(Rating == "Liked", 1, -1)
+)
+base_plot <- house_df |> ggplot(aes(x=sqm, y=yrs)) +
+  labs(
+    title = "Jeff's House Search",
+    x = "Square Meters",
+    y = "Years Old"
+  ) +
+  expand_limits(x=c(0,25), y=c(0,25)) +
+  coord_equal() +
+  # 45 is minus sign, 95 is em-dash
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=14)
+base_plot +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333)
+```
+
+:::
+::: {.column width="50%"}
+
+* Naïve idea: Try random lines (each forming a **decision boundary**), pick "best" one
+
+```{r}
+#| label: random-lines-plot
+#| crop: false
+#| fig-width: 4.5
+#| fig-height: 4.5
+set.seed(5300)
+is_separating <- function(beta_vec) {
+  beta_str <- paste0(beta_vec, collapse=",")
+  # print(paste0("is_separating: ",beta_str))
+  margins <- c()
+  for (i in 1:nrow(house_df)) {
+    cur_data <- house_df[i,]
+    # print(cur_data)
+    linear_comb <- beta_vec[1] + beta_vec[2] * cur_data$sqm + beta_vec[3] * cur_data$yrs
+    cur_margin <- cur_data$label * linear_comb
+    # print(cur_margin)
+    margins <- c(margins, cur_margin)
+  }
+  #print(margins)
+  return(all(margins > 0) | all(margins < 0))
+}
+cust_rand_lines_df <- tribble(
+  ~b0, ~b1, ~b2,
+  # 41, -0.025, -1,
+  165, -8, -1,
+  -980, 62, -1
+) |> mutate(
+  slope=-(b1/b2),
+  intercept=-(b0/b2)
+)
+num_lines <- 20
+rand_b0 <- runif(num_lines, min=-40, max=40)
+rand_b1 <- runif(num_lines, min=-2, max=2)
+# rand_b2 <- -1 + 2*rbernoulli(num_lines)
+rand_b2 <- -1
+rand_lines_df <- tibble::tibble(
+  id=1:num_lines,
+  b0=rand_b0,
+  b1=rand_b1,
+  b2=rand_b2
+) |> mutate(
+  slope=-(b1/b2),
+  intercept=-(b0/b2)
+)
+rand_lines_df <- bind_rows(rand_lines_df, cust_rand_lines_df)
+# Old school for loop
+for (i in 1:nrow(rand_lines_df)) {
+  cur_line <- rand_lines_df[i,]
+  cur_beta_vec <- c(cur_line$b0, cur_line$b1, cur_line$b2)
+  cur_is_sep <- is_separating(cur_beta_vec)
+  rand_lines_df[i, "is_sep"] <- cur_is_sep
+}
+base_plot +
+  geom_abline(
+    data=rand_lines_df, aes(slope=slope, intercept=intercept), linetype="dashed"
+  ) +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333) +
+  labs(
+    title = paste0("10 Boundary Guesses"),
+    x = "Square Meters",
+    y = "Years Old"
+  )
+```
+
+<center>
+
+[*(...Which one is "best"?)*]{style="font-size: 75%"}
+
+</center>
+
+:::
+::::
+
+## Separating Hyperplanes {.crunch-title .title-09 .crunch-quarto-figure .crunch-ul}
+
+* Any line which **perfectly separates** positive from negative cases is a **separating hyperplane**
+
+```{r}
+#| label: sep-lines-plot
+#| crop: false
+base_plot +
+  geom_abline(
+    data=rand_lines_df, aes(slope=slope, intercept=intercept, linetype=is_sep)
+  ) +
+  geom_abline(
+    data=rand_lines_df |> filter(is_sep),
+    aes(slope=slope, intercept=intercept),
+    linewidth=3, color=cb_palette[4], alpha=0.333
+  ) +
+  scale_linetype_manual("Separating?", values=c("dotted", "dashed")) +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333) +
+  labs(
+    title = paste0("The Like vs. Dislike Boundary: 10 Guesses"),
+    x = "Square Meters",
+    y = "Years Old"
+  )
+```
+
+* Why might the **left** line be better? *(Think of DGP!)*
+
+## Max-Margin Hyperplanes {.crunch-title .title-11 .smaller .crunch-quarto-figure .crunch-ul .crunch-li-8}
+
+* Among the two, left hyperplane establishes a larger **margin** between the two classes!
+* **Margin** (of hyperplane) = **Smallest distance** to datapoint (Think of hyperplane as middle of separating **slab**: how wide is the slab?)
+* **Important**: Note how margin is **not** the same as *average* distance!
+
+:::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+#| label: left-sep-only-plot
+#| crop: false
+sep_lines_df <- rand_lines_df |> filter(is_sep) |> mutate(
+  norm_slope = (-1)/slope
+)
+cur_line_df <- sep_lines_df |> filter(slope > 0)
+# left_line_df
+# And make one copy per point
+cur_sup_df <- uncount(cur_line_df, nrow(house_df))
+cur_sup_df <- bind_cols(cur_sup_df, house_df)
+cur_sup_df <- cur_sup_df |> mutate(
+  norm_intercept = yrs - norm_slope * sqm,
+  margin_intercept = yrs - slope * sqm,
+  margin_intercept_gap = intercept - margin_intercept,
+  margin_intercept_inv = intercept + margin_intercept_gap,
+  norm_cross_x = -(norm_intercept - intercept) / (norm_slope - slope),
+  x_gap = norm_cross_x - sqm,
+  norm_cross_y = yrs + x_gap * norm_slope,
+  vec_margin = label * (b0 + b1 * sqm + b2 * yrs),
+  is_sv = vec_margin <= 240
+)
+base_plot +
+  geom_abline(
+    data=cur_line_df, aes(slope=slope, intercept=intercept), linetype="solid"
+  ) +
+  geom_abline(
+    data=cur_sup_df |> filter(is_sv),
+    aes(
+      slope=slope,
+      intercept=margin_intercept
+    ),
+    linetype="dashed"
+  ) +
+  geom_abline(
+    data=cur_sup_df |> filter(is_sv),
+    aes(
+      slope=slope,
+      intercept=margin_intercept_inv
+    ),
+    linetype="dashed"
+  ) +
+  geom_segment(
+    data=cur_sup_df |> filter(is_sv),
+    aes(x=sqm, y=yrs, xend=norm_cross_x, yend=norm_cross_y),
+    color=cb_palette[4], linewidth=3
+  ) +
+  geom_segment(
+    data=cur_sup_df,
+    aes(x=sqm, y=yrs, xend=norm_cross_x, yend=norm_cross_y, linetype=is_sv)
+  ) +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333) +
+  scale_linetype_manual("Support\nVector?", values=c("dotted", "solid")) +
+  labs(
+    title = paste0("Left Hyperplane Distances"),
+    x = "Square Meters",
+    y = "Years Old"
+  )
+```
+
+:::
+::: {.column width="50%"}
+
+```{r}
+#| label: right-sep-only-plot
+#| crop: false
+# New calculation: line with same slope but that hits the SV
+# y - y1 = m(x - x1), so...
+# y - yrs = m(x - sqm) <=> y = m(x-sqm) + yrs <=> y = mx  - m*sqm + yrs
+# <=> b = yrs - -m*sqm
+cur_line_df <- sep_lines_df |> filter(slope < 0)
+# left_line_df
+# And make one copy per point
+cur_sup_df <- uncount(cur_line_df, nrow(house_df))
+cur_sup_df <- bind_cols(cur_sup_df, house_df)
+cur_sup_df <- cur_sup_df |> mutate(
+  norm_intercept = yrs - norm_slope * sqm,
+  margin_intercept = yrs - slope * sqm,
+  margin_intercept_gap = intercept - margin_intercept,
+  margin_intercept_inv = intercept + margin_intercept_gap,
+  norm_cross_x = -(norm_intercept - intercept) / (norm_slope - slope),
+  x_gap = norm_cross_x - sqm,
+  norm_cross_y = yrs + x_gap * norm_slope,
+  vec_margin = abs(label * (b0 + b1 * sqm + b2 * yrs)),
+  is_sv = vec_margin <= 25
+)
+base_plot +
+  geom_abline(
+    data=cur_line_df, aes(slope=slope, intercept=intercept), linetype="solid"
+  ) +
+  geom_abline(
+    data=cur_sup_df |> filter(is_sv),
+    aes(
+      slope=slope,
+      intercept=margin_intercept
+    ),
+    linetype="dashed"
+  ) +
+  geom_abline(
+    data=cur_sup_df |> filter(is_sv),
+    aes(
+      slope=slope,
+      intercept=margin_intercept_inv
+    ),
+    linetype="dashed"
+  ) +
+  # geom_abline(
+  #   data=cur_line_df,
+  #   aes(slope=slope, intercept=intercept),
+  #   linewidth=3, color=cb_palette[4], alpha=0.333
+  # ) +
+  geom_segment(
+    data=cur_sup_df |> filter(vec_margin <= 18),
+    aes(x=sqm, y=yrs, xend=norm_cross_x, yend=norm_cross_y),
+    color=cb_palette[4], linewidth=3
+  ) +
+  geom_segment(
+    data=cur_sup_df,
+    aes(x=sqm, y=yrs, xend=norm_cross_x, yend=norm_cross_y, linetype=is_sv)
+  ) +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333) +
+  scale_linetype_manual("Support\nVector?", values=c("dotted", "solid")) +
+  labs(
+    title = paste0("Right Hyperplane Margin"),
+    x = "Square Meters",
+    y = "Years Old"
+  )
+```
+
+:::
+::::
+
+## *Optimal* Max-Margin Hyperplane {.crunch-title .smaller}
+
+* On previous slides we chose from a small set of *randomly-generated* lines...
+* Now that we have our **max-margin objective**, we can optimize over **all possible lines!**
+
+:::: {.columns}
+::: {.column width="50%"}
+
+$$
+\begin{align*}
+\text{maximize } & M \\
+\text{s.t. } & y_i(\beta_0 + \beta_1x_i) > 0
+\end{align*}
+$$
+
+:::
+::: {.column width="50%"}
+
+```{r}
+#| label: optimal-mmh
+#| crop: false
+#| fig-width: 5
+#| fig-height: 5
+library(e1071)
+liked <- as.factor(house_df$Rating == "Liked")
+cent_df <- house_df
+cent_df$sqm <- scale(cent_df$sqm)
+cent_df$yrs <- scale(cent_df$yrs)
+svm_model <- svm(liked ~ sqm + yrs, data=cent_df, kernel="linear")
+cf <- coef(svm_model)
+sep_intercept <- -cf[1] / cf[3]
+sep_slope <- -cf[2] / cf[3]
+cent_df |> ggplot(aes(x=sqm, y=yrs)) +
+  coord_equal() +
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=14) +
+  geom_abline(
+    intercept=sep_intercept, slope=sep_slope, linetype="solid"
+  ) +
+  # geom_abline(
+  #   data=cur_line_df,
+  #   aes(slope=slope, intercept=intercept),
+  #   linewidth=3, color=cb_palette[4], alpha=0.333
+  # ) +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=6, stroke=0.75, alpha=0.333) +
+  scale_linetype_manual("Support\nVector?", values=c("dotted", "solid")) +
+  labs(
+    title = "Optimal Max-Margin Hyperplane",
+    x = "Z(Square Meters)",
+    y = "Z(Years Old)"
+  )
+```
+
+:::
+::::
+
+## When Does This Fail?
+
+* Here we need to keep in mind how our goal is relative to the **Data-Generating Process!**
+
+# Support Vector Classifiers {data-stack-name="SVCs"}
+
+## Handling Non-Linearly-Separable Data
+
+# Support Vector *Machines* {data-stack-name="SVMs"}
+
+## Non-Linearity Strikes Again!
+

@@ -1,5 +1,18 @@
 [
   {
+    "listing": "/index.html",
+    "items": [
+      "/w01/index.html",
+      "/w02/index.html",
+      "/w03/index.html",
+      "/w04/index.html",
+      "/w05/index.html",
+      "/w06/index.html",
+      "/w07/index.html",
+      "/w08/index.html"
+    ]
+  },
+  {
     "listing": "/writeups/index.html",
     "items": [
       "/writeups/hw2-guide/index.html",
@@ -10,18 +23,6 @@
       "/writeups/machine-learning/index.html",
       "/writeups/regression-vs-pca/index.html",
       "/writeups/optimization/index.html"
-    ]
-  },
-  {
-    "listing": "/index.html",
-    "items": [
-      "/w01/index.html",
-      "/w02/index.html",
-      "/w03/index.html",
-      "/w04/index.html",
-      "/w05/index.html",
-      "/w07/index.html",
-      "/w06/index.html"
     ]
   }
 ]
