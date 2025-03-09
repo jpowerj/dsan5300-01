@@ -8,6 +8,7 @@ date: last-modified
 date-format: full
 categories:
   - "Extra Writeups"
+cache: true
 format:
   html:
     echo: true

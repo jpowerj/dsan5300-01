@@ -466,7 +466,7 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <div class="columns text-90">
 <div class="column" style="width:32%;">
 <p><i class="bi bi-1-circle"></i> Raw data: <span class="math inline">\(y = \sin(x) + \varepsilon\)</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -484,15 +484,15 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <span id="cb2-13"><a></a>base_plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span>dgp_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/sine-data-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/sine-data-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <p><i class="bi bi-2-circle"></i> Bad (quadratic) model</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>quad_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x,<span class="dv">2</span>), <span class="at">data=</span>data_df)</span>
@@ -503,9 +503,9 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <span id="cb3-6"><a></a>  <span class="fu">labs</span>(<span class="at">title=</span>poly_label_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/sine-poly2-fit-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/sine-poly2-fit-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -514,7 +514,7 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <p>&nbsp;</p>
 </div><div class="column" style="width:32%;">
 <p><i class="bi bi-3-circle"></i> Making it “better” with more complex polynomials</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>poly5_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x,<span class="dv">5</span>), <span class="at">data=</span>data_df)</span>
@@ -525,14 +525,14 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <span id="cb4-6"><a></a>  <span class="fu">labs</span>(<span class="at">title=</span>poly5_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/sine-poly5-fit-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/sine-poly5-fit-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>poly8_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x,<span class="dv">8</span>), <span class="at">data=</span>data_df)</span>
@@ -543,9 +543,9 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <span id="cb5-6"><a></a>  <span class="fu">labs</span>(<span class="at">title=</span>poly8_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/sine-poly10-fit-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/sine-poly10-fit-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -557,7 +557,7 @@ Figure&nbsp;4: <a href="https://fonts.google.com/specimen/Rubik+Puddles">Font Cr
 <p><span class="math display">\[
 Y = \beta_0 + \beta_1 \sin(x)
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>sine_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">sin</span>(x), <span class="at">data=</span>data_df)</span>
@@ -568,9 +568,9 @@ Y = \beta_0 + \beta_1 \sin(x)
 <span id="cb6-6"><a></a>  <span class="fu">labs</span>(<span class="at">title=</span>sine_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/sine-fit-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/sine-fit-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -653,7 +653,7 @@ Y = \beta_0 + \beta_1 b_1(X) + \beta_2 b_2(X) + \cdots + \beta_d b_d(X)
 <ul>
 <li>Here we see why our first two basis functions were <strong>polynomial</strong> and <strong>piecewise</strong>: most rudimentary spline fits a <strong>polynomial</strong> to each <strong>piece</strong></li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -682,7 +682,7 @@ Y = \beta_0 + \beta_1 b_1(X) + \beta_2 b_2(X) + \cdots + \beta_d b_d(X)
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/quad-naive-spline-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><ul>
+<img data-src="index_files/figure-revealjs/quad-naive-spline-1.png" width="960" class="r-stretch"><ul>
 <li>What’s the issue with this?</li>
 </ul>
 </section>
@@ -702,7 +702,7 @@ Y = \beta_0 + \beta_1 b_1(X) + \beta_2 b_2(X) + \cdots + \beta_d b_d(X)
 Y_R = \beta_0^{🧐} + \beta_1 X_R \hspace{5cm}
 \]</span></p>
 </div></div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">set.seed</span>(<span class="dv">5300</span>)</span>
@@ -720,7 +720,7 @@ Y_R = \beta_0^{🧐} + \beta_1 X_R \hspace{5cm}
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/linear-continuity-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><ul>
+<img data-src="index_files/figure-revealjs/linear-continuity-1.png" width="960" class="r-stretch"><ul>
 <li>…We need <span class="math inline">\(X_R\)</span> to have its own slope but <strong>not</strong> its own intercept! Something like:</li>
 </ul>
 <p><span class="math display">\[
@@ -738,7 +738,7 @@ x &amp;\text{if }x &gt; 0
 x - \xi &amp;\text{if }x &gt; 0
 \end{cases}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -764,7 +764,7 @@ x - \xi &amp;\text{if }x &gt; 0
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/truncated-power-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><ul>
+<img data-src="index_files/figure-revealjs/truncated-power-1.png" width="960" class="r-stretch"><ul>
 <li><span class="math inline">\(\Rightarrow\)</span> we can include a <strong>“slope modifier”</strong> <span class="math inline">\(\beta_m (X - \xi)_+\)</span> that only <strong>“kicks in”</strong> once <span class="math inline">\(x\)</span> goes past <span class="math inline">\(\xi\)</span>! (Changing slope by <span class="math inline">\(\beta_m\)</span>)</li>
 </ul>
 </section>
@@ -783,7 +783,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 (X - \xi)_+ \\
 \end{align*}
 \]</span></p>
 </div><div class="column" style="width:60%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>sub_df <span class="ot">&lt;-</span> sub_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x_tr =</span> <span class="fu">ifelse</span>(x <span class="sc">&lt;</span> sub_knot, <span class="dv">0</span>, x <span class="sc">-</span> sub_knot))</span>
@@ -826,7 +826,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 (X - \xi)_+ \\
 </div>
 </div>
 </div></div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>sub_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span></span>
@@ -837,7 +837,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 (X - \xi)_+ \\
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/linear-seg-plot-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/linear-seg-plot-1.png" width="960" class="r-stretch"></section>
 <section id="continuous-segmented-regression" class="slide level2 smaller crunch-ul crunch-title title-12 math-80 table-80">
 <h2>Continuous Segmented Regression</h2>
 <div class="columns">
@@ -852,7 +852,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 \end{align*}
 \]</span></p>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>prod_df <span class="ot">&lt;-</span> prod_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">x_tr =</span> <span class="fu">ifelse</span>(x <span class="sc">&gt;</span> knot, x <span class="sc">-</span> knot, <span class="dv">0</span>))</span>
@@ -865,7 +865,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 </div></div>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>seg_model <span class="sc">|&gt;</span> broom<span class="sc">::</span><span class="fu">tidy</span>() <span class="sc">|&gt;</span> <span class="fu">mutate_if</span>(is.numeric, round, <span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>p.value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -918,7 +918,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>cont_seg_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
@@ -936,9 +936,9 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 <span id="cb14-13"><a></a>cont_seg_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/continuous-seg-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/continuous-seg-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -965,15 +965,15 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 <div class="columns">
 <div class="column" style="width:30%;">
 <p>Continuous Segmented:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>cont_seg_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/quadratic-seg-plot-again-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/quadratic-seg-plot-again-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -982,7 +982,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 <p>&nbsp;</p>
 </div><div class="column" style="width:30%;">
 <p>“Quadratic Spline”:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
@@ -997,9 +997,9 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 <span id="cb16-10"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/deriv-contraints-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/deriv-contraints-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1010,7 +1010,7 @@ Y &amp;= \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 (X - \xi)_+ + \beta_4 (X - 
 <p><span class="math display">\[
 Y = \beta_0 + \beta_1 X + \beta_2 X^2
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
@@ -1025,9 +1025,9 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb17-10"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/base-quadratic-reg-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/base-quadratic-reg-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1040,7 +1040,7 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <section id="cubic-splines-aka-splines" class="slide level2 smaller crunch-title crunch-ul">
 <h2>Cubic Splines (aka, Splines)</h2>
 <p><em>(We did it, we finally did it)</em></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
@@ -1056,13 +1056,13 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/cubic-spline-plot-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/cubic-spline-plot-1.png" width="960" class="r-stretch"></section>
 <section id="natural-splines-why-not-stop-there" class="slide level2 smaller crunch-title crunch-ul title-12">
 <h2>Natural Splines: Why Not Stop There?</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>Polynomials start to BEHAVE BADLY as they go to <span class="math inline">\(-\infty\)</span> and <span class="math inline">\(\infty\)</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">library</span>(splines) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1102,16 +1102,16 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb19-35"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/cubic-spline-boundary-issue-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/cubic-spline-boundary-issue-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
 <p>Natural Splines: <strong>Force</strong> leftmost and rightmost pieces to be <strong>linear</strong></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">library</span>(splines) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1140,9 +1140,9 @@ Y = \beta_0 + \beta_1 X + \beta_2 X^2
 <span id="cb20-24"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">22</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/natural-spline-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/natural-spline-1.png" width="960"></p>
 </figure>
 </div>
 </div>

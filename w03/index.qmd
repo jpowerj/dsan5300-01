@@ -7,6 +7,7 @@ bibliography: "../_DSAN5300.bib"
 date: 2025-01-27
 date-format: full
 lecnum: 3
+cache: true
 categories:
   - "Class Sessions"
 format:

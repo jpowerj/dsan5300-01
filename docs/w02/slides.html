@@ -339,18 +339,18 @@ Jeff Jacobs
 <div class="quarto-layout-row quarto-layout-valign-center">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/pc-line-1.png" class="quarto-figure quarto-figure-center" width="576"></p>
+<p><img data-src="index_files/figure-revealjs/pc-line-1.png" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/reg-line-1.png" class="quarto-figure quarto-figure-center" width="576"></p>
+<p><img data-src="index_files/figure-revealjs/reg-line-1.png" width="576"></p>
 </figure>
 </div>
 </div>
@@ -368,7 +368,7 @@ Jeff Jacobs
 <li><strong>Dependent variable</strong>: Sales</li>
 <li><strong>Goal</strong>: Figure out a good way to <strong>allocate</strong> an advertising budget</li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">library</span>(tidyverse)</span>
@@ -386,10 +386,10 @@ Jeff Jacobs
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/ad-plots-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/ad-plots-1.png" width="960" class="r-stretch"></section>
 <section id="explanatory-example-industrialization-effects" class="slide level2 smaller">
 <h2>Explanatory Example: Industrialization Effects</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(tidyverse)</span>
@@ -407,7 +407,7 @@ Jeff Jacobs
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/mil-plot-intro-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/mil-plot-intro-1.png" width="960" class="r-stretch"></section>
 <section id="simple-linear-regression" class="slide level2 smaller">
 <h2>Simple Linear Regression</h2>
 <ul>
@@ -430,7 +430,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <p>What can we <strong>optimize</strong> to ensure these residuals are as small as possible?</p>
 <div class="columns">
 <div class="column" style="width:60%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>N <span class="ot">&lt;-</span> <span class="dv">21</span></span>
@@ -452,9 +452,9 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <span id="cb5-17"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/large-resids-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/large-resids-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -463,7 +463,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <ul>
 <li>Sum?</li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>large_sum <span class="ot">&lt;-</span> <span class="fu">sum</span>(sim_lg_df<span class="sc">$</span>spread)</span>
@@ -476,7 +476,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <ul>
 <li>Sum of Squares?</li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>large_sqsum <span class="ot">&lt;-</span> <span class="fu">sum</span>((sim_lg_df<span class="sc">$</span>spread)<span class="sc">^</span><span class="dv">2</span>)</span>
@@ -489,7 +489,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 </div></div>
 <div class="columns">
 <div class="column" style="width:60%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>N <span class="ot">&lt;-</span> <span class="dv">21</span></span>
@@ -511,9 +511,9 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <span id="cb10-17"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/small-resids-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/small-resids-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -522,7 +522,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <ul>
 <li>Sum?</li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>small_rsum <span class="ot">&lt;-</span> <span class="fu">sum</span>(sim_sm_df<span class="sc">$</span>spread)</span>
@@ -535,7 +535,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <ul>
 <li>Sum of Squares?</li>
 </ul>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>small_sqrsum <span class="ot">&lt;-</span> <span class="fu">sum</span>((sim_sm_df<span class="sc">$</span>spread)<span class="sc">^</span><span class="dv">2</span>)</span>
@@ -559,7 +559,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 </ul>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">library</span>(latex2exp)</span>
@@ -573,15 +573,15 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <span id="cb15-9"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/x2-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/x2-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># Could use facet_grid() here, but it doesn't work too nicely with stat_function() :(</span></span>
@@ -594,9 +594,9 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <span id="cb16-8"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/abs-x-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/abs-x-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -651,7 +651,7 @@ Y = \underbrace{\param{\beta_0}}_{\mathclap{\text{Intercept}}} + \underbrace{\pa
 <p><span class="math display">\[
 Y = \beta_1 X + \varepsilon
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">library</span>(latex2exp)</span>
@@ -717,12 +717,12 @@ Y = \beta_1 X + \varepsilon
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/random-lines-origin-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/random-lines-origin-1.png" width="960" class="r-stretch"></section>
 <section id="evaluating-with-residuals" class="slide level2 smaller">
 <h2>Evaluating with Residuals</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>rc1_df <span class="ot">&lt;-</span> possible_lines <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">14</span>)</span>
@@ -751,15 +751,15 @@ Y = \beta_1 X + \varepsilon
 <span id="cb18-24"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/possible-choice-1-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/possible-choice-1-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>gen_resid_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(pred_df) {</span>
@@ -786,9 +786,9 @@ Y = \beta_1 X + \varepsilon
 <span id="cb19-22"><a></a>rc1_resid_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/choice-1-resid-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/choice-1-resid-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -796,7 +796,7 @@ Y = \beta_1 X + \varepsilon
 </div></div>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>rc2_df <span class="ot">&lt;-</span> possible_lines <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">9</span>)</span>
@@ -828,24 +828,24 @@ Y = \beta_1 X + \varepsilon
 <span id="cb20-27"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/possible-choice-2-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/possible-choice-2-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>rc2_resid_plot <span class="ot">&lt;-</span> <span class="fu">gen_resid_plot</span>(rc2_pred_df)</span>
 <span id="cb21-2"><a></a>rc2_resid_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/choice-2-resid-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/choice-2-resid-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -880,7 +880,7 @@ Y = \beta_1 X + \varepsilon
 <center>
 <strong>In (Base) R: <code>lm()</code></strong>
 </center>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>lin_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(sales <span class="sc">~</span> TV, <span class="at">data=</span>ad_df)</span>
@@ -916,7 +916,7 @@ F-statistic: 312.1 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 <center>
 <strong>In Python: <code>smf.ols()</code></strong>
 </center>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
@@ -952,21 +952,21 @@ Notes:
 <h2>Interpreting Output</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>mil_plot <span class="sc">+</span> <span class="fu">theme_dsan</span>(<span class="st">"quarter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/mil-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/mil-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>gdp_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(military <span class="sc">~</span> industrial, <span class="at">data=</span>gdp_df)</span>
@@ -1208,7 +1208,7 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <li>Formally: <span class="math inline">\(\forall i \left[ \Var{\varepsilon_i} = \sigma^2 \right]\)</span></li>
 </ul>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">library</span>(broom)</span>
@@ -1224,14 +1224,14 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <span id="cb33-11"><a></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/residual-plot-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/residual-plot-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">80</span></span>
@@ -1250,9 +1250,9 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <span id="cb34-14"><a></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/heteroskedastic-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/heteroskedastic-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1266,7 +1266,7 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 </ul>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">ggplot</span>(df_het, <span class="fu">aes</span>(<span class="at">sample=</span>.resid)) <span class="sc">+</span></span>
@@ -1279,15 +1279,15 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <span id="cb35-8"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/qq-plot-heteroskedastic-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/qq-plot-heteroskedastic-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">ggplot</span>(gdp_resid_df, <span class="fu">aes</span>(<span class="at">sample=</span>.resid)) <span class="sc">+</span></span>
@@ -1300,9 +1300,9 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <span id="cb36-8"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/qq-plot-gdp-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/qq-plot-gdp-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1330,7 +1330,7 @@ y_i = \beta_0 + \beta_1x_i + \varepsilon_i
 <h2>Interpreting MLR</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>mlr_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(sales <span class="sc">~</span> TV <span class="sc">+</span> radio <span class="sc">+</span> newspaper, <span class="at">data=</span>ad_df)</span>
@@ -1378,7 +1378,7 @@ F-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2>But Wait…</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">print</span>(<span class="fu">summary</span>(mlr_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1407,7 +1407,7 @@ F-statistic: 570.3 on 3 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>lr_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(sales <span class="sc">~</span> newspaper, <span class="at">data=</span>ad_df)</span>
@@ -1442,7 +1442,7 @@ F-statistic: 10.89 on 1 and 198 DF,  p-value: 0.001148</code></pre>
 </section>
 <section id="correlations-among-features" class="slide level2 smaller">
 <h2>Correlations Among Features</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">cor</span>(ad_df <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>id))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1471,7 +1471,7 @@ sales     0.78222442 0.57622257 0.22829903 1.0000000</code></pre>
 <p><span class="math display">\[
 Y = \beta_0 + \beta_1 \times \texttt{income}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>credit_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"assets/Credit.csv"</span>)</span>
@@ -1487,9 +1487,9 @@ Y = \beta_0 + \beta_1 \times \texttt{income}
 <span id="cb45-11"><a></a>credit_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/credit-plot-slr-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/credit-plot-slr-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1501,7 +1501,7 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 &amp;+ \beta_3 \times (\texttt{Student} \times \texttt{Income})
 \end{align*}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>student_plot <span class="ot">&lt;-</span> credit_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Income, <span class="at">y=</span>Balance, <span class="at">color=</span>Student)) <span class="sc">+</span></span>
@@ -1516,9 +1516,9 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 <span id="cb46-10"><a></a>student_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/credit-plot-students-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/credit-plot-students-1.png" width="960"></p>
 </figure>
 </div>
 </div>

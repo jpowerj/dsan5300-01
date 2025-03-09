@@ -6,6 +6,7 @@ weeknum: 2
 assignment: "Lab 1"
 categories:
   - "Extra Writeups"
+cache: true
 format:
   html:
     # embed-resources: true

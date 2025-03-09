@@ -6,6 +6,7 @@ weeknum: 3
 assignment: "HW 1"
 date: last-modified
 date-format: full
+cache: true
 categories:
   - "Extra Writeups"
 format:
