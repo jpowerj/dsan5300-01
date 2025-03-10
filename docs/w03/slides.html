@@ -353,18 +353,18 @@ Jeff Jacobs
 <div class="quarto-layout-row quarto-layout-valign-center">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/pc-line-1.png" class="quarto-figure quarto-figure-center" width="576"></p>
+<p><img data-src="index_files/figure-revealjs/pc-line-1.png" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/reg-line-1.png" class="quarto-figure quarto-figure-center" width="576"></p>
+<p><img data-src="index_files/figure-revealjs/reg-line-1.png" width="576"></p>
 </figure>
 </div>
 </div>
@@ -399,7 +399,7 @@ Jeff Jacobs
 <img data-src="images/3_5.svg" class="r-stretch quarto-figure-center"><p class="caption">(ISLR, Fig 3.5): <em>A pronounced non-linear relationship. Positive residuals (visible above the surface) tend to lie along the 45-degree line, where budgets are split evenly. Negative residuals (most not visible) tend to be away from this line, where budgets are more lopsided.</em></p></section>
 <section id="interpreting-mlr" class="slide level2 smaller crunch-title crunch-ul output-center">
 <h2>Interpreting MLR</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>mlr_model <span class="op">=</span> smf.ols(</span>
@@ -443,7 +443,7 @@ newspaper     -0.0010      0.006     -0.177      0.860      -0.013       0.011
 <h2>But Wait…</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell code-output-scroll" data-layout-align="center">
+<div class="cell code-output-scroll">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python code-overflow-scroll number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># print(mlr_result.summary2(float_format='%.3f'))</span></span>
@@ -454,7 +454,7 @@ newspaper     -0.0010      0.006     -0.177      0.860      -0.013       0.011
 =================================================================
 Model:              OLS              Adj. R-squared:     0.896   
 Dependent Variable: sales            AIC:                780.3622
-Date:               2025-03-09 05:02 BIC:                793.5555
+Date:               2025-03-09 05:23 BIC:                793.5555
 No. Observations:   200              Log-Likelihood:     -386.18 
 Df Model:           3                F-statistic:        570.3   
 Df Residuals:       196              Prob (F-statistic): 1.58e-96
@@ -478,7 +478,7 @@ errors is correctly specified.</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>slr_model <span class="op">=</span> smf.ols(</span>
@@ -493,7 +493,7 @@ errors is correctly specified.</code></pre>
 ==================================================================
 Model:              OLS              Adj. R-squared:     0.047    
 Dependent Variable: sales            AIC:                1220.6714
-Date:               2025-03-09 05:02 BIC:                1227.2680
+Date:               2025-03-09 05:23 BIC:                1227.2680
 No. Observations:   200              Log-Likelihood:     -608.34  
 Df Model:           1                F-statistic:        10.89    
 Df Residuals:       198              Prob (F-statistic): 0.00115  
@@ -522,7 +522,7 @@ errors is correctly specified.</code></pre>
 </section>
 <section id="correlations-among-features" class="slide level2 smaller">
 <h2>Correlations Among Features</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>ad_df.drop(columns<span class="op">=</span><span class="st">"id"</span>).corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -553,7 +553,7 @@ Y &amp;= \beta_0 + \beta_1 \times \texttt{income} \\
 &amp;\phantom{Y}
 \end{align*}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>credit_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"assets/Credit.csv"</span>)</span>
@@ -569,9 +569,9 @@ Y &amp;= \beta_0 + \beta_1 \times \texttt{income} \\
 <span id="cb11-11"><a></a>credit_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/credit-plot-slr-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/credit-plot-slr-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -583,7 +583,7 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 &amp;+ \beta_3 \times (\texttt{Student} \times \texttt{Income})
 \end{align*}
 \]</span></p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>student_plot <span class="ot">&lt;-</span> credit_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Income, <span class="at">y=</span>Balance, <span class="at">color=</span>Student)) <span class="sc">+</span></span>
@@ -598,9 +598,9 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 <span id="cb12-10"><a></a>student_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/credit-plot-students-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/credit-plot-students-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -639,7 +639,7 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 </section>
 <section id="credit-default" class="slide level2">
 <h2>Credit Default</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">library</span>(tidyverse)</span>
@@ -659,13 +659,13 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 </details>
 
 </div>
-<img data-src="index_files/figure-revealjs/default-dataset-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<img data-src="index_files/figure-revealjs/default-dataset-1.png" width="960" class="r-stretch"></section>
 <section id="lines-vs.-sigmoids" class="slide level2 smaller math-90">
 <h2>Lines vs.&nbsp;Sigmoids(!)</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <p>Here’s what lines look like for this dataset:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co">#lpm_model &lt;- lm(default ~ balance, data=default_df)</span></span>
@@ -679,16 +679,16 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 <span id="cb14-9"><a></a>  <span class="fu">theme_classic</span>(<span class="at">base_size=</span><span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/linear-prob-model-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/linear-prob-model-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
 <p>Here’s what sigmoids look like:</p>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">library</span>(tidyverse)</span>
@@ -706,9 +706,9 @@ Y = &amp;\beta_0 + \beta_1 \times \texttt{income} + \beta_2 \times \texttt{Stude
 <span id="cb15-13"><a></a>  <span class="fu">theme_classic</span>(<span class="at">base_size=</span><span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/plot-sigmoids-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/plot-sigmoids-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -751,7 +751,7 @@ L(\beta_0, \beta_1) = \prod_{\{i \mid y_i = 1\}}\Pr(Y = 1 \mid X) \prod_{\{i \mi
 </section>
 <section id="the-interpretation-problem" class="slide level2 smaller">
 <h2>The Interpretation Problem</h2>
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
@@ -796,7 +796,7 @@ Gelman, Andrew, and Jennifer Hill. 2007. <em>Data <span>Analysis Using Regressio
 <h2>Appendix: MLR in R</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">library</span>(tidyverse)</span>

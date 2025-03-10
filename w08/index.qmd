@@ -47,14 +47,14 @@ format:
 
 :::
 
-# Schedule {.smaller .small-title .crunch-title .crunch-callout data-name="Schedule"}
+# Schedule {.smaller .small-title .crunch-title .crunch-callout data-stack-name="Schedule"}
 
 Today's Planned Schedule:
 
 | | Start | End | Topic |
 |:- |:- |:- |:- |
 | **Lecture** | 6:30pm | 7:00pm | [Separating Hyperplanes &rarr;](#learning-decision-boundaries) |
-| | 7:00pm | 7:20pm | [Max-Margin Classifier &rarr;](#the-max-margin-classifier) | 
+| | 7:00pm | 7:20pm | [Max-Margin Classifiers &rarr;](#max-margin-classifiers) | 
 | | 7:20pm | 8:00pm | [Support Vector *Classifiers* &rarr;](#support-vector-classifiers) |
 | **Break!** | 8:00pm | 8:10pm | |
 | | 8:10pm | 9:00pm | [Support Vector *Machines* &rarr;](#support-vector-machines) |
@@ -81,7 +81,7 @@ set.seed(5300)
   * On the one hand, we shift focus to **binary classification** through learning **decision boundaries**
   * On the other hand, **everything we've discussed about handling non-linearity** will come into play!
 
-# Max-Margin Classifiers {data-stack-name="Max-Margin Classifiers"}
+## Decision Boundaries $\leadsto$ Max-Margin Classifiers {.title-07}
 
 * Most important **building block** for SVMs...
 * But should **not** be used on its own! For reasons we'll see shortly
@@ -89,7 +89,7 @@ set.seed(5300)
 * MMC $\leadsto$ Support Vector Classifiers (can be used)
 * MMC $\leadsto$ Support Vector Machines (can be used)
 
-## Learning Decision Boundaries {.title-09 .crunch-title .crunch-quarto-figure .crunch-ul .crunch-li-8 .crunch-p}
+# Learning Decision Boundaries {.title-09 .crunch-title .crunch-quarto-figure .crunch-ul .crunch-li-8 .crunch-p data-stack-name="Decision Boundaries"}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -101,7 +101,7 @@ set.seed(5300)
 #| crop: false
 #| fig-width: 4.5
 #| fig-height: 4.5
-library(tidyverse)
+library(tidyverse) |> suppressPackageStartupMessages()
 house_df <- tibble::tribble(
   ~sqm, ~yrs, ~Rating,
   10, 5, "Disliked",
@@ -394,20 +394,26 @@ base_plot +
 :::
 ::::
 
-## *Optimal* Max-Margin Hyperplane {.crunch-title .smaller}
+## *Optimal* Max-Margin Hyperplane {.crunch-title .smaller .crunch-quarto-figure}
 
 * On previous slides we chose from a small set of *randomly-generated* lines...
-* Now that we have our **max-margin objective**, we can optimize over **all possible lines!**
+* Now that we have **max-margin objective**, we can optimize over **all possible lines!**
+* Any hyperplane can be written as $\beta_0 + \beta_1 x_{1} + \beta_2 x_{2} = 0$
 
 :::: {.columns}
 ::: {.column width="50%"}
 
+Let $y_i = \begin{cases} +1 &\text{if house }i\text{ Liked} \\ -1 &\text{if house }i\text{ Disliked}\end{cases}$
+
 $$
 \begin{align*}
-\text{maximize } & M \\
-\text{s.t. } & y_i(\beta_0 + \beta_1x_i) > 0
+\underset{\beta_0, \beta_1, \beta_2, M}{\text{maximize}}\text{  } & M \\
+\text{s.t.  } & y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}) \geq M, \\
+~ & \beta_0^2 + \beta_1^2 + \beta_2^2 = 1
 \end{align*}
 $$
+
+* $\beta_0^2 + \beta_1^2 + \beta_2^2 = 1$ just ensures that $y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2})$ gives **distance from hyperplane to $x_i$**
 
 :::
 ::: {.column width="50%"}
@@ -426,18 +432,30 @@ svm_model <- svm(liked ~ sqm + yrs, data=cent_df, kernel="linear")
 cf <- coef(svm_model)
 sep_intercept <- -cf[1] / cf[3]
 sep_slope <- -cf[2] / cf[3]
-cent_df |> ggplot(aes(x=sqm, y=yrs)) +
+# Invert Z-scores
+sd_ratio <- sd(house_df$yrs) / sd(house_df$sqm)
+inv_slope <- sd_ratio * sep_slope
+inv_intercept <- mean(house_df$yrs) - inv_slope * mean(house_df$sqm) + sd(house_df$yrs)*sep_intercept
+# And the margin boundary
+sv_index <- svm_model$index[1]
+sv_sqm <- house_df$sqm[sv_index]
+sv_yrs <- house_df$yrs[sv_index]
+margin_intercept <- sv_yrs - inv_slope * sv_sqm
+margin_diff <- inv_intercept - margin_intercept
+margin_intercept_inv <- inv_intercept + margin_diff
+base_plot +
   coord_equal() +
   scale_shape_manual(values=c(95, 43)) +
   theme_dsan(base_size=14) +
   geom_abline(
-    intercept=sep_intercept, slope=sep_slope, linetype="solid"
+    intercept=inv_intercept, slope=inv_slope, linetype="solid"
   ) +
-  # geom_abline(
-  #   data=cur_line_df,
-  #   aes(slope=slope, intercept=intercept),
-  #   linewidth=3, color=cb_palette[4], alpha=0.333
-  # ) +
+  geom_abline(
+    intercept=margin_intercept, slope=inv_slope, linetype="dashed"
+  ) +
+  geom_abline(
+    intercept=margin_intercept_inv, slope=inv_slope, linetype="dashed"
+  ) +
   geom_point(
     aes(color=Rating, shape=Rating), size=g_pointsize * 0.9,
     stroke=6
@@ -446,23 +464,464 @@ cent_df |> ggplot(aes(x=sqm, y=yrs)) +
   scale_linetype_manual("Support\nVector?", values=c("dotted", "solid")) +
   labs(
     title = "Optimal Max-Margin Hyperplane",
-    x = "Z(Square Meters)",
-    y = "Z(Years Old)"
+    x = "Square Meters",
+    y = "Years Old"
   )
 ```
 
 :::
 ::::
 
-## When Does This Fail?
+## When Does This Fail? {.crunch-title .crunch-ul}
+
+* What do we do in this case? (No separating hyperplane!)
+
+```{r}
+#| label: house-df-nonsep
+#| crop: false
+# Generate gaussian blob of disliked + gaussian
+# blob of liked :3
+library(mvtnorm) |> suppressPackageStartupMessages()
+set.seed(5304)
+num_houses <- 100
+# Shared covariance matrix
+Sigma_all <- matrix(c(12,0,0,20), nrow=2, ncol=2, byrow=TRUE)
+# Negative datapoints
+mu_neg <- c(10, 12.5)
+neg_matrix <- rmvnorm(num_houses/2, mean=mu_neg, sigma=Sigma_all)
+colnames(neg_matrix) <- c("sqm", "yrs")
+neg_df <- as_tibble(neg_matrix) |> mutate(Rating="Disliked")
+# Positive datapoints
+mu_pos <- c(21, 12.5)
+pos_matrix <- rmvnorm(num_houses/2, mean=mu_pos, sigma=Sigma_all)
+colnames(pos_matrix) <- c("sqm", "yrs")
+pos_df <- as_tibble(pos_matrix) |> mutate(Rating="Liked")
+# And combine
+nonsep_df <- bind_rows(neg_df, pos_df)
+nonsep_df <- nonsep_df |> filter(yrs >= 5 & sqm <= 24 & sqm >= 7)
+# Plot
+nonsep_plot <- nonsep_df |> ggplot(aes(x=sqm, y=yrs)) +
+  labs(
+    title = "Jeff's House Search",
+    x = "Square Meters",
+    y = "Years Old"
+  ) +
+  # xlim(6,25) + ylim(2,22) +
+  coord_equal() +
+  # 45 is minus sign, 95 is em-dash
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=22)
+nonsep_plot +
+  geom_point(
+    aes(color=Rating, shape=Rating), size=g_pointsize * 0.25,
+    stroke=6
+  ) +
+  geom_point(aes(fill=Rating), color='black', shape=21, size=4, stroke=0.75, alpha=0.333)
+```
 
 * Here we need to keep in mind how our goal is relative to the **Data-Generating Process!**
 
+## No Separating Hyperplane? 😧
+
+![](images/fear.jpg){fig-align="center"}
+
+* Don't let the *perfect* be the enemy of the *good*!
+
+## Perfect vs. Good
+
+* In fact, "sub-optimal" may be better than optimal, in terms of overfitting!
+
+![ISLR Figure 9.5: Notice how the dashed line on the right side may be better in terms of **generalization**, even though the solid line is the **optimal** Max-Margin Hyperplane!](images/9_5.svg){fig-align="center"}
+
 # Support Vector Classifiers {data-stack-name="SVCs"}
 
-## Handling Non-Linearly-Separable Data
+* Max-Margin Classifier **+ budget $C$ for errors**
+
+## Handling Non-Linearly-Separable Data {.title-09}
+
+$$
+\begin{align*}
+\underset{\beta_0, \beta_1, \beta_2, \varepsilon_1, \ldots, \varepsilon_n, M}{\text{maximize}}\text{ } \; & M \\
+\text{s.t. } \; & y_i(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}) \geq M(1 - \varepsilon_i), \\
+~ & \varepsilon_i \geq 0, \sum_{i=1}^{n}\varepsilon_i \leq C, \\
+~ & \beta_0^2 + \beta_1^2 + \beta_2^2 = 1
+\end{align*}
+$$
+
+* $C = 0$ $\implies$ Max-Margin Classifier
+* We want to choose $C$ to optimize **generalizability** to unseen data... So, choose via **Cross-Validation**
+
+## "Slack" Variables {.smaller}
+
+* The $\varepsilon_i$ values also give us valuable information!
+* $\varepsilon_i = 0 \implies$ observation $i$ on correct side of **margin**
+* $0 < \varepsilon_i \leq 1 \implies$ observation $i$ is *within* margin but on correct side of **hyperplane**
+* $\varepsilon_i > 1 \implies$ observation $i$ on wrong side of **hyperplane**
+
+![[Image source](https://www.researchgate.net/publication/228873365_Support_Vector_Machines_Applied_to_Handwritten_Numerals_Recognition)](images/slack.svg){fig-align="center"}
+
+## Our Non-Linearly-Separable Example {.smaller .crunch-title .title-12}
+
+&nbsp;<br>
+
+```{r}
+#| label: nonsep-svm-houses
+#| crop: false
+library(e1071)
+liked <- as.factor(nonsep_df$Rating == "Liked")
+nonsep_cent_df <- nonsep_df
+nonsep_cent_df$sqm <- scale(nonsep_cent_df$sqm)
+nonsep_cent_df$yrs <- scale(nonsep_cent_df$yrs)
+# Compute boundary for different cost budgets
+budget_vals <- c(0.01, 1, 5)
+svm_df <- tibble(
+  sep_slope=numeric(), sep_intercept=numeric(),
+  inv_slope=numeric(), inv_intercept=numeric(),
+  margin_intercept=numeric(), margin_intercept_inv=numeric(),
+  budget=numeric(), budget_label=character()
+)
+for (cur_c in budget_vals) {
+  # print(cur_c)
+  svm_model <- svm(liked ~ sqm + yrs, data=nonsep_cent_df, kernel="linear", cost=cur_c)
+  cf <- coef(svm_model)
+  sep_intercept <- -cf[1] / cf[3]
+  sep_slope <- -cf[2] / cf[3]
+  # Invert Z-scores
+  sd_ratio <- sd(nonsep_df$yrs) / sd(nonsep_df$sqm)
+  inv_slope <- sd_ratio * sep_slope
+  inv_intercept <- mean(nonsep_df$yrs) - inv_slope * mean(nonsep_df$sqm) + sd(nonsep_df$yrs)*sep_intercept
+  # And the margin boundary
+  sv_index <- svm_model$index[1]
+  sv_sqm <- nonsep_df$sqm[sv_index]
+  sv_yrs <- nonsep_df$yrs[sv_index]
+  margin_intercept <- sv_yrs - inv_slope * sv_sqm
+  margin_diff <- inv_intercept - margin_intercept
+  margin_intercept_inv <- inv_intercept + margin_diff
+  cur_svm_row <- tibble_row(
+    budget = cur_c,
+    budget_label = paste0("Penalty = ",cur_c),
+    sep_slope = sep_slope,
+    sep_intercept = sep_intercept,
+    inv_slope = inv_slope,
+    inv_intercept = inv_intercept,
+    margin_intercept = margin_intercept,
+    margin_intercept_inv = margin_intercept_inv
+  )
+  svm_df <- bind_rows(svm_df, cur_svm_row)
+}
+ggplot() +
+  # xlim(6,25) + ylim(2,22) +
+  coord_equal() +
+  # 45 is minus sign, 95 is em-dash
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=14) +
+  geom_abline(
+    data=svm_df,
+    aes(intercept=inv_intercept, slope=inv_slope),
+    linetype="solid"
+  ) +
+  geom_abline(
+    data=svm_df,
+    aes(intercept=margin_intercept, slope=inv_slope),
+    linetype="dashed"
+  ) +
+  geom_abline(
+    data=svm_df,
+    aes(intercept=margin_intercept_inv, slope=inv_slope),
+    linetype="dashed"
+  ) +
+  geom_point(
+    data=nonsep_df,
+    aes(x=sqm, y=yrs, color=Rating, shape=Rating), size=g_pointsize * 0.1,
+    stroke=5
+  ) +
+  geom_point(
+    data=nonsep_df,
+    aes(x=sqm, y=yrs, fill=Rating), color='black', shape=21, size=3, stroke=0.75, alpha=0.333
+  ) +
+  labs(
+    title = "Support Vector Classifier",
+    x = "Square Meters",
+    y = "Years Old"
+  ) +
+  facet_wrap(vars(budget_label), nrow=1) +
+  theme(
+    panel.border = element_rect(color = "black", fill = NA, size = 0.4)
+  )
+```
+
+## But... Why Restrict Ourselves to *Lines*? {.math-70 .crunch-title .title-11 .smaller}
+
+* We just spent 7 weeks learning how to move from linear to non-linear! Basic template:
+
+$$
+\text{Nonlinear model} = \text{Linear model} \underbrace{- \; \text{linearity restriction}}_{\text{Enables overfitting...}} \underbrace{+ \text{ Complexity penalty}}_{\text{Prevent overfitting}}
+$$
+
+* So... We should be able to find reasonable **non-linear** boundaries!
+
+![From [MathWorks](https://www.mathworks.com/discovery/overfitting.html)](images/overfitting.svg){fig-align="center"}
+
 
 # Support Vector *Machines* {data-stack-name="SVMs"}
 
-## Non-Linearity Strikes Again!
 
+```{=html}
+<style>
+@font-face {
+    font-family: Noodle;
+    src: url('/assets/Kbnoodlemonster.ttf');
+}
+.noodle-jj {
+    font-family: "Noodle", serif;
+    font-size: 96pt !important;
+}
+.noodle-jj-smaller {
+    font-family: "Noodle", serif;
+    font-size: 54pt !important;
+}
+</style>
+```
+
+This is where stuff gets *super...*
+
+<center>
+
+[Linear]{.noodle-jj}
+
+</center>
+
+## Linear $\rightarrow$ [Linear]{.noodle-jj-smaller} {.crunch-title .inline-90 .crunch-ul .crunch-quarto-figure}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+* Old feature space: $\mathcal{S} = \{X_1, \ldots, X_J\}$
+* New feature space: $\mathcal{S}^2 = \{X_1, X_1^2, \ldots, X_J, X_J^2\}$
+* **Linear** boundary in $\mathcal{S}^2$ $\implies$ **Quadratic** boundary in $\mathcal{S}$
+* Helpful example: Non-linearly separable in 1D $\leadsto$ Linearly separable in 2D
+
+:::
+::: {.column width="50%"}
+
+1D Hyperplane = **point!** But no separating point here 😰
+
+```{r}
+#| label: plot-1d-nonsep
+#| fig-height: 2.5
+library(latex2exp) |> suppressPackageStartupMessages()
+x_vals <- runif(50, min=-9, max=9)
+data_df <- tibble(x=x_vals) |> mutate(
+  label = factor(ifelse(abs(x) >= 6, 1, -1)),
+  x2 = x^2
+)
+data_df |> ggplot(aes(x=x, y=0, color=label)) +
+  geom_point(
+    aes(color=label, shape=label), size=g_pointsize,
+    stroke=6
+  ) +
+  geom_point(
+    aes(fill=label), color='black', shape=21, size=6, stroke=0.75, alpha=0.333
+  ) +
+  # xlim(6,25) + ylim(2,22) +
+  # coord_equal() +
+  # 45 is minus sign, 95 is em-dash
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=28) +
+  theme(
+    axis.line.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  xlim(-10, 10) +
+  ylim(-0.1, 0.1) +
+  labs(title="Non-Linearly-Separable Data") +
+  theme(
+    plot.margin = unit(c(0,0,0,20), "mm")
+  )
+```
+
+```{r}
+#| label: lift-1d-to-2d
+#| crop: false
+data_df |> ggplot(aes(x=x, y=x2, color=label)) +
+  geom_point(
+    aes(color=label, shape=label), size=g_pointsize,
+    stroke=6
+  ) +
+  geom_point(
+    aes(fill=label), color='black', shape=21, size=6, stroke=0.75, alpha=0.333
+  ) +
+  geom_hline(yintercept=36, linetype="dashed") +
+  # xlim(6,25) + ylim(2,22) +
+  # coord_equal() +
+  # 45 is minus sign, 95 is em-dash
+  scale_shape_manual(values=c(95, 43)) +
+  theme_dsan(base_size=28) +
+  xlim(-10, 10) +
+  labs(
+    title = TeX("...Linearly Separable in $R^2$!"),
+    y = TeX("$x^2$")
+  )
+```
+
+:::
+::::
+
+## Taking This Idea and Running With It {.crunch-title .title-09}
+
+* The goal: find a **transformation of the original space** that the (non-linearly-separable) data lives in, such that data ***is* linearly separable** in new space
+* In theory, could just compute tons and tons of new features $\{X_1, X_1^2, X_1^3, \ldots, X_1X_2, X_1X_3, \ldots, X_1^2X_2, X_1^2X_3, \ldots\}$
+* In practice this "blows up" the dimensionality of the feature space, making SVM slower and slower
+* Weird trick (literally): turns out we only need **inner products** $\langle x_i, x_j \rangle$ between datapoints... **"Kernel Trick"**
+
+## The Magic of Kernels {.smaller}
+
+Radial Basis Function (RBF) Kernel:
+
+$$
+K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
+$$
+
+:::: {.columns}
+::: {.column width="50%"}
+
+
+```{r}
+#| label: linspike-svm
+library(kernlab) |> suppressPackageStartupMessages()
+library(mlbench) |> suppressPackageStartupMessages()
+if (!file.exists("assets/linspike_df.rds")) {
+  set.seed(5300)
+  N <- 120
+  x1_vals <- runif(N, min=-5, max=5)
+  x2_raw <- x1_vals
+  x2_noise <- rnorm(N, mean=0, sd=1.25)
+  x2_vals <- x2_raw + x2_noise
+  linspike_df <- tibble(x1=x1_vals, x2=x2_vals) |>
+    mutate(
+      label = factor(ifelse(x1^2 + x2^2 <= 2.5, 1, -1))
+    )
+  linspike_svm <- ksvm(
+    label ~ x1 + x2,
+    data = linspike_df,
+    kernel = "rbfdot",
+    C = 500,
+    prob.model = TRUE
+  )
+  # Grid over which to evaluate decision boundaries
+  npts <- 500
+  lsgrid <- expand.grid(
+    x1 = seq(from = -5, 5, length = npts),
+    x2 = seq(from = -5, 5, length = npts)
+  )
+  # Predicted probabilities (as a two-column matrix)
+  prob_svm <- predict(
+    linspike_svm,
+    newdata = lsgrid,
+    type = "probabilities"
+  )
+  # Add predicted class probabilities
+  lsgrid2 <- lsgrid |>
+    cbind("SVM" = prob_svm[, 1L]) |>
+    tidyr::gather(Model, Prob, -x1, -x2)
+
+  # Serialize for quicker rendering
+  saveRDS(linspike_df, "assets/linspike_df.rds")
+  saveRDS(lsgrid2, "assets/lsgrid2.rds")
+} else {
+  linspike_df <- readRDS("assets/linspike_df.rds")
+  lsgrid2 <- readRDS("assets/lsgrid2.rds")
+}
+linspike_df |> ggplot(aes(x = x1, y = x2)) +
+  geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +
+  xlab(expression(X[1])) +
+  ylab(expression(X[2])) +
+  coord_fixed() +
+  theme(legend.position = "none") +
+  theme_dsan(base_size=28) +
+  stat_contour(
+    data = lsgrid2,
+    aes(x = x1, y = x2, z = Prob),
+    breaks = 0.5,
+    color = "black"
+  )
+# lin_df |> ggplot(aes(x=x, y=y, color=label)) +
+#   geom_point(size=3) +
+#   coord_equal() +
+#   theme_dsan(base_size=28)
+```
+
+:::
+::: {.column width="50%"}
+
+```{r}
+#| label: spiral-svm
+#| fig-cap: Based on code from @boehmke2019handson, Ch 14
+if (!file.exists("assets/spiral_df.rds")) {
+  spiral_df <- as.data.frame(
+    mlbench.spirals(300, cycles = 2, sd = 0.09)
+  )
+  names(spiral_df) <- c("x1", "x2", "label")
+
+  # Fit SVM using a RBF kernel
+  spirals_svm <- ksvm(
+    label ~ x1 + x2,
+    data = spiral_df,
+    kernel = "rbfdot",
+    C = 500,
+    prob.model = TRUE
+  )
+
+  # Grid over which to evaluate decision boundaries
+  npts <- 500
+  xgrid <- expand.grid(
+    x1 = seq(from = -2, 2, length = npts),
+    x2 = seq(from = -2, 2, length = npts)
+  )
+
+  # Predicted probabilities (as a two-column matrix)
+  prob_svm <- predict(
+    spirals_svm,
+    newdata = xgrid,
+    type = "probabilities"
+  )
+
+  # Add predicted class probabilities
+  xgrid2 <- xgrid |>
+    cbind("SVM" = prob_svm[, 1L]) |>
+    tidyr::gather(Model, Prob, -x1, -x2)
+
+  # Serialize for quicker rendering
+  saveRDS(spiral_df, "assets/spiral_df.rds")
+  saveRDS(xgrid2, "assets/xgrid2.rds")
+} else {
+  spiral_df <- readRDS("assets/spiral_df.rds")
+  xgrid2 <- readRDS("assets/xgrid2.rds")
+}
+# And plot
+spiral_df |> ggplot(aes(x = x1, y = x2)) +
+  geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +
+  xlab(expression(X[1])) +
+  ylab(expression(X[2])) +
+  xlim(-2, 2) +
+  ylim(-2, 2) +
+  coord_fixed() +
+  theme(legend.position = "none") +
+  theme_dsan(base_size=28) +
+  stat_contour(
+    data = xgrid2,
+    aes(x = x1, y = x2, z = Prob),
+    breaks = 0.5,
+    color = "black"
+  )
+```
+
+:::
+::::
+
+## References
+
+::: {#refs}
+:::
