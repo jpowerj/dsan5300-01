@@ -284,7 +284,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-03-09, 11:00:25 PM</em></p>
+<p><em>Updated 2025-03-10, 05:00:36 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -317,6 +317,7 @@ window.Quarto = {
   <li><a href="#support-vector-machines" id="toc-support-vector-machines" class="nav-link" data-scroll-target="#support-vector-machines">Support Vector <em>Machines</em></a>
   <ul class="collapse">
   <li><a href="#linear-rightarrow-linear" id="toc-linear-rightarrow-linear" class="nav-link" data-scroll-target="#linear-rightarrow-linear">Linear <span class="math inline">\(\rightarrow\)</span> <span class="noodle-jj-smaller">Linear</span></a></li>
+  <li><a href="#and-in-3d" id="toc-and-in-3d" class="nav-link" data-scroll-target="#and-in-3d">And in 3D…</a></li>
   <li><a href="#taking-this-idea-and-running-with-it" id="toc-taking-this-idea-and-running-with-it" class="nav-link" data-scroll-target="#taking-this-idea-and-running-with-it">Taking This Idea and Running With It</a></li>
   <li><a href="#the-magic-of-kernels" id="toc-the-magic-of-kernels" class="nav-link" data-scroll-target="#the-magic-of-kernels">The Magic of Kernels</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -1261,6 +1262,16 @@ Adding another scale for shape, which will replace the existing scale.</code></p
 </div>
 </div>
 </section>
+<section id="and-in-3d" class="level2">
+<h2 class="anchored" data-anchor-id="and-in-3d">And in 3D…</h2>
+<p>&nbsp;<br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/kernel_trick.jpg" class="img-fluid figure-img"></p>
+<figcaption><a href="https://medium.com/@mehmetalitor/support-vector-machine-and-kernel-trick-45b122edc773">Image Source</a></figcaption>
+</figure>
+</div>
+</section>
 <section id="taking-this-idea-and-running-with-it" class="level2 crunch-title title-09">
 <h2 class="crunch-title title-09 anchored" data-anchor-id="taking-this-idea-and-running-with-it">Taking This Idea and Running With It</h2>
 <ul>
@@ -1270,15 +1281,15 @@ Adding another scale for shape, which will replace the existing scale.</code></p
 <li>Weird trick (literally): turns out we only need <strong>inner products</strong> <span class="math inline">\(\langle x_i, x_j \rangle\)</span> between datapoints… <strong>“Kernel Trick”</strong></li>
 </ul>
 </section>
-<section id="the-magic-of-kernels" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="the-magic-of-kernels">The Magic of Kernels</h2>
+<section id="the-magic-of-kernels" class="level2 smaller crunch-title title-12 math-90">
+<h2 class="smaller crunch-title title-12 math-90 anchored" data-anchor-id="the-magic-of-kernels">The Magic of Kernels</h2>
 <p>Radial Basis Function (RBF) Kernel:</p>
 <p><span class="math display">\[
 K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 \]</span></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernlab) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1292,7 +1303,7 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  x2_vals <span class="ot">&lt;-</span> x2_raw <span class="sc">+</span> x2_noise</span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  linspike_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x1=</span>x1_vals, <span class="at">x2=</span>x2_vals) <span class="sc">|&gt;</span></span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(x1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x2<span class="sc">^</span><span class="dv">2</span> <span class="sc">&lt;=</span> <span class="fl">2.5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(x1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x2<span class="sc">^</span><span class="dv">2</span> <span class="sc">&lt;=</span> <span class="fl">2.75</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  linspike_svm <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(</span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    label <span class="sc">~</span> x1 <span class="sc">+</span> x2,</span>
@@ -1325,20 +1336,33 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 <span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>  linspike_df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/linspike_df.rds"</span>)</span>
 <span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  lsgrid2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/lsgrid2.rds"</span>)</span>
 <span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>linspike_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> label, <span class="at">color =</span> label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_contour</span>(</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> lsgrid2,</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>linspike_df <span class="ot">&lt;-</span> linspike_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">Label =</span> label</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>linspike_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> Label, <span class="at">color =</span> Label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">stroke=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Label), <span class="at">color=</span><span class="st">'black'</span>, <span class="at">shape=</span><span class="dv">21</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">stroke=</span><span class="fl">0.75</span>, <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_contour</span>(</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> lsgrid2,</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">43</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 15 rows containing missing values or values outside the scale range
+(`geom_point()`).
+Removed 15 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1346,16 +1370,9 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 </figure>
 </div>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lin_df |&gt; ggplot(aes(x=x, y=y, color=label)) +</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point(size=3) +</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   coord_equal() +</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_dsan(base_size=28)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"assets/spiral_df.rds"</span>)) {</span>
@@ -1400,21 +1417,26 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 <span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>  xgrid2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/xgrid2.rds"</span>)</span>
 <span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co"># And plot</span></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>spiral_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> label, <span class="at">color =</span> label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_contour</span>(</span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> xgrid2,</span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>spiral_df <span class="ot">&lt;-</span> spiral_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">Label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(label <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>spiral_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> Label, <span class="at">color =</span> Label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">stroke=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Label), <span class="at">color=</span><span class="st">'black'</span>, <span class="at">shape=</span><span class="dv">21</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">stroke=</span><span class="fl">0.75</span>, <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_contour</span>(</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> xgrid2,</span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="st">"Label"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">43</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">

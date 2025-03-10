@@ -769,6 +769,12 @@ data_df |> ggplot(aes(x=x, y=x2, color=label)) +
 :::
 ::::
 
+## And in 3D...
+
+&nbsp;<br>
+
+![[Image Source](https://medium.com/@mehmetalitor/support-vector-machine-and-kernel-trick-45b122edc773)](images/kernel_trick.jpg){fig-align="center"}
+
 ## Taking This Idea and Running With It {.crunch-title .title-09}
 
 * The goal: find a **transformation of the original space** that the (non-linearly-separable) data lives in, such that data ***is* linearly separable** in new space
@@ -776,7 +782,7 @@ data_df |> ggplot(aes(x=x, y=x2, color=label)) +
 * In practice this "blows up" the dimensionality of the feature space, making SVM slower and slower
 * Weird trick (literally): turns out we only need **inner products** $\langle x_i, x_j \rangle$ between datapoints... **"Kernel Trick"**
 
-## The Magic of Kernels {.smaller}
+## The Magic of Kernels {.smaller .crunch-title .title-12 .math-90}
 
 Radial Basis Function (RBF) Kernel:
 
@@ -787,9 +793,9 @@ $$
 :::: {.columns}
 ::: {.column width="50%"}
 
-
 ```{r}
 #| label: linspike-svm
+#| crop: false
 library(kernlab) |> suppressPackageStartupMessages()
 library(mlbench) |> suppressPackageStartupMessages()
 if (!file.exists("assets/linspike_df.rds")) {
@@ -801,7 +807,7 @@ if (!file.exists("assets/linspike_df.rds")) {
   x2_vals <- x2_raw + x2_noise
   linspike_df <- tibble(x1=x1_vals, x2=x2_vals) |>
     mutate(
-      label = factor(ifelse(x1^2 + x2^2 <= 2.5, 1, -1))
+      label = factor(ifelse(x1^2 + x2^2 <= 2.75, 1, -1))
     )
   linspike_svm <- ksvm(
     label ~ x1 + x2,
@@ -834,23 +840,26 @@ if (!file.exists("assets/linspike_df.rds")) {
   linspike_df <- readRDS("assets/linspike_df.rds")
   lsgrid2 <- readRDS("assets/lsgrid2.rds")
 }
+linspike_df <- linspike_df |> mutate(
+  Label = label
+)
 linspike_df |> ggplot(aes(x = x1, y = x2)) +
-  geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +
+  # geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +
+  geom_point(aes(shape = Label, color = Label), size = 3, stroke=4) +
+  geom_point(aes(fill=Label), color='black', shape=21, size=4, stroke=0.75, alpha=0.4) +
   xlab(expression(X[1])) +
   ylab(expression(X[2])) +
   coord_fixed() +
   theme(legend.position = "none") +
   theme_dsan(base_size=28) +
+  xlim(-5, 5) + ylim(-5, 5) +
   stat_contour(
     data = lsgrid2,
     aes(x = x1, y = x2, z = Prob),
     breaks = 0.5,
     color = "black"
-  )
-# lin_df |> ggplot(aes(x=x, y=y, color=label)) +
-#   geom_point(size=3) +
-#   coord_equal() +
-#   theme_dsan(base_size=28)
+  ) +
+  scale_shape_manual(values=c(95, 43))
 ```
 
 :::
@@ -858,6 +867,7 @@ linspike_df |> ggplot(aes(x = x1, y = x2)) +
 
 ```{r}
 #| label: spiral-svm
+#| crop: false
 #| fig-cap: Based on code from @boehmke2019handson, Ch 14
 if (!file.exists("assets/spiral_df.rds")) {
   spiral_df <- as.data.frame(
@@ -901,8 +911,12 @@ if (!file.exists("assets/spiral_df.rds")) {
   xgrid2 <- readRDS("assets/xgrid2.rds")
 }
 # And plot
+spiral_df <- spiral_df |> mutate(
+  Label = factor(ifelse(label == 2, 1, -1))
+)
 spiral_df |> ggplot(aes(x = x1, y = x2)) +
-  geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +
+  geom_point(aes(shape = Label, color = Label), size = 3, stroke=4) +
+  geom_point(aes(fill=Label), color='black', shape=21, size=4, stroke=0.75, alpha=0.4) +
   xlab(expression(X[1])) +
   ylab(expression(X[2])) +
   xlim(-2, 2) +
@@ -915,7 +929,8 @@ spiral_df |> ggplot(aes(x = x1, y = x2)) +
     aes(x = x1, y = x2, z = Prob),
     breaks = 0.5,
     color = "black"
-  )
+  ) +
+  scale_shape_manual("Label", values=c(95, 43))
 ```
 
 :::

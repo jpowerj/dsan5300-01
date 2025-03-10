@@ -1075,6 +1075,11 @@ Jeff Jacobs
 </div>
 </div></div>
 </section>
+<section id="and-in-3d" class="slide level2">
+<h2>And in 3D…</h2>
+<p>&nbsp;<br></p>
+
+<img data-src="images/kernel_trick.jpg" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://medium.com/@mehmetalitor/support-vector-machine-and-kernel-trick-45b122edc773">Image Source</a></p></section>
 <section id="taking-this-idea-and-running-with-it" class="slide level2 crunch-title title-09">
 <h2>Taking This Idea and Running With It</h2>
 <ul>
@@ -1084,7 +1089,7 @@ Jeff Jacobs
 <li>Weird trick (literally): turns out we only need <strong>inner products</strong> <span class="math inline">\(\langle x_i, x_j \rangle\)</span> between datapoints… <strong>“Kernel Trick”</strong></li>
 </ul>
 </section>
-<section id="the-magic-of-kernels" class="slide level2 smaller">
+<section id="the-magic-of-kernels" class="slide level2 smaller crunch-title title-12 math-90">
 <h2>The Magic of Kernels</h2>
 <p>Radial Basis Function (RBF) Kernel:</p>
 <p><span class="math display">\[
@@ -1092,7 +1097,7 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 \]</span></p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">library</span>(kernlab) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
@@ -1106,7 +1111,7 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 <span id="cb12-9"><a></a>  x2_vals <span class="ot">&lt;-</span> x2_raw <span class="sc">+</span> x2_noise</span>
 <span id="cb12-10"><a></a>  linspike_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x1=</span>x1_vals, <span class="at">x2=</span>x2_vals) <span class="sc">|&gt;</span></span>
 <span id="cb12-11"><a></a>    <span class="fu">mutate</span>(</span>
-<span id="cb12-12"><a></a>      <span class="at">label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(x1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x2<span class="sc">^</span><span class="dv">2</span> <span class="sc">&lt;=</span> <span class="fl">2.5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb12-12"><a></a>      <span class="at">label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(x1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> x2<span class="sc">^</span><span class="dv">2</span> <span class="sc">&lt;=</span> <span class="fl">2.75</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
 <span id="cb12-13"><a></a>    )</span>
 <span id="cb12-14"><a></a>  linspike_svm <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(</span>
 <span id="cb12-15"><a></a>    label <span class="sc">~</span> x1 <span class="sc">+</span> x2,</span>
@@ -1139,19 +1144,26 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 <span id="cb12-42"><a></a>  linspike_df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/linspike_df.rds"</span>)</span>
 <span id="cb12-43"><a></a>  lsgrid2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/lsgrid2.rds"</span>)</span>
 <span id="cb12-44"><a></a>}</span>
-<span id="cb12-45"><a></a>linspike_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
-<span id="cb12-46"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> label, <span class="at">color =</span> label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb12-47"><a></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
-<span id="cb12-48"><a></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb12-49"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb12-50"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb12-51"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
-<span id="cb12-52"><a></a>  <span class="fu">stat_contour</span>(</span>
-<span id="cb12-53"><a></a>    <span class="at">data =</span> lsgrid2,</span>
-<span id="cb12-54"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
-<span id="cb12-55"><a></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
-<span id="cb12-56"><a></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb12-57"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-45"><a></a>linspike_df <span class="ot">&lt;-</span> linspike_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb12-46"><a></a>  <span class="at">Label =</span> label</span>
+<span id="cb12-47"><a></a>)</span>
+<span id="cb12-48"><a></a>linspike_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
+<span id="cb12-49"><a></a>  <span class="co"># geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +</span></span>
+<span id="cb12-50"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> Label, <span class="at">color =</span> Label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">stroke=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb12-51"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Label), <span class="at">color=</span><span class="st">'black'</span>, <span class="at">shape=</span><span class="dv">21</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">stroke=</span><span class="fl">0.75</span>, <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb12-52"><a></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
+<span id="cb12-53"><a></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb12-54"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb12-55"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb12-56"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb12-57"><a></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb12-58"><a></a>  <span class="fu">stat_contour</span>(</span>
+<span id="cb12-59"><a></a>    <span class="at">data =</span> lsgrid2,</span>
+<span id="cb12-60"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
+<span id="cb12-61"><a></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
+<span id="cb12-62"><a></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb12-63"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb12-64"><a></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">43</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1160,75 +1172,73 @@ K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
 </figure>
 </div>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># lin_df |&gt; ggplot(aes(x=x, y=y, color=label)) +</span></span>
-<span id="cb13-2"><a></a><span class="co">#   geom_point(size=3) +</span></span>
-<span id="cb13-3"><a></a><span class="co">#   coord_equal() +</span></span>
-<span id="cb13-4"><a></a><span class="co">#   theme_dsan(base_size=28)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-layout-align="center">
+<div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"assets/spiral_df.rds"</span>)) {</span>
-<span id="cb14-2"><a></a>  spiral_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(</span>
-<span id="cb14-3"><a></a>    <span class="fu">mlbench.spirals</span>(<span class="dv">300</span>, <span class="at">cycles =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.09</span>)</span>
-<span id="cb14-4"><a></a>  )</span>
-<span id="cb14-5"><a></a>  <span class="fu">names</span>(spiral_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"label"</span>)</span>
-<span id="cb14-6"><a></a></span>
-<span id="cb14-7"><a></a>  <span class="co"># Fit SVM using a RBF kernel</span></span>
-<span id="cb14-8"><a></a>  spirals_svm <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(</span>
-<span id="cb14-9"><a></a>    label <span class="sc">~</span> x1 <span class="sc">+</span> x2,</span>
-<span id="cb14-10"><a></a>    <span class="at">data =</span> spiral_df,</span>
-<span id="cb14-11"><a></a>    <span class="at">kernel =</span> <span class="st">"rbfdot"</span>,</span>
-<span id="cb14-12"><a></a>    <span class="at">C =</span> <span class="dv">500</span>,</span>
-<span id="cb14-13"><a></a>    <span class="at">prob.model =</span> <span class="cn">TRUE</span></span>
-<span id="cb14-14"><a></a>  )</span>
-<span id="cb14-15"><a></a></span>
-<span id="cb14-16"><a></a>  <span class="co"># Grid over which to evaluate decision boundaries</span></span>
-<span id="cb14-17"><a></a>  npts <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb14-18"><a></a>  xgrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb14-19"><a></a>    <span class="at">x1 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length =</span> npts),</span>
-<span id="cb14-20"><a></a>    <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length =</span> npts)</span>
-<span id="cb14-21"><a></a>  )</span>
-<span id="cb14-22"><a></a></span>
-<span id="cb14-23"><a></a>  <span class="co"># Predicted probabilities (as a two-column matrix)</span></span>
-<span id="cb14-24"><a></a>  prob_svm <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
-<span id="cb14-25"><a></a>    spirals_svm,</span>
-<span id="cb14-26"><a></a>    <span class="at">newdata =</span> xgrid,</span>
-<span id="cb14-27"><a></a>    <span class="at">type =</span> <span class="st">"probabilities"</span></span>
-<span id="cb14-28"><a></a>  )</span>
-<span id="cb14-29"><a></a></span>
-<span id="cb14-30"><a></a>  <span class="co"># Add predicted class probabilities</span></span>
-<span id="cb14-31"><a></a>  xgrid2 <span class="ot">&lt;-</span> xgrid <span class="sc">|&gt;</span></span>
-<span id="cb14-32"><a></a>    <span class="fu">cbind</span>(<span class="st">"SVM"</span> <span class="ot">=</span> prob_svm[, <span class="dv">1</span>L]) <span class="sc">|&gt;</span></span>
-<span id="cb14-33"><a></a>    tidyr<span class="sc">::</span><span class="fu">gather</span>(Model, Prob, <span class="sc">-</span>x1, <span class="sc">-</span>x2)</span>
-<span id="cb14-34"><a></a></span>
-<span id="cb14-35"><a></a>  <span class="co"># Serialize for quicker rendering</span></span>
-<span id="cb14-36"><a></a>  <span class="fu">saveRDS</span>(spiral_df, <span class="st">"assets/spiral_df.rds"</span>)</span>
-<span id="cb14-37"><a></a>  <span class="fu">saveRDS</span>(xgrid2, <span class="st">"assets/xgrid2.rds"</span>)</span>
-<span id="cb14-38"><a></a>} <span class="cf">else</span> {</span>
-<span id="cb14-39"><a></a>  spiral_df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/spiral_df.rds"</span>)</span>
-<span id="cb14-40"><a></a>  xgrid2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/xgrid2.rds"</span>)</span>
-<span id="cb14-41"><a></a>}</span>
-<span id="cb14-42"><a></a><span class="co"># And plot</span></span>
-<span id="cb14-43"><a></a>spiral_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
-<span id="cb14-44"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> label, <span class="at">color =</span> label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb14-45"><a></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
-<span id="cb14-46"><a></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb14-47"><a></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb14-48"><a></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb14-49"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb14-50"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb14-51"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
-<span id="cb14-52"><a></a>  <span class="fu">stat_contour</span>(</span>
-<span id="cb14-53"><a></a>    <span class="at">data =</span> xgrid2,</span>
-<span id="cb14-54"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
-<span id="cb14-55"><a></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
-<span id="cb14-56"><a></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
-<span id="cb14-57"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"assets/spiral_df.rds"</span>)) {</span>
+<span id="cb13-2"><a></a>  spiral_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(</span>
+<span id="cb13-3"><a></a>    <span class="fu">mlbench.spirals</span>(<span class="dv">300</span>, <span class="at">cycles =</span> <span class="dv">2</span>, <span class="at">sd =</span> <span class="fl">0.09</span>)</span>
+<span id="cb13-4"><a></a>  )</span>
+<span id="cb13-5"><a></a>  <span class="fu">names</span>(spiral_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"label"</span>)</span>
+<span id="cb13-6"><a></a></span>
+<span id="cb13-7"><a></a>  <span class="co"># Fit SVM using a RBF kernel</span></span>
+<span id="cb13-8"><a></a>  spirals_svm <span class="ot">&lt;-</span> <span class="fu">ksvm</span>(</span>
+<span id="cb13-9"><a></a>    label <span class="sc">~</span> x1 <span class="sc">+</span> x2,</span>
+<span id="cb13-10"><a></a>    <span class="at">data =</span> spiral_df,</span>
+<span id="cb13-11"><a></a>    <span class="at">kernel =</span> <span class="st">"rbfdot"</span>,</span>
+<span id="cb13-12"><a></a>    <span class="at">C =</span> <span class="dv">500</span>,</span>
+<span id="cb13-13"><a></a>    <span class="at">prob.model =</span> <span class="cn">TRUE</span></span>
+<span id="cb13-14"><a></a>  )</span>
+<span id="cb13-15"><a></a></span>
+<span id="cb13-16"><a></a>  <span class="co"># Grid over which to evaluate decision boundaries</span></span>
+<span id="cb13-17"><a></a>  npts <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb13-18"><a></a>  xgrid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb13-19"><a></a>    <span class="at">x1 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length =</span> npts),</span>
+<span id="cb13-20"><a></a>    <span class="at">x2 =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length =</span> npts)</span>
+<span id="cb13-21"><a></a>  )</span>
+<span id="cb13-22"><a></a></span>
+<span id="cb13-23"><a></a>  <span class="co"># Predicted probabilities (as a two-column matrix)</span></span>
+<span id="cb13-24"><a></a>  prob_svm <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb13-25"><a></a>    spirals_svm,</span>
+<span id="cb13-26"><a></a>    <span class="at">newdata =</span> xgrid,</span>
+<span id="cb13-27"><a></a>    <span class="at">type =</span> <span class="st">"probabilities"</span></span>
+<span id="cb13-28"><a></a>  )</span>
+<span id="cb13-29"><a></a></span>
+<span id="cb13-30"><a></a>  <span class="co"># Add predicted class probabilities</span></span>
+<span id="cb13-31"><a></a>  xgrid2 <span class="ot">&lt;-</span> xgrid <span class="sc">|&gt;</span></span>
+<span id="cb13-32"><a></a>    <span class="fu">cbind</span>(<span class="st">"SVM"</span> <span class="ot">=</span> prob_svm[, <span class="dv">1</span>L]) <span class="sc">|&gt;</span></span>
+<span id="cb13-33"><a></a>    tidyr<span class="sc">::</span><span class="fu">gather</span>(Model, Prob, <span class="sc">-</span>x1, <span class="sc">-</span>x2)</span>
+<span id="cb13-34"><a></a></span>
+<span id="cb13-35"><a></a>  <span class="co"># Serialize for quicker rendering</span></span>
+<span id="cb13-36"><a></a>  <span class="fu">saveRDS</span>(spiral_df, <span class="st">"assets/spiral_df.rds"</span>)</span>
+<span id="cb13-37"><a></a>  <span class="fu">saveRDS</span>(xgrid2, <span class="st">"assets/xgrid2.rds"</span>)</span>
+<span id="cb13-38"><a></a>} <span class="cf">else</span> {</span>
+<span id="cb13-39"><a></a>  spiral_df <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/spiral_df.rds"</span>)</span>
+<span id="cb13-40"><a></a>  xgrid2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"assets/xgrid2.rds"</span>)</span>
+<span id="cb13-41"><a></a>}</span>
+<span id="cb13-42"><a></a><span class="co"># And plot</span></span>
+<span id="cb13-43"><a></a>spiral_df <span class="ot">&lt;-</span> spiral_df <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb13-44"><a></a>  <span class="at">Label =</span> <span class="fu">factor</span>(<span class="fu">ifelse</span>(label <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb13-45"><a></a>)</span>
+<span id="cb13-46"><a></a>spiral_df <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2)) <span class="sc">+</span></span>
+<span id="cb13-47"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape =</span> Label, <span class="at">color =</span> Label), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">stroke=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb13-48"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Label), <span class="at">color=</span><span class="st">'black'</span>, <span class="at">shape=</span><span class="dv">21</span>, <span class="at">size=</span><span class="dv">4</span>, <span class="at">stroke=</span><span class="fl">0.75</span>, <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb13-49"><a></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(X[<span class="dv">1</span>])) <span class="sc">+</span></span>
+<span id="cb13-50"><a></a>  <span class="fu">ylab</span>(<span class="fu">expression</span>(X[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb13-51"><a></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-52"><a></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-53"><a></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb13-54"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb13-55"><a></a>  <span class="fu">theme_dsan</span>(<span class="at">base_size=</span><span class="dv">28</span>) <span class="sc">+</span></span>
+<span id="cb13-56"><a></a>  <span class="fu">stat_contour</span>(</span>
+<span id="cb13-57"><a></a>    <span class="at">data =</span> xgrid2,</span>
+<span id="cb13-58"><a></a>    <span class="fu">aes</span>(<span class="at">x =</span> x1, <span class="at">y =</span> x2, <span class="at">z =</span> Prob),</span>
+<span id="cb13-59"><a></a>    <span class="at">breaks =</span> <span class="fl">0.5</span>,</span>
+<span id="cb13-60"><a></a>    <span class="at">color =</span> <span class="st">"black"</span></span>
+<span id="cb13-61"><a></a>  ) <span class="sc">+</span></span>
+<span id="cb13-62"><a></a>  <span class="fu">scale_shape_manual</span>(<span class="st">"Label"</span>, <span class="at">values=</span><span class="fu">c</span>(<span class="dv">95</span>, <span class="dv">43</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
