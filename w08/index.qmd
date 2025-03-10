@@ -936,6 +936,52 @@ spiral_df |> ggplot(aes(x = x1, y = x2)) +
 :::
 ::::
 
+## How Is This Possible? {.smaller .crunch-math .crunch-title .title-12}
+
+* SVM prediction for an observation $\mathbf{x}$ can be rewritten as
+
+$$
+f(\mathbf{x}) = \beta_0 + \sum_{i=1}^{n} \alpha_i \langle \mathbf{x}, \mathbf{x}_i \rangle
+$$
+
+* Rather than one parameter $\beta_j$ per *feature*, we have one parameter $\alpha_i$ per *observation*
+* At first this seems worse, since usually $n > p$... But we're saved by **support vectors!**
+* Since the margin itself is only a function of the support vectors (not *every* vector---remember that margin $\neq$ average distance!), $\alpha_i > 0$ only when $\mathbf{x}_i$ a support vector! 
+* Thus the equation becomes $f(\mathbf{x}) = \beta_0 + \sum_{i \in \mathcal{SV}} \alpha_i \langle \mathbf{x}, \mathbf{x}_i \rangle$, and there's one step left...
+* **Kernel** $K$ = **similarity function** (generalization of inner product!)
+
+$$
+f(\mathbf{x}) = \beta_0 + \sum_{i \in \mathcal{SV}} \alpha_i K(\mathbf{x}, \mathbf{x}_i)
+$$
+
+## Inner Products are Already Similarities! {.smaller .crunch-title .title-11}
+
+* When linearly separable, this is exactly the property we use (by computing inner product of new vector $\mathbf{x}$ with support vectors $\mathbf{x}_i$) to classify!
+
+![[Interactive demo](https://mathinsight.org/dot_product)](images/dot_product_crop.svg){fig-align="center"}
+
+* Why restrict ourselves to *this* similarity function? Choosing $K$ **converts the problem**:
+  * From finding **transformation of *features*** allowing linear separability
+  * To finding **similarity function for *observations*** allowing linear separability
+
+## Kernel Trick as Two-Sided Swiss Army Knife {.smaller .title-11 .crunch-title .crunch-math}
+
+* <i class='bi bi-1-circle'></i> If we *have* a linearly-separating transformation (like $f(x) = x^2$), can "encode" as kernel, saving computation
+* Example: Transformation of features $f(x) = x^2$ equivalent to **quadratic kernel:**
+
+  $$
+  K(x_i, x_{i'}) = (1 + \sum_{j = 1}^{p}x_{ij}x_{i'j})^2
+  $$
+
+* <i class='bi bi-2-circle'></i> If we *don't* have a transformation (and having trouble figuring it out), can **change the problem** into one of finding a "good" **similarity function**
+* Example: Look again at RBF Kernel:
+
+  $$
+  K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
+  $$
+
+* It turns out: **no** finite collection of transformed features is equivalent to this kernel! (Roughly: can keep adding transformed features to asymptotically approach it---space of SVMs w/kernel thus $>$ space of SVMs w/transformed features)
+
 ## References
 
 ::: {#refs}

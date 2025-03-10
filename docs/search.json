@@ -530,6 +530,27 @@
     "text": "The Magic of Kernels\nRadial Basis Function (RBF) Kernel:\n\\[\nK(x_i, x_{i'}) = \\exp\\left[ -\\gamma \\sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \\right]\n\\]\n\n\n\n\nCode\nlibrary(kernlab) |&gt; suppressPackageStartupMessages()\nlibrary(mlbench) |&gt; suppressPackageStartupMessages()\nif (!file.exists(\"assets/linspike_df.rds\")) {\n  set.seed(5300)\n  N &lt;- 120\n  x1_vals &lt;- runif(N, min=-5, max=5)\n  x2_raw &lt;- x1_vals\n  x2_noise &lt;- rnorm(N, mean=0, sd=1.25)\n  x2_vals &lt;- x2_raw + x2_noise\n  linspike_df &lt;- tibble(x1=x1_vals, x2=x2_vals) |&gt;\n    mutate(\n      label = factor(ifelse(x1^2 + x2^2 &lt;= 2.75, 1, -1))\n    )\n  linspike_svm &lt;- ksvm(\n    label ~ x1 + x2,\n    data = linspike_df,\n    kernel = \"rbfdot\",\n    C = 500,\n    prob.model = TRUE\n  )\n  # Grid over which to evaluate decision boundaries\n  npts &lt;- 500\n  lsgrid &lt;- expand.grid(\n    x1 = seq(from = -5, 5, length = npts),\n    x2 = seq(from = -5, 5, length = npts)\n  )\n  # Predicted probabilities (as a two-column matrix)\n  prob_svm &lt;- predict(\n    linspike_svm,\n    newdata = lsgrid,\n    type = \"probabilities\"\n  )\n  # Add predicted class probabilities\n  lsgrid2 &lt;- lsgrid |&gt;\n    cbind(\"SVM\" = prob_svm[, 1L]) |&gt;\n    tidyr::gather(Model, Prob, -x1, -x2)\n\n  # Serialize for quicker rendering\n  saveRDS(linspike_df, \"assets/linspike_df.rds\")\n  saveRDS(lsgrid2, \"assets/lsgrid2.rds\")\n} else {\n  linspike_df &lt;- readRDS(\"assets/linspike_df.rds\")\n  lsgrid2 &lt;- readRDS(\"assets/lsgrid2.rds\")\n}\nlinspike_df &lt;- linspike_df |&gt; mutate(\n  Label = label\n)\nlinspike_df |&gt; ggplot(aes(x = x1, y = x2)) +\n  # geom_point(aes(shape = label, color = label), size = 3, alpha = 0.75) +\n  geom_point(aes(shape = Label, color = Label), size = 3, stroke=4) +\n  geom_point(aes(fill=Label), color='black', shape=21, size=4, stroke=0.75, alpha=0.4) +\n  xlab(expression(X[1])) +\n  ylab(expression(X[2])) +\n  coord_fixed() +\n  theme(legend.position = \"none\") +\n  theme_dsan(base_size=28) +\n  xlim(-5, 5) + ylim(-5, 5) +\n  stat_contour(\n    data = lsgrid2,\n    aes(x = x1, y = x2, z = Prob),\n    breaks = 0.5,\n    color = \"black\"\n  ) +\n  scale_shape_manual(values=c(95, 43))\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nif (!file.exists(\"assets/spiral_df.rds\")) {\n  spiral_df &lt;- as.data.frame(\n    mlbench.spirals(300, cycles = 2, sd = 0.09)\n  )\n  names(spiral_df) &lt;- c(\"x1\", \"x2\", \"label\")\n\n  # Fit SVM using a RBF kernel\n  spirals_svm &lt;- ksvm(\n    label ~ x1 + x2,\n    data = spiral_df,\n    kernel = \"rbfdot\",\n    C = 500,\n    prob.model = TRUE\n  )\n\n  # Grid over which to evaluate decision boundaries\n  npts &lt;- 500\n  xgrid &lt;- expand.grid(\n    x1 = seq(from = -2, 2, length = npts),\n    x2 = seq(from = -2, 2, length = npts)\n  )\n\n  # Predicted probabilities (as a two-column matrix)\n  prob_svm &lt;- predict(\n    spirals_svm,\n    newdata = xgrid,\n    type = \"probabilities\"\n  )\n\n  # Add predicted class probabilities\n  xgrid2 &lt;- xgrid |&gt;\n    cbind(\"SVM\" = prob_svm[, 1L]) |&gt;\n    tidyr::gather(Model, Prob, -x1, -x2)\n\n  # Serialize for quicker rendering\n  saveRDS(spiral_df, \"assets/spiral_df.rds\")\n  saveRDS(xgrid2, \"assets/xgrid2.rds\")\n} else {\n  spiral_df &lt;- readRDS(\"assets/spiral_df.rds\")\n  xgrid2 &lt;- readRDS(\"assets/xgrid2.rds\")\n}\n# And plot\nspiral_df &lt;- spiral_df |&gt; mutate(\n  Label = factor(ifelse(label == 2, 1, -1))\n)\nspiral_df |&gt; ggplot(aes(x = x1, y = x2)) +\n  geom_point(aes(shape = Label, color = Label), size = 3, stroke=4) +\n  geom_point(aes(fill=Label), color='black', shape=21, size=4, stroke=0.75, alpha=0.4) +\n  xlab(expression(X[1])) +\n  ylab(expression(X[2])) +\n  xlim(-2, 2) +\n  ylim(-2, 2) +\n  coord_fixed() +\n  theme(legend.position = \"none\") +\n  theme_dsan(base_size=28) +\n  stat_contour(\n    data = xgrid2,\n    aes(x = x1, y = x2, z = Prob),\n    breaks = 0.5,\n    color = \"black\"\n  ) +\n  scale_shape_manual(\"Label\", values=c(95, 43))\n\n\n\n\n\nBased on code from Boehmke and Greenwell (2019), Ch 14"
   },
   {
+    "objectID": "w08/slides.html#how-is-this-possible",
+    "href": "w08/slides.html#how-is-this-possible",
+    "title": "Week 8: Support Vector Machines",
+    "section": "How Is This Possible?",
+    "text": "How Is This Possible?\n\nSVM prediction for an observation \\(\\mathbf{x}\\) can be rewritten as\n\n\\[\nf(\\mathbf{x}) = \\beta_0 + \\sum_{i=1}^{n} \\alpha_i \\langle \\mathbf{x}, \\mathbf{x}_i \\rangle\n\\]\n\nRather than one parameter \\(\\beta_j\\) per feature, we have one parameter \\(\\alpha_i\\) per observation\nAt first this seems worse, since usually \\(n &gt; p\\)… But we’re saved by support vectors!\nSince the margin itself is only a function of the support vectors (not every vector—remember that margin \\(\\neq\\) average distance!), \\(\\alpha_i &gt; 0\\) only when \\(\\mathbf{x}_i\\) a support vector!\nThus the equation becomes \\(f(\\mathbf{x}) = \\beta_0 + \\sum_{i \\in \\mathcal{SV}} \\alpha_i \\langle \\mathbf{x}, \\mathbf{x}_i \\rangle\\), and there’s one step left…\nKernel \\(K\\) = similarity function (generalization of inner product!)\n\n\\[\nf(\\mathbf{x}) = \\beta_0 + \\sum_{i \\in \\mathcal{SV}} \\alpha_i K(\\mathbf{x}, \\mathbf{x}_i)\n\\]"
+  },
+  {
+    "objectID": "w08/slides.html#inner-products-are-already-similarities",
+    "href": "w08/slides.html#inner-products-are-already-similarities",
+    "title": "Week 8: Support Vector Machines",
+    "section": "Inner Products are Already Similarities!",
+    "text": "Inner Products are Already Similarities!\n\nWhen linearly separable, this is exactly the property we use (by computing inner product of new vector \\(\\mathbf{x}\\) with support vectors \\(\\mathbf{x}_i\\)) to classify!\n\n\nInteractive demo\nWhy restrict ourselves to this similarity function? Choosing \\(K\\) converts the problem:\n\nFrom finding transformation of features allowing linear separability\nTo finding similarity function for observations allowing linear separability"
+  },
+  {
+    "objectID": "w08/slides.html#kernel-trick-as-two-sided-swiss-army-knife",
+    "href": "w08/slides.html#kernel-trick-as-two-sided-swiss-army-knife",
+    "title": "Week 8: Support Vector Machines",
+    "section": "Kernel Trick as Two-Sided Swiss Army Knife",
+    "text": "Kernel Trick as Two-Sided Swiss Army Knife\n\n If we have a linearly-separating transformation (like \\(f(x) = x^2\\)), can “encode” as kernel, saving computation\nExample: Transformation of features \\(f(x) = x^2\\) equivalent to quadratic kernel:\n\\[\nK(x_i, x_{i'}) = (1 + \\sum_{j = 1}^{p}x_{ij}x_{i'j})^2\n\\]\n If we don’t have a transformation (and having trouble figuring it out), can change the problem into one of finding a “good” similarity function\nExample: Look again at RBF Kernel:\n\\[\nK(x_i, x_{i'}) = \\exp\\left[ -\\gamma \\sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \\right]\n\\]\nIt turns out: no finite collection of transformed features is equivalent to this kernel! (Roughly: can keep adding transformed features to asymptotically approach it—space of SVMs w/kernel thus \\(&gt;\\) space of SVMs w/transformed features)"
+  },
+  {
     "objectID": "w08/slides.html#references",
     "href": "w08/slides.html#references",
     "title": "Week 8: Support Vector Machines",
@@ -707,6 +728,36 @@
     ]
   },
   {
+    "objectID": "w08/index.html#how-is-this-possible",
+    "href": "w08/index.html#how-is-this-possible",
+    "title": "Week 8: Support Vector Machines",
+    "section": "How Is This Possible?",
+    "text": "How Is This Possible?\n\nSVM prediction for an observation \\(\\mathbf{x}\\) can be rewritten as\n\n\\[\nf(\\mathbf{x}) = \\beta_0 + \\sum_{i=1}^{n} \\alpha_i \\langle \\mathbf{x}, \\mathbf{x}_i \\rangle\n\\]\n\nRather than one parameter \\(\\beta_j\\) per feature, we have one parameter \\(\\alpha_i\\) per observation\nAt first this seems worse, since usually \\(n &gt; p\\)… But we’re saved by support vectors!\nSince the margin itself is only a function of the support vectors (not every vector—remember that margin \\(\\neq\\) average distance!), \\(\\alpha_i &gt; 0\\) only when \\(\\mathbf{x}_i\\) a support vector!\nThus the equation becomes \\(f(\\mathbf{x}) = \\beta_0 + \\sum_{i \\in \\mathcal{SV}} \\alpha_i \\langle \\mathbf{x}, \\mathbf{x}_i \\rangle\\), and there’s one step left…\nKernel \\(K\\) = similarity function (generalization of inner product!)\n\n\\[\nf(\\mathbf{x}) = \\beta_0 + \\sum_{i \\in \\mathcal{SV}} \\alpha_i K(\\mathbf{x}, \\mathbf{x}_i)\n\\]",
+    "crumbs": [
+      "Week 8: {{< var w08.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w08/index.html#inner-products-are-already-similarities",
+    "href": "w08/index.html#inner-products-are-already-similarities",
+    "title": "Week 8: Support Vector Machines",
+    "section": "Inner Products are Already Similarities!",
+    "text": "Inner Products are Already Similarities!\n\nWhen linearly separable, this is exactly the property we use (by computing inner product of new vector \\(\\mathbf{x}\\) with support vectors \\(\\mathbf{x}_i\\)) to classify!\n\n\n\n\nInteractive demo\n\n\n\nWhy restrict ourselves to this similarity function? Choosing \\(K\\) converts the problem:\n\nFrom finding transformation of features allowing linear separability\nTo finding similarity function for observations allowing linear separability",
+    "crumbs": [
+      "Week 8: {{< var w08.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w08/index.html#kernel-trick-as-two-sided-swiss-army-knife",
+    "href": "w08/index.html#kernel-trick-as-two-sided-swiss-army-knife",
+    "title": "Week 8: Support Vector Machines",
+    "section": "Kernel Trick as Two-Sided Swiss Army Knife",
+    "text": "Kernel Trick as Two-Sided Swiss Army Knife\n\n If we have a linearly-separating transformation (like \\(f(x) = x^2\\)), can “encode” as kernel, saving computation\nExample: Transformation of features \\(f(x) = x^2\\) equivalent to quadratic kernel:\n\\[\nK(x_i, x_{i'}) = (1 + \\sum_{j = 1}^{p}x_{ij}x_{i'j})^2\n\\]\n If we don’t have a transformation (and having trouble figuring it out), can change the problem into one of finding a “good” similarity function\nExample: Look again at RBF Kernel:\n\\[\nK(x_i, x_{i'}) = \\exp\\left[ -\\gamma \\sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \\right]\n\\]\nIt turns out: no finite collection of transformed features is equivalent to this kernel! (Roughly: can keep adding transformed features to asymptotically approach it—space of SVMs w/kernel thus \\(&gt;\\) space of SVMs w/transformed features)",
+    "crumbs": [
+      "Week 8: {{< var w08.date-md >}}"
+    ]
+  },
+  {
     "objectID": "w08/index.html#references",
     "href": "w08/index.html#references",
     "title": "Week 8: Support Vector Machines",
@@ -836,14 +887,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5402928\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5473927\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5517565\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5137704\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8750796\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1338826\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4273272\n\n\nCode\npoly_rss_test\n\n\n[1] 0.613758"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8764929\n\n\nCode\nlin_rss_test\n\n\n[1] 0.136207\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.3487604\n\n\nCode\npoly_rss_test\n\n\n[1] 0.7182049"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -1018,14 +1069,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5909885\n\nget_rss(lin_model)\n\n[1] 0.5780348\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5637098\n\nget_rss(lin_model)\n\n[1] 0.5508636\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.9170594\n\nlin_rss_test\n\n[1] 0.08963823\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3173936\n\npoly_rss_test\n\n[1] 0.7377286"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.9305843\n\nlin_rss_test\n\n[1] 0.06897372\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3917703\n\npoly_rss_test\n\n[1] 0.6043572"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",

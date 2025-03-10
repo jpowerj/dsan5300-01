@@ -284,7 +284,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-03-10, 05:00:36 PM</em></p>
+<p><em>Updated 2025-03-10, 06:24:47 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -320,6 +320,9 @@ window.Quarto = {
   <li><a href="#and-in-3d" id="toc-and-in-3d" class="nav-link" data-scroll-target="#and-in-3d">And in 3D…</a></li>
   <li><a href="#taking-this-idea-and-running-with-it" id="toc-taking-this-idea-and-running-with-it" class="nav-link" data-scroll-target="#taking-this-idea-and-running-with-it">Taking This Idea and Running With It</a></li>
   <li><a href="#the-magic-of-kernels" id="toc-the-magic-of-kernels" class="nav-link" data-scroll-target="#the-magic-of-kernels">The Magic of Kernels</a></li>
+  <li><a href="#how-is-this-possible" id="toc-how-is-this-possible" class="nav-link" data-scroll-target="#how-is-this-possible">How Is This Possible?</a></li>
+  <li><a href="#inner-products-are-already-similarities" id="toc-inner-products-are-already-similarities" class="nav-link" data-scroll-target="#inner-products-are-already-similarities">Inner Products are Already Similarities!</a></li>
+  <li><a href="#kernel-trick-as-two-sided-swiss-army-knife" id="toc-kernel-trick-as-two-sided-swiss-army-knife" class="nav-link" data-scroll-target="#kernel-trick-as-two-sided-swiss-army-knife">Kernel Trick as Two-Sided Swiss Army Knife</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -1449,6 +1452,60 @@ Removed 15 rows containing missing values or values outside the scale range
 </div>
 </div>
 </div>
+</section>
+<section id="how-is-this-possible" class="level2 smaller crunch-math crunch-title title-12">
+<h2 class="smaller crunch-math crunch-title title-12 anchored" data-anchor-id="how-is-this-possible">How Is This Possible?</h2>
+<ul>
+<li>SVM prediction for an observation <span class="math inline">\(\mathbf{x}\)</span> can be rewritten as</li>
+</ul>
+<p><span class="math display">\[
+f(\mathbf{x}) = \beta_0 + \sum_{i=1}^{n} \alpha_i \langle \mathbf{x}, \mathbf{x}_i \rangle
+\]</span></p>
+<ul>
+<li>Rather than one parameter <span class="math inline">\(\beta_j\)</span> per <em>feature</em>, we have one parameter <span class="math inline">\(\alpha_i\)</span> per <em>observation</em></li>
+<li>At first this seems worse, since usually <span class="math inline">\(n &gt; p\)</span>… But we’re saved by <strong>support vectors!</strong></li>
+<li>Since the margin itself is only a function of the support vectors (not <em>every</em> vector—remember that margin <span class="math inline">\(\neq\)</span> average distance!), <span class="math inline">\(\alpha_i &gt; 0\)</span> only when <span class="math inline">\(\mathbf{x}_i\)</span> a support vector!</li>
+<li>Thus the equation becomes <span class="math inline">\(f(\mathbf{x}) = \beta_0 + \sum_{i \in \mathcal{SV}} \alpha_i \langle \mathbf{x}, \mathbf{x}_i \rangle\)</span>, and there’s one step left…</li>
+<li><strong>Kernel</strong> <span class="math inline">\(K\)</span> = <strong>similarity function</strong> (generalization of inner product!)</li>
+</ul>
+<p><span class="math display">\[
+f(\mathbf{x}) = \beta_0 + \sum_{i \in \mathcal{SV}} \alpha_i K(\mathbf{x}, \mathbf{x}_i)
+\]</span></p>
+</section>
+<section id="inner-products-are-already-similarities" class="level2 smaller crunch-title title-11">
+<h2 class="smaller crunch-title title-11 anchored" data-anchor-id="inner-products-are-already-similarities">Inner Products are Already Similarities!</h2>
+<ul>
+<li>When linearly separable, this is exactly the property we use (by computing inner product of new vector <span class="math inline">\(\mathbf{x}\)</span> with support vectors <span class="math inline">\(\mathbf{x}_i\)</span>) to classify!</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/dot_product_crop.svg" class="img-fluid figure-img"></p>
+<figcaption><a href="https://mathinsight.org/dot_product">Interactive demo</a></figcaption>
+</figure>
+</div>
+<ul>
+<li>Why restrict ourselves to <em>this</em> similarity function? Choosing <span class="math inline">\(K\)</span> <strong>converts the problem</strong>:
+<ul>
+<li>From finding <strong>transformation of <em>features</em></strong> allowing linear separability</li>
+<li>To finding <strong>similarity function for <em>observations</em></strong> allowing linear separability</li>
+</ul></li>
+</ul>
+</section>
+<section id="kernel-trick-as-two-sided-swiss-army-knife" class="level2 smaller title-11 crunch-title crunch-math">
+<h2 class="smaller title-11 crunch-title crunch-math anchored" data-anchor-id="kernel-trick-as-two-sided-swiss-army-knife">Kernel Trick as Two-Sided Swiss Army Knife</h2>
+<ul>
+<li><p><i class="bi bi-1-circle"></i> If we <em>have</em> a linearly-separating transformation (like <span class="math inline">\(f(x) = x^2\)</span>), can “encode” as kernel, saving computation</p></li>
+<li><p>Example: Transformation of features <span class="math inline">\(f(x) = x^2\)</span> equivalent to <strong>quadratic kernel:</strong></p>
+<p><span class="math display">\[
+K(x_i, x_{i'}) = (1 + \sum_{j = 1}^{p}x_{ij}x_{i'j})^2
+\]</span></p></li>
+<li><p><i class="bi bi-2-circle"></i> If we <em>don’t</em> have a transformation (and having trouble figuring it out), can <strong>change the problem</strong> into one of finding a “good” <strong>similarity function</strong></p></li>
+<li><p>Example: Look again at RBF Kernel:</p>
+<p><span class="math display">\[
+K(x_i, x_{i'}) = \exp\left[ -\gamma \sum_{j=1}^{J} (x_{ij} - x_{i'j})^2 \right]
+\]</span></p></li>
+<li><p>It turns out: <strong>no</strong> finite collection of transformed features is equivalent to this kernel! (Roughly: can keep adding transformed features to asymptotically approach it—space of SVMs w/kernel thus <span class="math inline">\(&gt;\)</span> space of SVMs w/transformed features)</p></li>
+</ul>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
