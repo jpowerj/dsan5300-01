@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="DSAN 5300 Staff">
 
-<title>Getting Started with HW 1 – DSAN 5300-01</title>
+<title>DSAN 5300 Exam 2 Study Guide – DSAN 5300-01</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -240,21 +241,24 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#sums-leftrightarrows-linear-algebraic-operations" id="toc-sums-leftrightarrows-linear-algebraic-operations" class="nav-link active" data-scroll-target="#sums-leftrightarrows-linear-algebraic-operations">Sums <span class="math inline">\(\leftrightarrows\)</span> Linear-Algebraic Operations</a></li>
-  <li><a href="#the-regression-models-linear-algebraic-representation" id="toc-the-regression-models-linear-algebraic-representation" class="nav-link" data-scroll-target="#the-regression-models-linear-algebraic-representation">The Regression Model’s Linear Algebraic Representation</a></li>
-  <li><a href="#from-vectors-to-matrices" id="toc-from-vectors-to-matrices" class="nav-link" data-scroll-target="#from-vectors-to-matrices">From Vectors to Matrices</a></li>
-  <li><a href="#sanity-check-how-do-we-know-these-operations-will-be-well-defined" id="toc-sanity-check-how-do-we-know-these-operations-will-be-well-defined" class="nav-link" data-scroll-target="#sanity-check-how-do-we-know-these-operations-will-be-well-defined">Sanity Check: How Do We Know These Operations Will Be Well-Defined?</a></li>
-  <li><a href="#least-squares-derivation" id="toc-least-squares-derivation" class="nav-link" data-scroll-target="#least-squares-derivation">Least Squares Derivation</a></li>
+  <li><a href="#part-1-data-splitting" id="toc-part-1-data-splitting" class="nav-link active" data-scroll-target="#part-1-data-splitting">Part 1: Data-Splitting</a>
+  <ul class="collapse">
+  <li><a href="#train-test-split-leadsto-generalizability" id="toc-train-test-split-leadsto-generalizability" class="nav-link" data-scroll-target="#train-test-split-leadsto-generalizability">Train-Test Split <span class="math inline">\(\leadsto\)</span> Generalizability</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation">Cross-Validation</a></li>
+  </ul></li>
+  <li><a href="#part-2-stepwise-model-selection" id="toc-part-2-stepwise-model-selection" class="nav-link" data-scroll-target="#part-2-stepwise-model-selection">Part 2: Stepwise Model Selection</a></li>
+  <li><a href="#part-3-regularization-and-lp-norms" id="toc-part-3-regularization-and-lp-norms" class="nav-link" data-scroll-target="#part-3-regularization-and-lp-norms">Part 3: Regularization and <span class="math inline">\(L^p\)</span>-Norms</a></li>
+  <li><a href="#part-4-basis-functions" id="toc-part-4-basis-functions" class="nav-link" data-scroll-target="#part-4-basis-functions">Part 4: Basis Functions</a></li>
+  <li><a href="#part-5-splines" id="toc-part-5-splines" class="nav-link" data-scroll-target="#part-5-splines">Part 5: Splines</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/writeups/hw1-guide/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/writeups/quiz-2/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Getting Started with HW 1</h1>
-<p class="subtitle lead">DSAN 5300: Statistical Learning</p>
+<h1 class="title">DSAN 5300 Exam 2 Study Guide</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Extra Writeups</div>
   </div>
@@ -264,11 +268,17 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>DSAN 5300 Staff </p>
+          </div>
+  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Sunday, March 9, 2025</p>
+      <p class="date">Wednesday, March 12, 2025</p>
     </div>
   </div>
   
@@ -280,309 +290,224 @@ window.Quarto = {
 </header>
 
 
-<div class="callout callout-style-default callout-note callout-titled" title="Update Log">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Update Log
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
+<section id="part-1-data-splitting" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-data-splitting">Part 1: Data-Splitting</h2>
+<p>Here the idea is that, we will be evaluating your understanding of different ways to split a dataset: <strong>how</strong> the split is performed and <strong>why</strong> we might prefer a particular splitting approach in a particular data-analysis scenario.</p>
+<section id="train-test-split-leadsto-generalizability" class="level3">
+<h3 class="anchored" data-anchor-id="train-test-split-leadsto-generalizability">Train-Test Split <span class="math inline">\(\leadsto\)</span> Generalizability</h3>
+<p>This is not a 5300 topic on its own—you learned it in DSAN 5000!—but is nonetheless important to take note of here since its the basis for <strong>why</strong> we use Cross-Validation for model evaluation in 5300 (e.g., for tuning the hyperparameters of the models we look at each week).</p>
+<p>It turns out to be an… oddly deep topic (hence why Jeff spent too long ranting about it in his section during Week 4), but the key rationale for <strong>why</strong> we split our full dataset into a <strong>Training Set</strong> and a <strong>Test Set</strong> boils down to the fact that our <strong>fundamental goal</strong> in statistical learning is to…</p>
 <ul>
-<li>Section on <a href="#least-squares-derivation">Least Squares Derivation</a> added <strong>1 Feb 2025, 1:00am</strong></li>
-<li>Original version posted <strong>31 Jan 2025, 2:30am</strong></li>
+<li>Find a <strong>prediction function <span class="math inline">\(\widehat{f}(x)\)</span></strong> that…</li>
+<li>Does a good job predicting <strong>labels <span class="math inline">\(y_i\)</span></strong> based on <strong>features <span class="math inline">\(x_i\)</span></strong>…</li>
+<li>For data <span class="math inline">\((x_i, y_i)\)</span> that has <strong>not (yet) been observed</strong></li>
 </ul>
-</div>
-</div>
-</div>
-<p>As with the <a href="../lab-1/">Lab 1 getting-started guide</a>, here we don’t give away the answers but do provide as much background as possible to nudge you up to the starting line!</p>
-<section id="sums-leftrightarrows-linear-algebraic-operations" class="level2">
-<h2 class="anchored" data-anchor-id="sums-leftrightarrows-linear-algebraic-operations">Sums <span class="math inline">\(\leftrightarrows\)</span> Linear-Algebraic Operations</h2>
-<p>One key motivation for this section is for you to see how all of the regression model’s mathematical details can be represented in <strong>two equally valid ways</strong>:</p>
-<ul>
-<li>First, using a “standard” calculus approach, where you will end up with lots of sums (<span class="math inline">\(\Sigma\)</span> symbols) in your derivations because (for example) the <strong>loss function</strong> used by regression is itself a <strong>sum of squares</strong> (specifically, a <strong>sum of squared residuals</strong>). However, there is also…</li>
-<li>Second, using a <strong>linear algebra</strong>-heavy approach, where in place of the sums you will now have lots of vector-vector, matrix-vector, and matrix-matrix products.</li>
-</ul>
-<p>To see how the second approach “replaces” the sums with linear-algebraic operations, as a basic example you can use to remind yourself of these two different representations (and then think about which one feels more clear to you, and then use that one), consider a scenario where you have a set of <strong>datapoints</strong> (scalars for now):</p>
-<p><span class="math display">\[
-\mathbf{x} = (x_1, x_2, \ldots, x_n),
-\]</span></p>
-<p>and a set of <strong>weights</strong>, with one weight per datapoint (so that the subscripts “match up”: <span class="math inline">\(w_1\)</span> is the weight to be applied to <span class="math inline">\(x_1\)</span>, <span class="math inline">\(w_2\)</span> is the weight to be applied to <span class="math inline">\(x_2\)</span>, and so on):</p>
-<p><span class="math display">\[
-\mathbf{w} = (w_1, w_2, \ldots, w_n).
-\]</span></p>
-<p>Now, if we wanted to write out the <strong>weighted sum</strong> <span class="math inline">\(S\)</span> of these datapoints <span class="math inline">\(\mathbf{x}\)</span>, with the weights given by <span class="math inline">\(\mathbf{w}\)</span>, the “straightforward” way (at least, in the sense that it’s probably the approach you learned earlier on in your math-class-taking career) would look like:</p>
-<p><span class="math display">\[
-S = w_1x_1 + w_2x_2 + \cdots + w_nx_n = \sum_{i=1}^{n}w_ix_i,
-\]</span></p>
-<p>which is why that <span class="math inline">\(\Sigma\)</span> notation will appear all over the place when you are working through the early parts of the homework.</p>
-<p>However, now consider the fact that you know about some fancier mathematical objects—<strong>vectors</strong> and <strong>matrices</strong>—and how they can help us in terms of providing an alternative representation of this same sum! Instead of “zooming in” on the individual elements to write out the weighted sum, we could just as easily treat them as unitary objects—<strong>vectors</strong>—and apply the binary <a href="https://en.wikipedia.org/wiki/Dot_product"><strong>dot product</strong></a> operator from Linear Algebra to achieve the same weighted sum!</p>
-<p>To see this, recall how the dot product of two vectors is defined, and then work out what (e.g.) <span class="math inline">\(\mathbf{w} \cdot \mathbf{x}^{\top}\)</span> looks like:</p>
-<p><span id="eq-weighted-sum"><span class="math display">\[
-\begin{align*}
-\mathbf{w} \cdot \mathbf{x} &amp;= (w_1, w_2, \ldots, w_n) \cdot (x_1, x_2, \ldots, x_n) \\
-&amp;= w_1x_1 + w_2x_2 + \cdots + w_nx_n = \sum_{i=1}^{n}w_ix_i = S ~ ✅
-\end{align*}
-\tag{1}\]</span></span></p>
-<p>And so we see that, indeed, we can obtain this same sum <span class="math inline">\(S\)</span> by considering the datapoints and weights as <strong>vectors</strong> and then using the <strong>dot product</strong> as our key operator for combining these vectors (rather than thinking of <span class="math inline">\(S\)</span> on the level of individual multiplications and additions).</p>
+<p>This contrasts with the more “naïve” goal of optimizing predictions of <span class="math inline">\(y_i\)</span> relative to already-observed <strong>training</strong> datapoints.</p>
+<p>So, under this framing of our goal, we <em>set aside</em> a small proportion (usually 20%) of the data as our <strong>Test Set</strong>, which we do <em>not</em> look at while <em>training</em> the model, so that it can instead be used to evaluate the model’s performance on <strong>unseen</strong> data.</p>
 </section>
-<section id="the-regression-models-linear-algebraic-representation" class="level2">
-<h2 class="anchored" data-anchor-id="the-regression-models-linear-algebraic-representation">The Regression Model’s Linear Algebraic Representation</h2>
-<p>That all may be obvious to you, if you’ve taken Linear Algebra for example, but now to foreshadow some of the later portions of the homework, let’s look at how this idea can help us when e.g.&nbsp;we’re working with the math of regression models.</p>
-<p>Consider the non-Linear-Algebraic way we’ve been writing out the basic pieces of the regression model thus far in the class. The <strong>Multiple Linear Regression</strong> model, for example, is typically written out in a form like this (where here I’m writing out the model we’d use to predict <strong>one</strong> particular label, <span class="math inline">\(y_i\)</span>, as a function of <strong>one</strong> observation’s features, <span class="math inline">\(x_{i,1}\)</span> through <span class="math inline">\(x_{i,m}\)</span>).</p>
-<p><span id="eq-mlr"><span class="math display">\[
-\widehat{y}_i = \beta_0 + \beta_1 x_{i,1} + \beta_2 x_{i,2} + \cdots + \beta_M x_{i,M}
-\tag{2}\]</span></span></p>
-<p>If we look at this representation, we can see how it <em>almost</em> perfectly matches the type of weighted sum we re-wrote using the dot product in <a href="#eq-weighted-sum" class="quarto-xref">Equation&nbsp;1</a> above. The only difference, in fact, is that the pesky <span class="math inline">\(\beta_0\)</span> coefficient has no corresponding <span class="math inline">\(x_{i,0}\)</span> term…</p>
-<p>…But, what if we just <strong>defined</strong> an <span class="math inline">\(x_{i,0}\)</span>, to just always take on the numeric value <span class="math inline">\(1\)</span>? This would provide the “missing piece” which would allow us to write the Multiple Linear Regression model as a dot product! That is: once we define <span class="math inline">\(x_{i,0} \triangleq 1\)</span>, we can now write the data for this observation as as vector <span class="math inline">\(\mathbf{x}_i\)</span> like:</p>
-<p><span class="math display">\[
-\mathbf{x}_i = (x_{i,0}, x_{i,1}, x_{i,2}, \ldots, x_{i,M}) = (1, x_{i,1}, x_{i,2}, \ldots, x_{i,M}),
-\]</span></p>
-<p>and we can write the coefficients as a vector <span class="math inline">\(\boldsymbol\beta\)</span> like:</p>
-<p><span class="math display">\[
-\boldsymbol\beta = (\beta_0, \beta_1, \ldots, \beta_M),
-\]</span></p>
-<p>and we achieve the same type of result as in the previous section—that the Multiple Linear Regression model itself (modeling the prediction for one observation, for now) can be written as a dot product:</p>
-<p><span class="math display">\[
-\begin{align*}
-\widehat{y}_i &amp;= \boldsymbol\beta \cdot \mathbf{x}_i = (\beta_0, \beta_1, \ldots, \beta_M) \cdot (1, x_{i,1}, \ldots, x_{i,M}) \\
-&amp;= \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_M x_{i,M} ~ ✅
-\end{align*}
-\]</span></p>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">Cross-Validation</h3>
+<p>Given that setup, then, the different versions of Cross-Validation all fall under the general rubric of: generating “mini” training sets (sub-training sets) and test sets (validation sets), as <em>smaller</em> subsets of the full training data, in order to <strong>estimate</strong> how well a given model might perform on <strong>unseen</strong> data before we move to the <em>final</em> test-set-based evaluation once we have settled upon and trained a final version of our model.</p>
+<p>The key versions of Cross-Validation to know are:</p>
+<ul>
+<li>The Validation Set approach,</li>
+<li>Leave-One-Out Cross-Validation (LOOCV), and</li>
+<li><span class="math inline">\(K\)</span>-Fold Cross-Validation.</li>
+</ul>
+<p>For example, you should understand the relationship between <span class="math inline">\(K\)</span>-Fold CV and LOOCV: that LOOCV is exactly just <span class="math inline">\(K\)</span>-Fold CV with <span class="math inline">\(K\)</span> set to be equal to the number of datapoints <span class="math inline">\(n\)</span>.</p>
 </section>
-<section id="from-vectors-to-matrices" class="level2">
-<h2 class="anchored" data-anchor-id="from-vectors-to-matrices">From Vectors to Matrices</h2>
-<p>The final step, in terms of representing the <strong>full</strong> MLR model using objects from Linear Algebra (rather than just its prediction for one particular observation <span class="math inline">\(i\)</span>), requires us to think about <strong>matrices</strong> rather than just the <strong>vectors</strong> we’ve used thus far. However, just as we thought of:</p>
+</section>
+<section id="part-2-stepwise-model-selection" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-stepwise-model-selection">Part 2: Stepwise Model Selection</h2>
 <ul>
-<li><strong>Vectors</strong> as objects allowing us to group individual <strong>scalars</strong> together into a single object, here we can also retain our sanity by thinking of</li>
-<li><strong>Matrices</strong> as objects allowing us to group individual <strong>vectors</strong> together into a single object!</li>
+<li>Best Subset Selection</li>
+<li>Forward Stepwise Selection</li>
+<li>Backward Stepwise Selection</li>
 </ul>
-<p>To see how this way of thinking can help us here, notice how if we have <span class="math inline">\(N\)</span> labels (<span class="math inline">\(y_1\)</span> through <span class="math inline">\(y_n\)</span>) for <span class="math inline">\(N\)</span> datapoints (<span class="math inline">\(\mathbf{x}_1\)</span> through <span class="math inline">\(\mathbf{x}_n\)</span>), then our model is going to generate <span class="math inline">\(N\)</span> predictions, using <a href="#eq-mlr" class="quarto-xref">Equation&nbsp;2</a> above <span class="math inline">\(N\)</span> times:</p>
-<p><span class="math display">\[
-\begin{align*}
-\widehat{y}_1 &amp;= \beta_0 + \beta_1 x_{1,1} + \cdots + \beta_m x_{1,m} \\
-\widehat{y}_2 &amp;= \beta_0 + \beta_1 x_{2,1} + \cdots + \beta_m x_{2,m} \\
-\phantom{y_3} &amp;~~\vdots \\
-\widehat{y}_n &amp;= \beta_0 + \beta_1 x_{n,1} + \dots + \beta_m x_{n,m}
-\end{align*}
-\]</span></p>
-<p>So, if you squint your eyes while looking at this <strong>system of equations</strong>, and you keep in mind the above point about defining <span class="math inline">\(x_{i,0}\)</span> to just be the value <span class="math inline">\(1\)</span> for every observation <span class="math inline">\(i\)</span>, hopefully you can start to see how that whole thing could be re-written as a single <strong>matrix equation</strong>!</p>
-<p>To start off, for example, we could gather all of the <span class="math inline">\(\widehat{y}_i\)</span> terms on the left-hand side of each equation into a single <strong>column vector</strong>:</p>
-<p><span class="math display">\[
-\widehat{\mathbf{y}} = \begin{bmatrix}
-\widehat{y}_1 \\
-\vdots \\
-\widehat{y}_n
-\end{bmatrix}
-\]</span></p>
-<p>And, next, we already saw how weighted sums like the ones we see on the right-hand side of each equation can be re-written as <strong>vector-vector products</strong> (dot products). So, in the same way that we “stacked” the individual <span class="math inline">\(\widehat{y}_i\)</span> terms into a single column vector just now, we can also look at these right-hand side expressions as a “stack” of such products, like:</p>
-<p><span id="eq-rhs-stack"><span class="math display">\[
-\begin{bmatrix}
-\beta_0 x_{1,0} + \beta_1x_{1,1} + \cdots + \beta_m x_{1,m} \\
-\vdots \\
-\beta_0 x_{n,0} + \beta_1x_{n,1} + \cdots + \beta_m x_{n,m}
-\end{bmatrix} = \begin{bmatrix}
-\boldsymbol\beta \cdot \mathbf{x}_1 \\
-\vdots \\
-\boldsymbol\beta \cdot \mathbf{x}_n
-\end{bmatrix}
-\tag{3}\]</span></span></p>
-<p>The final leap, which I think is most helpful if you try to work it out yourself (like, as in, by trying different guesses and multiplying them out to see if you get the desired result), is to take this almost-there representation where we’ve stacked the dot products (<span class="math inline">\(\boldsymbol\beta \cdot \mathbf{x}_1\)</span>, <span class="math inline">\(\boldsymbol\beta \cdot \mathbf{x}_2\)</span>, and so on) into a column vector, and turn it into a product of <strong>only</strong> “base” Linear Algebra objects: <strong>vectors</strong> and/or <strong>matrices</strong>.</p>
-<p>In other words, right now we have a column-vector-of-dot-products, which is not exactly what we think of when we think of “a vector” or “a matrix” (it’s… a hybrid of the two, in a sense). To make progress, take note of the fact that:</p>
+<p>Here you can focus on, e.g., what are the relative <strong>strengths</strong> and <strong>weakness</strong> of these approaches? In particular, you should understand how:</p>
 <ul>
-<li><span class="math inline">\(\boldsymbol\beta\)</span> appears in <strong>every row</strong>, whereas</li>
-<li>For a given index <span class="math inline">\(i\)</span>, <span class="math inline">\(\mathbf{x}_i\)</span> only appears in <strong>one row</strong>.</li>
+<li>Best Subset Selection is guaranteed to find an optimal subset of features, but is usually prohibitively slow/inefficient, since it searches over all <span class="math inline">\(\binom{p}{1} + \binom{p}{2} + \cdots + \binom{p}{p}\)</span> possible subsets of features, whereas</li>
+<li>Forward and Backward Stepwise Selection are computationally tractable but at the cost of <strong>not</strong> being guaranteed to find an optimal subset of features.</li>
 </ul>
-<p>So (here’s where you can pause and try to work it out on paper, before reading on!), the second bullet point provides us with a hint that it may be helpful to construct a <strong>data matrix</strong> <span class="math inline">\(\mathbf{X}\)</span>, where <strong>each row <span class="math inline">\(i\)</span></strong> contains <strong>all of the terms in <span class="math inline">\(\mathbf{x}_i\)</span></strong>:</p>
+</section>
+<section id="part-3-regularization-and-lp-norms" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-regularization-and-lp-norms">Part 3: Regularization and <span class="math inline">\(L^p\)</span>-Norms</h2>
+<p>Here the most helpful things to study are as follows:</p>
+<p><strong>Which particular norms are used in which particular regularization methods?</strong></p>
+<ul>
+<li>Lasso penalizes model complexity via a penalty <span class="math inline">\(\lambda\)</span> on <span class="math inline">\(\|\boldsymbol{\beta}\|_1\)</span>, the <span class="math inline">\(L^1\)</span> norm of <span class="math inline">\(\boldsymbol{\beta} = (\beta_0, \beta_1, \ldots, \beta_p)\)</span></li>
+<li>Ridge Regression penalizes model complexity via a penalty <span class="math inline">\(\lambda\)</span> on <span class="math inline">\(\|\boldsymbol{\beta}\|_2^2\)</span>, the squared <span class="math inline">\(L^2\)</span> norm of <span class="math inline">\(\boldsymbol{\beta}\)</span></li>
+<li>Elastic Net Regularization “averages” these approaches, in a sense, by penalizing model complexity via <em>two</em> penalty values:
+<ul>
+<li><span class="math inline">\(\lambda_1\)</span> as a penalty on <span class="math inline">\(\|\boldsymbol{\beta}\|_1\)</span> and $ <span class="math inline">\(\lambda_2\)</span> as a penalty on <span class="math inline">\(\|\boldsymbol{\beta}\|_2^2\)</span></li>
+</ul></li>
+</ul>
+<p><strong>What do the different <span class="math inline">\(L^p\)</span> constraints “look like”, in terms of how they constrain the full space of possible model parameters <span class="math inline">\(\boldsymbol\beta\)</span>?</strong></p>
+<p>Here, as a helpful/fun way to prepare, is a practice problem for this part:</p>
+<p>Assume we are estimating a regression with two parameters <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>, both real numbers so that the space of estimates is <span class="math inline">\(\mathbb{R}^2\)</span> (we can imagine <span class="math inline">\(\beta_1\)</span> as the <span class="math inline">\(x\)</span>-axis in this space and <span class="math inline">\(\beta_2\)</span> as the <span class="math inline">\(y\)</span>-axis). Each <span class="math inline">\(L^p\)</span>-norm induces a <strong>“unit circle”</strong> within this space, defined to be the <strong>set of points</strong> <span class="math inline">\(\boldsymbol{\beta} = (\beta_1, \beta_2)\)</span> for which <span class="math inline">\(\|\boldsymbol{\beta}\|_p = 1\)</span>.</p>
+<p>Since the <span class="math inline">\(L^2\)</span> norm corresponds to “standard” Euclidean distance, for example, the shape of the unit circle it induces is the shape we typically already call “the unit circle” in geometry:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://jjacobs.me/dsan5300-01/w06/images/unit_circle_l2.svg" class="img-fluid figure-img"></p>
+<figcaption>From <a href="https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0">this slide</a></figcaption>
+</figure>
+</div>
+<p>The <span class="math inline">\(L^1\)</span> norm, however, induces a different unit circle: the set of all points exactly 1 unit away from the origin in <span class="math inline">\(L^1\)</span> space looks like a diamond:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://jjacobs.me/dsan5300-01/w06/images/unit_circle_l1.svg" class="img-fluid figure-img"></p>
+<figcaption>From <a href="https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0">this slide</a></figcaption>
+</figure>
+</div>
+<p><strong>Practice Problem 3A:</strong></p>
+<ul>
+<li>What do the unit circles look like for values of <span class="math inline">\(p\)</span> where <span class="math inline">\(0 &lt; p &lt; 1\)</span>? (This was discussed in the Google Space, but it can be helpful to think of <em>why</em> the unit circle looks this way)</li>
+<li>The unit disks (the spaces enclosed by the unit circles) in <span class="math inline">\(L^1\)</span> and <span class="math inline">\(L^2\)</span> space are <strong>convex</strong>, meaning that if you pick any two points <span class="math inline">\(\boldsymbol\beta_A\)</span> and <span class="math inline">\(\boldsymbol\beta_B\)</span> within the space and draw a line between them, any point along this line is also within the space.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Are the unit circles produced when <span class="math inline">\(0 &lt; p &lt; 1\)</span> also <strong>convex</strong>?</li>
+</ul>
+<p><strong>Practice Problem 3B:</strong></p>
+<p>The definition of the <span class="math inline">\(L^p\)</span> norm,</p>
 <p><span class="math display">\[
-\begin{align*}
-\mathbf{X} &amp;= \begin{bmatrix}
-\mathbf{x}_1 \\
-\mathbf{x}_2 \\
-\vdots \\
-\mathbf{x}_n
-\end{bmatrix} = \begin{bmatrix}
-x_{1,0} &amp; x_{1,1} &amp; x_{1,2} &amp; \cdots &amp; x_{1,m} \\
-x_{2,0} &amp; x_{2,1} &amp; x_{2,2} &amp; \cdots &amp; x_{2,m} \\
-\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-x_{n,0} &amp; x_{n,1} &amp; x_{n,2} &amp; \cdots &amp; x_{n,m}
-\end{bmatrix} \\
-&amp;= \begin{bmatrix}
-1 &amp; x_{1,1} &amp; x_{1,2} &amp; \cdots &amp; x_{1,m} \\
-1 &amp; x_{2,1} &amp; x_{2,2} &amp; \cdots &amp; x_{2,m} \\
-\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-1 &amp; x_{n,1} &amp; x_{n,2} &amp; \cdots &amp; x_{n,m}
-\end{bmatrix}
-\end{align*}
+\|\boldsymbol\beta\|_p = \left( \sum_{j=1}^{J}|\beta_j|^p \right)^{\frac{1}{p}},
 \]</span></p>
-<p>And finally, the first bullet point gives us a hint that we don’t need a full <strong>matrix</strong> to represent <span class="math inline">\(\boldsymbol\beta\)</span>, since the same set of parameters <span class="math inline">\(\boldsymbol\beta\)</span> is used across <strong>all</strong> predictions from <span class="math inline">\(\widehat{y}_1\)</span> to <span class="math inline">\(\widehat{y}_n\)</span>. Instead, to ensure that it “combines with” our data matrix <span class="math inline">\(\mathbf{X}\)</span> to produce the desired final system of equations, we can represent it as a <strong>column vector</strong>:</p>
+<p>works fine for deriving (e.g.) the <span class="math inline">\(L^2\)</span>, <span class="math inline">\(L^1\)</span>, and <span class="math inline">\(L^{2/3}\)</span> norms. But there is one additional widely-used norm, the <span class="math inline">\(L^\infty\)</span> norm, that we can’t exactly derive by “plugging in” <span class="math inline">\(\infty\)</span>, but <em>can</em> easily derive by taking the <strong>limit</strong> as <span class="math inline">\(p \rightarrow \infty\)</span>:</p>
 <p><span class="math display">\[
-\boldsymbol\beta = \begin{bmatrix}
-\beta_0 \\
-\beta_1 \\
-\vdots \\
-\beta_m
-\end{bmatrix}
+\|\boldsymbol\beta\|_\infty \overset{\small \text{def}}{=} \lim_{p \rightarrow \infty} \|\boldsymbol\beta\|_p
 \]</span></p>
-<p>Though the choice of a <strong>column</strong> vector rather than a row vector here might seem arbitrary at first, the point is exactly what I mentioned above, that you can try the two different representations and see which one is more helpful for what we’re trying to do. It turns out that, with this column vector representation, we can combine <span class="math inline">\(\mathbf{X}\)</span> with <span class="math inline">\(\boldsymbol\beta\)</span> using a simple <strong>matrix-vector multiplication</strong> to obtain the final result we’ve been looking for:</p>
+<ul>
+<li>Show (or, just, try your best to show! Or look up!) that this limit can be evaluated to arrive at the closed-form expression <span class="math inline">\(\|\boldsymbol\beta\|_\infty = \max\{\beta_0, \beta_1, \ldots, \beta_J\}\)</span></li>
+<li>More importantly: what does the <strong>unit circle</strong> induced by this norm look like? Try to draw it on an <span class="math inline">\(xy\)</span>-plane, the same way you would draw a unit circle or the diamond induced by the <span class="math inline">\(L^1\)</span> norm.</li>
+</ul>
+</section>
+<section id="part-4-basis-functions" class="level2">
+<h2 class="anchored" data-anchor-id="part-4-basis-functions">Part 4: Basis Functions</h2>
+<p>In Week 7 we introduced the notion of a set of <strong>basis functions</strong> <span class="math inline">\(\{b_0(X), b_1(X), \ldots, b_D(X)\}\)</span> as a method for writing different types of regressions (e.g., linear regression, polynomial regression, piecewise regression, and regression splines) in a single form.</p>
+<p>A degree-<span class="math inline">\(d\)</span> polynomial regression, for example, can be thought of as a simple linear regression on <span class="math inline">\(d\)</span> basis functions <span class="math inline">\(\{b_0(X) = 1, b_1(X) = X, b_2(X) = X^2, \ldots, b_d(X) = X^d\}\)</span>, so that estimating parameters <span class="math inline">\(\beta_0\)</span> through <span class="math inline">\(\beta_d\)</span> gives us</p>
 <p><span class="math display">\[
-\begin{align*}
-\mathbf{X}\boldsymbol\beta &amp;= \begin{bmatrix}
-1 &amp; x_{1,1} &amp; x_{1,2} &amp; \cdots &amp; x_{1,m} \\
-1 &amp; x_{2,1} &amp; x_{2,2} &amp; \cdots &amp; x_{2,m} \\
-\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-1 &amp; x_{n,1} &amp; x_{n,2} &amp; \cdots &amp; x_{n,m}
-\end{bmatrix} \begin{bmatrix}
-\beta_0 \\
-\beta_1 \\
-\vdots \\
-\beta_m
-\end{bmatrix} \\
-&amp;= \begin{bmatrix}
-\beta_0 x_{1,0} + \beta_1x_{1,1} + \cdots + \beta_m x_{1,m} \\
-\vdots \\
-\beta_0 x_{n,0} + \beta_1x_{n,1} + \cdots + \beta_m x_{n,m}
-\end{bmatrix}
-\end{align*}
+Y = \beta_0 b_0(X) + \beta_1 b_1(X) + \cdots + \beta_d b_d(X) = \beta_0 + \beta_1 X + \cdots + \beta_d X^d,
 \]</span></p>
-<p>Which is precisely the stack-of-weighted-sums we were hoping to “decompose” into Linear Algebraic operations in <a href="#eq-rhs-stack" class="quarto-xref">Equation&nbsp;3</a> above!</p>
-<p>So, combining all this together, if we want a representation of our MLR model without <strong>any</strong> sums (since the sums are all performed <em>implicitly</em> via the vector-vector and matrix-vector operations), we can now just use the following ultra-shorthand Linear Algebraic form!</p>
+<p>the standard form for a degree-<span class="math inline">\(d\)</span> polynomial regression.</p>
+<p>For this portion, if we provide you with a “true” Data-Generating Process <span class="math inline">\(f(x)\)</span>, you should be able to identify whether or not performing regression on a particular set of basis functions <span class="math inline">\(\mathcal{B} = \{b_0(X), b_1(X), \ldots\}\)</span> would allow you to <strong>learn</strong> the true DGP <span class="math inline">\(f(x)\)</span>.</p>
+<p>For example, if the true DGP underlying a given dataset was</p>
 <p><span class="math display">\[
-\widehat{\mathbf{y}} = \mathbf{X}\boldsymbol\beta
+f(x) = 2^x,
+\]</span></p>
+<p>but the set of basis functions used for a regression was <span class="math inline">\(\mathcal{B} = \{x, x^2\}\)</span>, then this regression would <strong>not</strong> be able to learn the true DGP, since there are no numeric constants <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\beta_2\)</span> that it could learn which would produce</p>
+<p><span class="math display">\[
+2^x = \beta_0 + \beta_1 x + \beta_2 x^2.
+\]</span></p>
+<p>However, if the true DGP was</p>
+<p><span class="math display">\[
+f(x) = \log_2(x) + 3,
+\]</span></p>
+<p>and we employed the basis functions <span class="math inline">\(\mathcal{B}' = \{x, x^2, \ln(x)\}\)</span>, we <strong>could</strong> learn the true DGP using regression, since learning the numeric constants <span class="math inline">\(\widehat{\beta}_0 = 3\)</span>, <span class="math inline">\(\widehat{\beta}_1 = 0\)</span>, <span class="math inline">\(\widehat{\beta}_2 = 0\)</span>, and <span class="math inline">\(\widehat{\beta}_3 = \frac{1}{\ln(2)}\)</span> would recover <span class="math inline">\(f(x)\)</span>:</p>
+<p><span class="math display">\[
+\log_2(x) + 3 = \widehat{\beta}_0 + \widehat{\beta}_1 x + \widehat{\beta}_2 x^2 + \widehat{\beta}_3 \ln(x) = 3 + 0 + 0 + \frac{\ln(x)}{\ln(2)} ✅
 \]</span></p>
 </section>
-<section id="sanity-check-how-do-we-know-these-operations-will-be-well-defined" class="level2">
-<h2 class="anchored" data-anchor-id="sanity-check-how-do-we-know-these-operations-will-be-well-defined">Sanity Check: How Do We Know These Operations Will Be Well-Defined?</h2>
-<p>This is kind of… shoved in here, since it’s <strong>generally</strong> super useful imo, across any situation where you’re using matrices and/or vectors, but I may as well introduce it here!</p>
-<p>There is a “sanity check” you can perform, whenever you’re doing math <strong>or</strong> writing code that involves matrices/vectors, that instantly gives you two pieces of information:</p>
-<ul>
-<li>A verification of whether or not the matrix-matrix or matrix-vector product is <strong>well-defined</strong>, but also</li>
-<li>The specific <strong>dimensions</strong> that the <strong>result</strong> of the matrix-matrix or matrix-vector product will have!</li>
-</ul>
-<p>In general, this sanity check involves just checking how many <strong>rows</strong> and <strong>columns</strong> are in the two objects you’re hoping to multiply, and writing these two dimensions (number of rows and number of columns) underneath each object. So, for example, if we’re thinking about right-multiplying a <span class="math inline">\(3 \times 2\)</span> matrix <span class="math inline">\(A\)</span> by a <span class="math inline">\(2 \times 4\)</span> matrix <span class="math inline">\(B\)</span>, we can write the two matrices out like:</p>
-<p><span class="math display">\[
-AB =
-\underbrace{\begin{bmatrix}
-a_{11} &amp; a_{12} \\
-a_{21} &amp; a_{22} \\
-a_{31} &amp; a_{32}
-\end{bmatrix}}_{3 \times 2} \underbrace{\begin{bmatrix}
-b_{11} &amp; b_{12} &amp; b_{13} &amp; b_{14} \\
-b_{21} &amp; b_{22} &amp; b_{23} &amp; b_{24}
-\end{bmatrix}}_{2 \times 4}
-\]</span></p>
-<p>And now, the <strong>first</strong> piece of information this gives us: how do we know whether or not this multiplication is well-defined?</p>
-<ul>
-<li>The multiplication is well-defined <strong>if the two “inner” numbers written under the matrices are equal</strong>: in this case, the operation is well-defined because the number of <strong>columns</strong> in the first matrix <span class="math inline">\(A\)</span> (<span class="math inline">\(2\)</span>) is equal to the number of <strong>rows</strong> in the second matrix <span class="math inline">\(B\)</span> (<span class="math inline">\(2\)</span>)!</li>
-</ul>
-<p>I call these the “inner” numbers because, if we simplified the above to just have the shapes written out, we’d get</p>
-<p><span class="math display">\[
-[3 \times 2][2 \times 4],
-\]</span></p>
-<p>in which the “well-defined test” can now be read off from the two numbers (<span class="math inline">\(2]\)</span> and <span class="math inline">\([2\)</span>) on the “inside” of this 4-number representation.</p>
-<p>Next, we get the <strong>second</strong> piece of information: what dimensions will the resulting product have?</p>
-<ul>
-<li>If the multiplication is well-defined, then the result will have a shape given by the <strong>two outer numbers</strong> written underneath the matrices above: In this case, the result have a number of rows equal to the number of rows in <span class="math inline">\(A\)</span> (<span class="math inline">\(3\)</span>) and a number of columns equal to the number of columns in <span class="math inline">\(B\)</span> (<span class="math inline">\(4\)</span>), i.e., the result will be a <span class="math inline">\(3 \times 4\)</span> matrix.</li>
-</ul>
-<p>We can verify this, for example, if we know the procedure for matrix-matrix multiplication from Linear Algebra:</p>
-<p><span class="math display">\[
-\begin{align*}
-AB &amp;= \underbrace{\begin{bmatrix}
-a_{11} &amp; a_{12} \\
-a_{21} &amp; a_{22} \\
-a_{31} &amp; a_{32}
-\end{bmatrix}}_{3 \times 2} \underbrace{\begin{bmatrix}
-b_{11} &amp; b_{12} &amp; b_{13} &amp; b_{14} \\
-b_{21} &amp; b_{22} &amp; b_{23} &amp; b_{24}
-\end{bmatrix}}_{2 \times 4} \\
-&amp;= \underbrace{\begin{bmatrix}
-a_{11}b_{11} + a_{12}b_{21} &amp; a_{11}b_{12} + a_{12}b_{22} &amp; a_{11}b_{13} + a_{12}b_{23} &amp; a_{11}b_{14} + a_{12}b_{24} \\
-a_{21}b_{11} + a_{22}b_{21} &amp; a_{21}b_{12} + a_{22}b_{22} &amp; a_{21}b_{13} + a_{22}b_{23} &amp; a_{21}b_{14} + a_{22}b_{24} \\
-a_{31}b_{11} + a_{32}b_{21} &amp; a_{31}b_{12} + a_{32}b_{22} &amp; a_{31}b_{13} + a_{32}b_{23} &amp; a_{31}b_{14} + a_{32}b_{24}
-\end{bmatrix}}_{3 \times 4}
-\end{align*}
-\]</span></p>
-<p>And we can see that the result is a <span class="math inline">\(3 \times 4\)</span> matrix, as expected given the pair of “outer” numbers <span class="math inline">\([3\)</span> and <span class="math inline">\(4]\)</span> in the shape representation</p>
-<p><span class="math display">\[
-[3 \times 2][2 \times 4].
-\]</span></p>
-<p>In my head, once I got used to it, this boiled down to something like the following “rule”: given a <span class="math inline">\(r_A \times c_A\)</span> matrix <span class="math inline">\(A\)</span> and a <span class="math inline">\(r_B \times c_B\)</span> matrix <span class="math inline">\(B\)</span>, their matrix-matrix product <span class="math inline">\(AB\)</span> can be sanity-checked using a “diagram” like:</p>
-<p><span class="math display">\[
-[\underline{r_A} \times \overset{✅}{c_A}][\overset{✅}{r_B} \times \underline{c_B}] = [r_A \times c_B]
-\]</span></p>
-</section>
-<section id="least-squares-derivation" class="level2">
-<h2 class="anchored" data-anchor-id="least-squares-derivation">Least Squares Derivation</h2>
-<p>For this part, the truth is you’re mainly going to have to wade through a lot of algebra—the idea is to get comfortable with the use/manipulation of the kinds of quantities that will probably come up again and again as you absorb fancier and fancier regression and ML models!</p>
-<p>So, if your derivation has lots of terms that look like <span class="math inline">\(\sum_{i=1}^{N}x_iy_i\)</span>, <span class="math inline">\(\sum_{i=1}^{N}x_i^2\)</span>, and so on, that is a good sign (and relates to the points in the previous sections about turning sums into Linear Algebraic operations)!</p>
-<p>Probably the most concrete advice I can give, for those of you still wrestling with this part, is that at least for the way my brain works it helps to “compartmentalize” the derivation into two chunks:</p>
-<p><strong>First</strong> (again, for me, though this division may not be helpful for everyone), I find it helpful to split the terms we might see into (a) terms which arise from treating it like a “pure” <strong>calculus</strong> problem that we solve by taking derivatives and setting them equal to zero, and then (b) terms/definitions which we bring in from <strong>statistics</strong> (the definitions which are given in the problem) which can help us interpret what we find. So, for this derivation, that split would look like:</p>
+<section id="part-5-splines" class="level2">
+<h2 class="anchored" data-anchor-id="part-5-splines">Part 5: Splines</h2>
+<p>The basic approach to data modeling underlying the use of splines is as follows:</p>
+<ol type="1">
+<li>“Chop” the feature space (the domain of <span class="math inline">\(\mathbf{x}\)</span>) at <span class="math inline">\(K\)</span> points <span class="math inline">\(\Xi = \{\xi_1, \xi_2, \ldots, \xi_k\}\)</span><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, called “knot points”, thus producing <span class="math inline">\(K + 1\)</span> separate pieces of the original domain of <span class="math inline">\(\mathbf{x}\)</span></li>
+<li>Model each of these <span class="math inline">\(K + 1\)</span> pieces individually, using tools from Weeks 1-6</li>
+<li><em>Join</em> the <span class="math inline">\(K + 1\)</span> resulting prediction functions together in a <strong>smooth</strong> way</li>
+</ol>
+<p>Here the term “smooth” in Step 3 is typically (99.9% of the time) <em>operationalized</em> to mean that the final joined-together prediction function should have a well-defined <strong>second derivative</strong> at each knot point <span class="math inline">\(\xi_k\)</span>. This is why, when a data scientist says “spline” in general, they usually are referring specifially to <strong>cubic splines</strong>:</p>
+<div id="tbl-polys" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-polys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: First and second derivatives of polynomials evaluated at an arbitrary point <span class="math inline">\(\xi_k\)</span>
+</figcaption>
+<div aria-describedby="tbl-polys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>(a) Calculus/Algebra Thing</th>
-<th>(b) Statistics Thing</th>
+<th>Degree</th>
+<th>Polynomial</th>
+<th>Derivatives at <span class="math inline">\(x = \xi_k\)</span></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(\sum_{i=1}^{N}x_i\)</span></td>
-<td><span class="math inline">\(\overline{x} = \frac{1}{N}\sum_{i=1}^{N}x_i\)</span></td>
+<td>0</td>
+<td><span class="math inline">\(f(x) = c_0 x^0 = c_0\)</span></td>
+<td><span class="math inline">\(f'(\xi_k) = 0\)</span><br><span class="math inline">\(f''(\xi_k) = 0\)</span></td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(\sum_{i=1}^{N}y_i\)</span></td>
-<td><span class="math inline">\(\overline{y} = \frac{1}{N}\sum_{i=1}^{N}y_i\)</span></td>
+<td>1</td>
+<td><span class="math inline">\(f(\xi_k) = c_0 x^0 + c_1 x^1 = c_0 + c_1x\)</span></td>
+<td><span class="math inline">\(f'(\xi_k) = c_1\)</span><br><span class="math inline">\(f''(\xi_k) = 0\)</span></td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(\sum_{i=1}^{N}x_iy_i\)</span></td>
-<td><span class="math inline">\(\text{Cov}[X, Y] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})(y_i - \overline{y})\)</span></td>
+<td>2</td>
+<td><span class="math inline">\(f(x) = c_0 x^0 + c_1 x^1 + c_2 x^2\)</span></td>
+<td><span class="math inline">\(f'(\xi_k) = c_1 + 2c_2 \xi_k\)</span><br><span class="math inline">\(f''(\xi_k) = 2c_2\)</span></td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(\sum_{i=1}^{N}x_i^2\)</span></td>
-<td><span class="math inline">\(\text{Var}[X] = \frac{1}{N}\sum_{i=1}^{N}(x_i-\overline{x})^2\)</span></td>
+<td>3</td>
+<td><span class="math inline">\(f(x) = c_0 x^0 + c_1 x^1 + c_2 x^2 + c_3 x^3\)</span></td>
+<td><span class="math inline">\(f'(\xi_k) = c_1 + 2c_2 \xi_k + 3c_3 \xi_k^2\)</span><br><span class="math inline">\(f''(\xi_k) = 2c_2 + 6c_3 \xi_k\)</span></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Then</strong>, I like to think of the first actual doing-math step as the step where I treat is as a “pure” calculus problem. Mainly because my brain starts to hurt if I switch back-and-forth between Calculus/Algebra Things and Statistics Things, I find it more comfortable to forget about the right column in the above table and just solve:</p>
+</div>
+</figure>
+</div>
+<p>From this table we can see how degree-3 <strong>cubic</strong> polynomials are the “simplest” (in terms of lowest degree) polynomials for which we could learn coefficients <span class="math inline">\(c_0\)</span> through <span class="math inline">\(c_3\)</span> that would enable <strong>joining</strong> different pieces together to have a well-defined second derivative at <strong>all</strong> knot points <span class="math inline">\(\xi_k\)</span><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. And, in fact, we don’t even need to learn 4 separate coefficients <span class="math inline">\(c_0\)</span>, <span class="math inline">\(c_1\)</span>, <span class="math inline">\(c_2\)</span>, and <span class="math inline">\(c_3\)</span> to achieve this: by looking at the form of <span class="math inline">\(f''(x)\)</span> in the final row of <a href="#tbl-polys" class="quarto-xref">Table&nbsp;1</a>, we see that by just learning a coefficient <span class="math inline">\(c_3\)</span> on the cubic term (<span class="math inline">\(x^3\)</span>) at each knot point, we can ensure that the regression solution <span class="math inline">\(\widehat{c_3}\)</span> (for example, the OLS estimate <span class="math inline">\(\widehat{\beta}_j\)</span> for a term <span class="math inline">\(\beta_j \xi_k^3\)</span> on the RHS of a regression model)</p>
+<p>This tells us (for reasons that we talked about in more depth during lecture) that we can join our <span class="math inline">\(K + 1\)</span> separately-modeled “pieces” together in a <strong>smooth</strong> way by <strong>adding</strong> the <strong>truncated power basis functions</strong></p>
 <p><span class="math display">\[
-\begin{align*}
-\min_{m,b}\left[ L(m,b) \right] &amp;= \min_{m,b}\left[ \sum_{i=1}^{N} (\widehat{y}(m,b) - y)^2 \right] \\
-&amp;= \min_{m,b}\left[ \sum_{i=1}^{N}((mx_i + b) - y)^2 \right]
-\end{align*}
+\mathcal{B}_{\text{TP}} = \{(x - \xi_1)^3_+, (x - \xi_2)^3_+, \ldots, (x - \xi_K)^3_+\}
 \]</span></p>
-<p>The way I learned to solve minimization problems in calculus: by taking the thing inside the square brackets, computing its derivative(s) with respect to the maximand(s) (<span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span> in this case), and then solving the system of equations which in some classes would be called the “First-Order Conditions” that are necessary (but not sufficient) for some chosen values <span class="math inline">\(m^*\)</span> and <span class="math inline">\(b^*\)</span> to minimize the function:</p>
+<p>to any existing regression model with existing basis functions <span class="math inline">\(\mathcal{B}\)</span>, where the <span class="math inline">\(+\)</span> in the subscript after the parentheses denotes the <a href="https://en.wikipedia.org/wiki/Truncated_power_function">truncated power function</a>:</p>
 <p><span class="math display">\[
-\left. \frac{\partial L}{\partial m}\right|_{\substack{m=m^* \\ b=b^*}} = 0 \wedge \left. \frac{\partial L}{\partial b}\right|_{\substack{m=m^* \\ b=b^*}} = 0
+(x - \xi)^3_+ \overset{\small \text{def}}{=} \begin{cases}
+0 &amp;\text{if }x - \xi \leq 0 \\
+(x - \xi)^3 &amp;\text{if }x - \xi &gt; 0
+\end{cases}
 \]</span></p>
-<p>The goal, once you take these two derivatives and set them equal to zero, is to use algebraic manipulations to eventually arrive at <strong>closed-form solutions</strong> for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>. In this case, what would a closed-form solution look like?</p>
+<p>Thus, for example, if we were fitting a regression model using one of the example bases given in the previous part:</p>
+<p><span class="math display">\[
+\mathcal{B}' = \{x, x^2, \ln(x)\},
+\]</span></p>
+<p>but decided that in fact we want to fit this model <strong>separately</strong> for datapoints with <span class="math inline">\(x_i \leq 100^\circ \mathrm{C}\)</span> and <span class="math inline">\(x_i &gt; 100^\circ \mathrm{C}\)</span>, we can “automatically” achieve this by performing a new regression with basis functions</p>
+<p><span class="math display">\[
+\mathcal{B}'' = \{x, x^2, \ln(x), (x-100)^3_+\}.
+\]</span></p>
+<p>This “forces” the regression to now estimate some parameter <span class="math inline">\(\beta_4\)</span> as a coefficient for <span class="math inline">\((x-100)^3_+\)</span>, ensuring that resulting prediction function joins the two “pieces” at <span class="math inline">\(x = 100^\circ \textrm{C}\)</span> in a smooth way.</p>
+<p>Given these pieces, some takeaways for yall in terms of what you can study is as follows:</p>
+<p><strong>How should the knot points <span class="math inline">\(\xi_k\)</span> themselves be chosen?</strong></p>
 <ul>
-<li><p>A closed-form solution for <span class="math inline">\(m\)</span> would be an expression like</p>
-<p><span class="math display">\[
-m = [\text{stuff}],
-\]</span></p>
-<p>where everything on the right-hand side is a function of only <span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>, and <span class="math inline">\(N\)</span>. Meaning, if <span class="math inline">\(b\)</span> or <span class="math inline">\(m\)</span> itself appear on the right-hand side, you have not yet arrived at a closed-form solution for <span class="math inline">\(m\)</span>!</p></li>
-<li><p>A closed-form solution for <span class="math inline">\(b\)</span> would be an expression like</p>
-<p><span class="math display">\[
-b = [\text{stuff}],
-\]</span></p>
-<p>where everything on the right-hand side here is a function of only <span class="math inline">\(x_i\)</span>, <span class="math inline">\(y_i\)</span>, and <span class="math inline">\(N\)</span>. So, if <span class="math inline">\(m\)</span> or <span class="math inline">\(b\)</span> itself appear on the right-hand side, you have not yet arrived at a closed-form solution for <span class="math inline">\(b\)</span>!</p></li>
+<li>If we have a <strong>pre-existing</strong> reason (with respect to our theory or hypothesis that we’re bringing to the data) to expect <strong>different behavior</strong> in different regions of the domain of some feature <span class="math inline">\(\mathbf{x}\)</span>, we can opt to “manually” place knot points to separate the full domain into these regions</li>
+<li>In the above example, <span class="math inline">\(\xi_1 = 100^\circ \mathrm{C}\)</span> may be chosen because we’re studying <strong>water</strong>, which (our theory tells us) undergoes a <strong>phase change</strong> at that temperature.</li>
+<li>In the absence of this type of pre-existing reason, however, we more-commonly choose both the <strong>number</strong> of knot points <span class="math inline">\(K\)</span> and their <strong>locations</strong> <span class="math inline">\(\{\xi_1, \ldots, \xi_k\}\)</span> via <strong>Cross-Validation</strong></li>
 </ul>
-<p><strong>Finally</strong>, once I have these two <strong>closed-form solutions</strong> for <span class="math inline">\(m\)</span> and <span class="math inline">\(b\)</span>, I then take the Statistics Things back out and try to rewrite the terms in this closed form solution in terms of <span class="math inline">\(\overline{x}\)</span>, <span class="math inline">\(\overline{y}\)</span>, <span class="math inline">\(\text{Var}[X]\)</span>, <span class="math inline">\(\text{Var}[Y]\)</span>, and <span class="math inline">\(\text{Cov}[X,Y]\)</span>.</p>
-<p>This may not help in terms of the particular point at which you may be stuck, in which case I’m sorry in advance! But, it’s the… division-of-tasks that tended to help me when deriving closed-form solutions like this in e.g.&nbsp;econometrics classes!</p>
-<!-- ## Part 2: What is it asking, how do you know your implementation is correct? -->
+<p><strong>How exactly does adding the truncated power function <span class="math inline">\((x - \xi_k)^3_+\)</span> as a new basis function allow us to “split” the original regression into pieces (constrained to join together smoothly)?</strong></p>
+<ul>
+<li><p>The parenthetical part we already discussed above (that smoothness is “enforced” by the <span class="math inline">\(3\)</span> in the exponent), but the splitting is a separate “feature” of these truncated power bases.</p></li>
+<li><p>For intuition, rather than thinking of these as separate/new features, it can help to think of them as <a href="https://jjacobs.me/dsan5300-01/w07/slides.html#/truncated-power-basis-relu-basis">“slope modifiers”</a>: if our prediction function is</p>
+<p><span class="math display">\[
+\widehat{y}_i = \widehat{\beta}_0 + \widehat{\beta}_1x_i + \widehat{\beta}_2(x_i - \xi_1)^3_+,
+\]</span></p>
+<p>then the slope of this prediction function will be <span class="math inline">\(\widehat{\beta}_1\)</span> up until the point <span class="math inline">\(x = \xi_1\)</span>, after which the slope will become <span class="math inline">\(\widehat{\beta}_1 + \widehat{\beta}_2\)</span>.</p></li>
+</ul>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>We haven’t talked about <a href="https://stanford.edu/~boyd/cvxbook/">convex optimization</a> in this class, but it turns out to be a very important feature in terms of whether or not we can efficiently <strong>optimize</strong> a given function within a given space…<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The symbol <span class="math inline">\(\Xi\)</span> is the capitalized form, and <span class="math inline">\(\xi\)</span> the lowercased form, of the Greek letter “xi”, pronounced like “ksy”—like saying “sigh” immediately after a quick “k” sound.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>In a Calculus class, we learn (as basically a helpful rule-of-thumb definition) that a function <span class="math inline">\(f(x)\)</span> has a “well-defined” second derivative at a given point <span class="math inline">\(\xi\)</span> if <span class="math inline">\(\lim_{x \rightarrow \xi^+}f''(x) = \lim_{x \rightarrow \xi^-}f''(x)\)</span>, i.e., if the second derivative has the same value approaching <span class="math inline">\(\xi\)</span> from below and approaching <span class="math inline">\(\xi\)</span> from above. If we go on to take a Real Analysis class this picture gets complicated a bit to arrive at a fully-workable definition (by bringing in <a href="https://en.wikipedia.org/wiki/Infimum_and_supremum">infima and suprema</a>), but the intuition from Calculus class should be fine for this class!<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -831,6 +756,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         if (link.dataset.originalHref !== undefined) {
           link.href = link.dataset.originalHref;
         }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
       }
     }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
@@ -1149,4 +1081,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/writeups/hw1-guide/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/jpowerj/dsan5300-01/blob/main/writeups/quiz-2/index.qmd" target="_blank" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div></div></footer></body></html>
