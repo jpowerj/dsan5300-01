@@ -9,6 +9,15 @@ date-format: full
 categories:
   - "Extra Writeups"
 format:
+  pdf:
+    html-math-method: mathjax
+    fontsize: "11pt"
+    geometry:
+      - top=12mm
+    include-in-header:
+      text: |
+        \usepackage{fullpage}
+        \usepackage{unicode-math}
   html:
     # embed-resources: true
     df-print: kable
@@ -16,7 +25,6 @@ format:
     toc: true
     link-external-newwindow: true
     link-external-icon: true
-  # pdf: default
 ---
 
 ## Part 1: Data-Splitting
@@ -80,11 +88,11 @@ Assume we are estimating a regression with two parameters $\beta_1$ and $\beta_2
 
 Since the $L^2$ norm corresponds to "standard" Euclidean distance, for example, the shape of the unit circle it induces is the shape we typically already call "the unit circle" in geometry:
 
-![From [this slide](https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0)](https://jjacobs.me/dsan5300-01/w06/images/unit_circle_l2.svg)
+![From [this slide](https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0)](images/unit_circle_l2.svg)
 
 The $L^1$ norm, however, induces a different unit circle: the set of all points exactly 1 unit away from the origin in $L^1$ space looks like a diamond:
 
-![From [this slide](https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0)](https://jjacobs.me/dsan5300-01/w06/images/unit_circle_l1.svg)
+![From [this slide](https://jjacobs.me/dsan5300-01/w06/slides.html#/different-norms-leftrightarrow-different-distances-from-vecmathbf0)](images/unit_circle_l1.svg)
 
 **Practice Problem 3A:**
 
