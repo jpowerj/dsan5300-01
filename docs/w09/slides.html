@@ -114,7 +114,7 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-33eaf4b70a9a1edc274cf22cdce1b762.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-6c1d497da16702c0d37cfc9290a53c7d.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -402,8 +402,8 @@ Jeff Jacobs
 <li><p>Priors can be estimated as <span class="math inline">\(n_k / n\)</span>. The hard work is in modeling <span class="math inline">\(f_k(x)\)</span>! With estimates of these two “pieces” for each <span class="math inline">\(k\)</span>, we can derive a classifier <span class="math inline">\(\widehat{y}(x) = \argmax_k p_k(x)\)</span></p></li>
 </ul>
 </section>
-<section id="the-lda-assumption" class="slide level2 smaller crunch-title title-11 math-90 crunch-ul crunch-li-8">
-<h2>The LDA Assumption</h2>
+<section id="the-lda-assumption-one-feature-x" class="slide level2 smaller crunch-title title-11 math-90 crunch-ul crunch-li-5">
+<h2>The LDA Assumption (One Feature <span class="math inline">\(x\)</span>)</h2>
 <ul>
 <li>Within each class <span class="math inline">\(k\)</span>, values of <span class="math inline">\(x\)</span> are <strong>normally distributed</strong>:</li>
 </ul>
@@ -427,21 +427,174 @@ Jeff Jacobs
 \widehat{y}(x) = \argmax_k[\delta_k(x)] = \argmax_{k}\left[ \overbrace{\frac{\mu_k}{\sigma^2}}^{\smash{m}} x ~ \overbrace{- \frac{\mu_k^2}{2\sigma^2} + \log(\pi_k)}^{\smash{b}} \right]
 \]</span></p>
 </section>
-<section id="estimating-from-data" class="slide level2">
-<h2>Estimating From Data</h2>
-
-<img data-src="images/4_4.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.4</p></section>
-<section id="moving-to-multiple-features" class="slide level2">
-<h2>Moving to Multiple Features</h2>
-
-<img data-src="images/4_6.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.6</p></section>
-<section id="qudratic-class-boundaries" class="slide level2 smaller crunch-title title-12">
-<h2>Qudratic Class Boundaries</h2>
+<section id="decision-boundaries" class="slide level2 smaller crunch-title crunch-ul crunch-math math-90">
+<h2>Decision Boundaries</h2>
 <ul>
-<li>Here, dashed <strong>purple</strong> line is “true” boundary (Bayes decision boundary), dotted <strong>black</strong> line is LDA boundary, solid <strong>green</strong> line is QDA boundary</li>
+<li><p>The <strong>boundary</strong> between two classes <span class="math inline">\(k\)</span> and <span class="math inline">\(k'\)</span> will be the point at which <span class="math inline">\(\delta_k(x) = \delta_{k'}(x)\)</span></p></li>
+<li><p>For two classes, can solve <span class="math inline">\(\delta_0(x) = \delta_1(x)\)</span> for <span class="math inline">\(x\)</span> to obtain <span class="math inline">\(x = \frac{\mu_0 + \mu_1}{2}\)</span></p></li>
+<li><p>To derive a boundary from <strong>data</strong>: <span class="math inline">\(x = \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}\)</span> <span class="math inline">\(\Rightarrow\)</span> Predict <span class="math inline">\(1\)</span> if <span class="math inline">\(x &gt; \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}\)</span>, <span class="math inline">\(0\)</span> otherwise</p></li>
 </ul>
 
-<img data-src="images/4_9.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.9</p></section></section>
+<img data-src="images/4_4.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.4: Estimating the Decision Boundary from data. The dashed line is the “true” boundary <span class="math inline">\(x = \frac{\mu_0 + \mu_1}{2}\)</span>, while the solid line in the right panel is the boundary <strong>estimated from data</strong> as <span class="math inline">\(x = \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}\)</span>.</p></section>
+<section id="number-of-parameters" class="slide level2 smaller crunch-title">
+<h2>Number of Parameters</h2>
+<ul>
+<li><span class="math inline">\(K = 2\)</span> is special case, since lots of things cancel out, but in general need to estimate:</li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>English</th>
+<th>Notation</th>
+<th>How Many</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Prior for class <span class="math inline">\(k\)</span></td>
+<td><span class="math inline">\(\widehat{\pi}_k\)</span></td>
+<td><span class="math inline">\(K - 1\)</span></td>
+<td><span class="math inline">\(\widehat{\pi}_k = n_k / n\)</span></td>
+</tr>
+<tr class="even">
+<td>Estimated mean for class <span class="math inline">\(k\)</span></td>
+<td><span class="math inline">\(\widehat{\mu}_k\)</span></td>
+<td><span class="math inline">\(K\)</span></td>
+<td><span class="math inline">\(\widehat{\mu}_k = \displaystyle \frac{1}{n_k}\sum_{\{i \mid y_i = k\}}x_i\)</span></td>
+</tr>
+<tr class="odd">
+<td>Estimated (shared) variance</td>
+<td><span class="math inline">\(\widehat{\sigma}^2\)</span></td>
+<td>1</td>
+<td><span class="math inline">\(\widehat{\sigma}^2 = \displaystyle \frac{1}{n - K}\sum_{k = 1}^{K}\sum_{i:y_i = k}(x_i - \widehat{\mu}_k)^2\)</span></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>Total:</strong></td>
+<td><span class="math inline">\(2K\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><em>(Keep in mind for fancier methods! This may blow up to be much larger than <span class="math inline">\(n\)</span>)</em></li>
+</ul>
+</section>
+<section id="lda-with-multiple-features-here-p-2" class="slide level2 smaller crunch-title title-11 crunch-ul">
+<h2>LDA with Multiple Features (Here <span class="math inline">\(p = 2\)</span>)</h2>
+<ul>
+<li>Within each class <span class="math inline">\(k\)</span>, values of <span class="math inline">\(\mathbf{x}\)</span> are <strong>(multivariate) normally distributed</strong>:</li>
+</ul>
+<p><span class="math display">\[
+\left( \begin{bmatrix}X_1 \\ X_2\end{bmatrix} \middle| ~ Y = k \right) \sim \mathbf{\mathcal{N}}_2(\param{\boldsymbol\mu_k}, \param{\mathbf{\Sigma}})
+\]</span></p>
+<ul>
+<li>Increasing <span class="math inline">\(p\)</span> to 2 and <span class="math inline">\(K\)</span> to 3 means more parameters, but still <strong>linear boundaries</strong>. It turns out: shared variance (<span class="math inline">\(\sigma^2\)</span> or <span class="math inline">\(\mathbf{\Sigma}\)</span>) will <strong>always</strong> produce linear boundaries 🤔</li>
+</ul>
+
+<img data-src="images/4_6.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.6: Like before, dashed lines are “true” boundaries while solid lines are boundaries <strong>estimated from data</strong></p></section>
+<section id="quadratic-class-boundaries" class="slide level2 smaller crunch-title title-12 crunch-ul math-90 crunch-math">
+<h2>Quadratic Class Boundaries</h2>
+<ul>
+<li>To achieve <strong>non-linear</strong> boundaries, estimate covariance matrix <span class="math inline">\(\mathbf{\Sigma}_k\)</span> for each class <span class="math inline">\(k\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\left( \begin{bmatrix}X_1 \\ X_2\end{bmatrix} \middle| ~ Y = k \right) \sim \mathbf{\mathcal{N}}_2(\param{\boldsymbol\mu_k}, \param{\mathbf{\Sigma}_k})
+\]</span></p>
+<ul>
+<li>Pros: Non-linear class boundaries! Cons: More parameters to estimate, does worse than LDA if data linearly-separable (or nearly linearly-separable).</li>
+<li>Deciding factor: do you think DGP produces normal classes with same variance?</li>
+</ul>
+
+<img data-src="images/4_9.svg" class="r-stretch quarto-figure-center"><p class="caption">ISLR Figure 4.9: Dashed <span style="color: #b97dc3"><strong>purple</strong></span> line is “true” boundary (Bayes decision boundary), dotted <strong>black</strong> line is LDA boundary, solid <span style="color: #009f86"><strong>green</strong></span> line is QDA boundary</p></section>
+<section id="key-advantage-of-generative-model" class="slide level2 smaller crunch-title crunch-ul table-va title-11 inline-90 crunch-quarto-figure crunch-td">
+<h2>Key Advantage of Generative Model</h2>
+<ul>
+<li>You get an actual “picture” of <strong>what the data looks like!</strong></li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_1)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_3)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(k = 1\)</span></td>
+<td style="text-align: center;"><img data-src="images/4_10a1.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10a2.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10a3.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(k = 2\)</span></td>
+<td style="text-align: center;"><img data-src="images/4_10b1.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10b2.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10b3.svg" class="quarto-figure quarto-figure-center" style="width:70.0%"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classifying-new-points" class="slide level2 smaller crunch-title crunch-ul table-va title-11 inline-90 crunch-quarto-figure crunch-td">
+<h2>Classifying New Points</h2>
+<ul>
+<li>For new feature values <span class="math inline">\(x_{ij}\)</span>, compare <strong>how likely</strong> this value is under <span class="math inline">\(k = 1\)</span> vs.&nbsp;<span class="math inline">\(k = 2\)</span></li>
+<li>Example: <span class="math inline">\(\mathbf{x} = (0.4, 1.5, 1)^{\top}\)</span></li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_1)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_2)\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\widehat{f}_k(X_3)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(k = 1\)</span></td>
+<td style="text-align: center;"><img data-src="images/4_10a1.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10a2.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10a3.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(f_1(0.4) = 0.368\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(f_1(1.5) = 0.484\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(f_1(1) = 0.226\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(k = 2\)</span></td>
+<td style="text-align: center;"><img data-src="images/4_10b1.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10b2.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+<td style="text-align: center;"><img data-src="images/4_10b3.svg" class="quarto-figure quarto-figure-center" style="width:50.0%"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">\(f_2(0.4) = 0.030\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(f_2(1.5) = 0.130\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(f_2(1) = 0.616\)</span></td>
+</tr>
+</tbody>
+</table>
+</section></section>
 <section>
 <section id="quiz-time" class="title-slide slide level1 center" data-stack-name="Quiz">
 <h1>Quiz Time!</h1>

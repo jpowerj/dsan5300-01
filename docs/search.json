@@ -3012,14 +3012,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5193367\n\nget_rss(lin_model)\n\n[1] 0.5415791\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5468408\n\nget_rss(lin_model)\n\n[1] 0.5301841\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8636261\n\nlin_rss_test\n\n[1] 0.1489068\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3605045\n\npoly_rss_test\n\n[1] 0.6982655"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8629866\n\nlin_rss_test\n\n[1] 0.1581941\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.4166031\n\npoly_rss_test\n\n[1] 0.6735835"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -3194,14 +3194,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5559932\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5134964\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5209398\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5331896\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8739053\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1399418\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.5070828\n\n\nCode\npoly_rss_test\n\n\n[1] 0.5470468"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8604426\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1756537\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4147538\n\n\nCode\npoly_rss_test\n\n\n[1] 0.736619"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -3274,84 +3274,150 @@
     "href": "w09/index.html",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "",
-    "text": "Open slides in new tab →"
+    "text": "Open slides in new tab →",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#quick-roadmap",
     "href": "w09/index.html#quick-roadmap",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Quick Roadmap",
-    "text": "Quick Roadmap\n\nWeeks 8-9: Shift from focus on regression to focus on classification (Though we use lessons from regression!)\nLast Week (W08): SVMs as new method with this focus\n\nEmphasis on boundary between classes \\(\\leadsto\\) 2.5hrs on separating hyperplanes: in original feature space (Max-Margin, SVCs) or derived feature spaces (SVMs)\n\nNow: Wait, didn’t we discuss a classification method before, though its name confusingly had “regression” in it? 🤔\n\nTake logistic regression but use Bayes rule to “flip” from regression[+thresholding] task to class-separation task (think of SVM’s max-width-of-“slab” objective!)"
+    "text": "Quick Roadmap\n\nWeeks 8-9: Shift from focus on regression to focus on classification (Though we use lessons from regression!)\nLast Week (W08): SVMs as new method with this focus\n\nEmphasis on boundary between classes \\(\\leadsto\\) 2.5hrs on separating hyperplanes: in original feature space (Max-Margin, SVCs) or derived feature spaces (SVMs)\n\nNow: Wait, didn’t we discuss a classification method before, though its name confusingly had “regression” in it? 🤔\n\nTake logistic regression but use Bayes rule to “flip” from regression[+thresholding] task to class-separation task (think of SVM’s max-width-of-“slab” objective!)",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#logistic-regression-refresher",
     "href": "w09/index.html#logistic-regression-refresher",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Logistic Regression Refresher",
-    "text": "Logistic Regression Refresher\n\nWe don’t have time for full refresher, but just remember how it involves learning \\(\\beta_j\\) values to minimize loss w.r.t.\n\n\\[\n\\begin{align*}\n&\\log\\left[ \\frac{\\Pr(Y = 1 \\mid X)}{1 - \\Pr(Y = 1 \\mid X)} \\right] = \\beta_0 + \\beta_1 X \\\\\n&\\iff \\Pr(Y = 1 \\mid X = x_i) = \\frac{e^{\\beta_0 + \\beta_1 X}}{1 + e^{\\beta_0 + \\beta_1 X}}\n\\end{align*}\n\\]\n\nAnd then, if we want to classify \\(x\\) rather than just predict \\(\\Pr(Y = 1 \\mid X = x)\\), we apply a threshold \\(t \\in [0,1]\\):\n\n\\[\n\\widehat{y} = \\begin{cases}\n1 &\\text{if }\\Pr(Y = 1 \\mid X = x) = \\frac{e^{\\beta_0 + \\beta_1 x}}{1 + e^{\\beta_0 + \\beta_1 x}} &gt; t \\\\\n0 &\\text{otherwise}\n\\end{cases}\n\\]"
+    "text": "Logistic Regression Refresher\n\nWe don’t have time for full refresher, but just remember how it involves learning \\(\\beta_j\\) values to minimize loss w.r.t.\n\n\\[\n\\begin{align*}\n&\\log\\left[ \\frac{\\Pr(Y = 1 \\mid X)}{1 - \\Pr(Y = 1 \\mid X)} \\right] = \\beta_0 + \\beta_1 X \\\\\n&\\iff \\Pr(Y = 1 \\mid X = x_i) = \\frac{e^{\\beta_0 + \\beta_1 X}}{1 + e^{\\beta_0 + \\beta_1 X}}\n\\end{align*}\n\\]\n\nAnd then, if we want to classify \\(x\\) rather than just predict \\(\\Pr(Y = 1 \\mid X = x)\\), we apply a threshold \\(t \\in [0,1]\\):\n\n\\[\n\\widehat{y} = \\begin{cases}\n1 &\\text{if }\\Pr(Y = 1 \\mid X = x) = \\frac{e^{\\beta_0 + \\beta_1 x}}{1 + e^{\\beta_0 + \\beta_1 x}} &gt; t \\\\\n0 &\\text{otherwise}\n\\end{cases}\n\\]",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#intuition",
     "href": "w09/index.html#intuition",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Intuition",
-    "text": "Intuition\n\nLogistic regression is called a discriminative model, since we are learning parameters \\(\\beta_j\\) that best produce a predicted class \\(\\widehat{y_i}\\) from features \\(\\mathbf{x}_i\\)…\nWe’re modeling \\(\\Pr(Y = k \\mid X)\\) (for two classes, \\(k = 0\\) and \\(k = 1\\)), hence the LHS of the Logistic Regression formula\nBut there are cases where we can do better1 by instead modeling (learning parameters for) \\(\\Pr(X \\mid Y = k)\\), for each \\(k\\), then using Bayes rule to “flip” back to \\(\\Pr(Y = k \\mid X)\\)!\\(\\leadsto\\) LDA, QDA, and Naïve Bayes classifiers"
+    "text": "Intuition\n\nLogistic regression is called a discriminative model, since we are learning parameters \\(\\beta_j\\) that best produce a predicted class \\(\\widehat{y_i}\\) from features \\(\\mathbf{x}_i\\)…\nWe’re modeling \\(\\Pr(Y = k \\mid X)\\) (for two classes, \\(k = 0\\) and \\(k = 1\\)), hence the LHS of the Logistic Regression formula\nBut there are cases where we can do better1 by instead modeling (learning parameters for) \\(\\Pr(X \\mid Y = k)\\), for each \\(k\\), then using Bayes rule to “flip” back to \\(\\Pr(Y = k \\mid X)\\)!\\(\\leadsto\\) LDA, QDA, and Naïve Bayes classifiers",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#bayes-rule",
     "href": "w09/index.html#bayes-rule",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Bayes’ Rule",
-    "text": "Bayes’ Rule\n\nFirst things first, we generalize from \\(Y \\in \\{0, 1\\}\\) to \\(K\\) possible classes (labels), since the notation for \\(K\\) classes here is not much more complex than 2 classes!\nWe label the pieces using ISLR’s notation to make our lives easier:\n\n\\[\n\\underbrace{\\Pr(Y = k \\mid X = x)}_{p_k(x)} = \\frac{\n  \\overbrace{\\Pr(X = x \\mid Y = k)}^{f_k(x)} \\overbrace{\\Pr(Y = k)}^{\\pi_k}\n}{\n  \\sum_{\\ell = 1}^{K} \\underbrace{\\Pr(X = x \\mid Y = \\ell)}_{f_{\\ell}(x)} \\underbrace{\\Pr(Y = \\ell)}_{\\pi_{\\ell}}\n} = \\frac{f_k(x) \\overbrace{\\pi_k}^{\\mathclap{\\text{Prior}(k)}}}{\\sum_{\\ell = 1}^{K}f_{\\ell}(x) \\underbrace{\\pi_\\ell}_{\\mathclap{\\text{Prior}(\\ell)}}}\n\\]\n\nSo if we do have only two classes, \\(K = 2\\) and \\(p_1(x) = \\frac{f_1(x)\\pi_1}{f_1(x)\\pi_1 + f_0(x)\\pi_0}\\)\nPriors can be estimated as \\(n_k / n\\). The hard work is in modeling \\(f_k(x)\\)! With estimates of these two “pieces” for each \\(k\\), we can derive a classifier \\(\\widehat{y}(x) = \\argmax_k p_k(x)\\)"
+    "text": "Bayes’ Rule\n\nFirst things first, we generalize from \\(Y \\in \\{0, 1\\}\\) to \\(K\\) possible classes (labels), since the notation for \\(K\\) classes here is not much more complex than 2 classes!\nWe label the pieces using ISLR’s notation to make our lives easier:\n\n\\[\n\\underbrace{\\Pr(Y = k \\mid X = x)}_{p_k(x)} = \\frac{\n  \\overbrace{\\Pr(X = x \\mid Y = k)}^{f_k(x)} \\overbrace{\\Pr(Y = k)}^{\\pi_k}\n}{\n  \\sum_{\\ell = 1}^{K} \\underbrace{\\Pr(X = x \\mid Y = \\ell)}_{f_{\\ell}(x)} \\underbrace{\\Pr(Y = \\ell)}_{\\pi_{\\ell}}\n} = \\frac{f_k(x) \\overbrace{\\pi_k}^{\\mathclap{\\text{Prior}(k)}}}{\\sum_{\\ell = 1}^{K}f_{\\ell}(x) \\underbrace{\\pi_\\ell}_{\\mathclap{\\text{Prior}(\\ell)}}}\n\\]\n\nSo if we do have only two classes, \\(K = 2\\) and \\(p_1(x) = \\frac{f_1(x)\\pi_1}{f_1(x)\\pi_1 + f_0(x)\\pi_0}\\)\nPriors can be estimated as \\(n_k / n\\). The hard work is in modeling \\(f_k(x)\\)! With estimates of these two “pieces” for each \\(k\\), we can derive a classifier \\(\\widehat{y}(x) = \\argmax_k p_k(x)\\)",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
-    "objectID": "w09/index.html#the-lda-assumption",
-    "href": "w09/index.html#the-lda-assumption",
+    "objectID": "w09/index.html#the-lda-assumption-one-feature-x",
+    "href": "w09/index.html#the-lda-assumption-one-feature-x",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "The LDA Assumption",
-    "text": "The LDA Assumption\n\nWithin each class \\(k\\), values of \\(x\\) are normally distributed:\n\n\\[\n(X \\mid Y = k) \\sim \\mathcal{N}(\\param{\\mu_k}, \\param{\\sigma^2}) \\iff f_k(x) = \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n\\]\n\nPlugging back into (notationally-simplified) classifier, we get\n\n\\[\n\\widehat{y}(x) = \\argmax_{k}\\left[ \\frac{\n  \\pi_k \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n}{\n  \\sum_{\\ell = 1}^{K}\\pi_{\\ell} \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_\\ell}{\\sigma} \\right)^2\\right]\n}\\right],\n\\]\n\nGross, BUT \\(\\argmax_k p_k(x) = \\argmax_k \\log(p_k(x)) \\leadsto\\) “linear” discriminant \\(\\delta_k(x)\\):\n\n\\[\n\\widehat{y}(x) = \\argmax_k[\\delta_k(x)] = \\argmax_{k}\\left[ \\overbrace{\\frac{\\mu_k}{\\sigma^2}}^{\\smash{m}} x ~ \\overbrace{- \\frac{\\mu_k^2}{2\\sigma^2} + \\log(\\pi_k)}^{\\smash{b}} \\right]\n\\]"
+    "section": "The LDA Assumption (One Feature \\(x\\))",
+    "text": "The LDA Assumption (One Feature \\(x\\))\n\nWithin each class \\(k\\), values of \\(x\\) are normally distributed:\n\n\\[\n(X \\mid Y = k) \\sim \\mathcal{N}(\\param{\\mu_k}, \\param{\\sigma^2}) \\iff f_k(x) = \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n\\]\n\nPlugging back into (notationally-simplified) classifier, we get\n\n\\[\n\\widehat{y}(x) = \\argmax_{k}\\left[ \\frac{\n  \\pi_k \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n}{\n  \\sum_{\\ell = 1}^{K}\\pi_{\\ell} \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_\\ell}{\\sigma} \\right)^2\\right]\n}\\right],\n\\]\n\nGross, BUT \\(\\argmax_k p_k(x) = \\argmax_k \\log(p_k(x)) \\leadsto\\) “linear” discriminant \\(\\delta_k(x)\\):\n\n\\[\n\\widehat{y}(x) = \\argmax_k[\\delta_k(x)] = \\argmax_{k}\\left[ \\overbrace{\\frac{\\mu_k}{\\sigma^2}}^{\\smash{m}} x ~ \\overbrace{- \\frac{\\mu_k^2}{2\\sigma^2} + \\log(\\pi_k)}^{\\smash{b}} \\right]\n\\]",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
-    "objectID": "w09/index.html#estimating-from-data",
-    "href": "w09/index.html#estimating-from-data",
+    "objectID": "w09/index.html#decision-boundaries",
+    "href": "w09/index.html#decision-boundaries",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Estimating From Data",
-    "text": "Estimating From Data\n\n\n\nISLR Figure 4.4"
+    "section": "Decision Boundaries",
+    "text": "Decision Boundaries\n\nThe boundary between two classes \\(k\\) and \\(k'\\) will be the point at which \\(\\delta_k(x) = \\delta_{k'}(x)\\)\nFor two classes, can solve \\(\\delta_0(x) = \\delta_1(x)\\) for \\(x\\) to obtain \\(x = \\frac{\\mu_0 + \\mu_1}{2}\\)\nTo derive a boundary from data: \\(x = \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\) \\(\\Rightarrow\\) Predict \\(1\\) if \\(x &gt; \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\), \\(0\\) otherwise\n\n\n\n\nISLR Figure 4.4: Estimating the Decision Boundary from data. The dashed line is the “true” boundary \\(x = \\frac{\\mu_0 + \\mu_1}{2}\\), while the solid line in the right panel is the boundary estimated from data as \\(x = \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\).",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
-    "objectID": "w09/index.html#moving-to-multiple-features",
-    "href": "w09/index.html#moving-to-multiple-features",
+    "objectID": "w09/index.html#number-of-parameters",
+    "href": "w09/index.html#number-of-parameters",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Moving to Multiple Features",
-    "text": "Moving to Multiple Features\n\n\n\nISLR Figure 4.6"
+    "section": "Number of Parameters",
+    "text": "Number of Parameters\n\n\\(K = 2\\) is special case, since lots of things cancel out, but in general need to estimate:\n\n\n\n\n\n\n\n\n\n\nEnglish\nNotation\nHow Many\nFormula\n\n\n\n\nPrior for class \\(k\\)\n\\(\\widehat{\\pi}_k\\)\n\\(K - 1\\)\n\\(\\widehat{\\pi}_k = n_k / n\\)\n\n\nEstimated mean for class \\(k\\)\n\\(\\widehat{\\mu}_k\\)\n\\(K\\)\n\\(\\widehat{\\mu}_k = \\displaystyle \\frac{1}{n_k}\\sum_{\\{i \\mid y_i = k\\}}x_i\\)\n\n\nEstimated (shared) variance\n\\(\\widehat{\\sigma}^2\\)\n1\n\\(\\widehat{\\sigma}^2 = \\displaystyle \\frac{1}{n - K}\\sum_{k = 1}^{K}\\sum_{i:y_i = k}(x_i - \\widehat{\\mu}_k)^2\\)\n\n\n\nTotal:\n\\(2K\\)\n\n\n\n\n\n(Keep in mind for fancier methods! This may blow up to be much larger than \\(n\\))",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
-    "objectID": "w09/index.html#qudratic-class-boundaries",
-    "href": "w09/index.html#qudratic-class-boundaries",
+    "objectID": "w09/index.html#lda-with-multiple-features-here-p-2",
+    "href": "w09/index.html#lda-with-multiple-features-here-p-2",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Qudratic Class Boundaries",
-    "text": "Qudratic Class Boundaries\n\nHere, dashed purple line is “true” boundary (Bayes decision boundary), dotted black line is LDA boundary, solid green line is QDA boundary\n\n\n\n\nISLR Figure 4.9"
+    "section": "LDA with Multiple Features (Here \\(p = 2\\))",
+    "text": "LDA with Multiple Features (Here \\(p = 2\\))\n\nWithin each class \\(k\\), values of \\(\\mathbf{x}\\) are (multivariate) normally distributed:\n\n\\[\n\\left( \\begin{bmatrix}X_1 \\\\ X_2\\end{bmatrix} \\middle| ~ Y = k \\right) \\sim \\mathbf{\\mathcal{N}}_2(\\param{\\boldsymbol\\mu_k}, \\param{\\mathbf{\\Sigma}})\n\\]\n\nIncreasing \\(p\\) to 2 and \\(K\\) to 3 means more parameters, but still linear boundaries. It turns out: shared variance (\\(\\sigma^2\\) or \\(\\mathbf{\\Sigma}\\)) will always produce linear boundaries 🤔\n\n\n\n\nISLR Figure 4.6: Like before, dashed lines are “true” boundaries while solid lines are boundaries estimated from data",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w09/index.html#quadratic-class-boundaries",
+    "href": "w09/index.html#quadratic-class-boundaries",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Quadratic Class Boundaries",
+    "text": "Quadratic Class Boundaries\n\nTo achieve non-linear boundaries, estimate covariance matrix \\(\\mathbf{\\Sigma}_k\\) for each class \\(k\\):\n\n\\[\n\\left( \\begin{bmatrix}X_1 \\\\ X_2\\end{bmatrix} \\middle| ~ Y = k \\right) \\sim \\mathbf{\\mathcal{N}}_2(\\param{\\boldsymbol\\mu_k}, \\param{\\mathbf{\\Sigma}_k})\n\\]\n\nPros: Non-linear class boundaries! Cons: More parameters to estimate, does worse than LDA if data linearly-separable (or nearly linearly-separable).\nDeciding factor: do you think DGP produces normal classes with same variance?\n\n\n\n\nISLR Figure 4.9: Dashed purple line is “true” boundary (Bayes decision boundary), dotted black line is LDA boundary, solid green line is QDA boundary",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w09/index.html#key-advantage-of-generative-model",
+    "href": "w09/index.html#key-advantage-of-generative-model",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Key Advantage of Generative Model",
+    "text": "Key Advantage of Generative Model\n\nYou get an actual “picture” of what the data looks like!\n\n\n\n\n\n\n\n\n\n\n\n\\(\\widehat{f}_k(X_1)\\)\n\\(\\widehat{f}_k(X_2)\\)\n\\(\\widehat{f}_k(X_3)\\)\n\n\n\\(k = 1\\)\n\n\n\n\n\n\\(k = 2\\)",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w09/index.html#classifying-new-points",
+    "href": "w09/index.html#classifying-new-points",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Classifying New Points",
+    "text": "Classifying New Points\n\nFor new feature values \\(x_{ij}\\), compare how likely this value is under \\(k = 1\\) vs. \\(k = 2\\)\nExample: \\(\\mathbf{x} = (0.4, 1.5, 1)^{\\top}\\)\n\n\n\n\n\n\n\n\n\n\n\n\\(\\widehat{f}_k(X_1)\\)\n\\(\\widehat{f}_k(X_2)\\)\n\\(\\widehat{f}_k(X_3)\\)\n\n\n\\(k = 1\\)\n\n\n\n\n\n\n\\(f_1(0.4) = 0.368\\)\n\\(f_1(1.5) = 0.484\\)\n\\(f_1(1) = 0.226\\)\n\n\n\\(k = 2\\)\n\n\n\n\n\n\n\\(f_2(0.4) = 0.030\\)\n\\(f_2(1.5) = 0.130\\)\n\\(f_2(1) = 0.616\\)",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#appendix-fuller-logistic-derivation",
     "href": "w09/index.html#appendix-fuller-logistic-derivation",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Appendix: Fuller Logistic Derivation",
-    "text": "Appendix: Fuller Logistic Derivation\n\\[\n\\begin{align*}\n&\\log\\left[ \\frac{\\Pr(Y = 1 \\mid X)}{1 - \\Pr(Y = 1 \\mid X)} \\right] = \\beta_0 + \\beta_1 X \\\\\n&\\iff \\frac{\\Pr(Y = 1 \\mid X = x_i)}{1 - \\Pr(Y = 1\\ \\mid X = x_i)} = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X}(1 - \\Pr(Y = 1 \\mid X)) \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X} - e^{\\beta_0 + \\beta_1 X}\\Pr(Y = 1 \\mid X) \\\\\n&\\iff \\Pr(Y = 1 \\mid X) + e^{\\beta_0 + \\beta_1 X}\\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X)(1 + e^{\\beta_0 + \\beta_1 X}) = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = \\frac{e^{\\beta_0 + \\beta_1 X}}{1 + e^{\\beta_0 + \\beta_1 X}}\n\\end{align*}\n\\]"
+    "text": "Appendix: Fuller Logistic Derivation\n\\[\n\\begin{align*}\n&\\log\\left[ \\frac{\\Pr(Y = 1 \\mid X)}{1 - \\Pr(Y = 1 \\mid X)} \\right] = \\beta_0 + \\beta_1 X \\\\\n&\\iff \\frac{\\Pr(Y = 1 \\mid X = x_i)}{1 - \\Pr(Y = 1\\ \\mid X = x_i)} = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X}(1 - \\Pr(Y = 1 \\mid X)) \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X} - e^{\\beta_0 + \\beta_1 X}\\Pr(Y = 1 \\mid X) \\\\\n&\\iff \\Pr(Y = 1 \\mid X) + e^{\\beta_0 + \\beta_1 X}\\Pr(Y = 1 \\mid X) = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X)(1 + e^{\\beta_0 + \\beta_1 X}) = e^{\\beta_0 + \\beta_1 X} \\\\\n&\\iff \\Pr(Y = 1 \\mid X) = \\frac{e^{\\beta_0 + \\beta_1 X}}{1 + e^{\\beta_0 + \\beta_1 X}}\n\\end{align*}\n\\]",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#references",
     "href": "w09/index.html#references",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "References",
-    "text": "References"
+    "text": "References",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/index.html#footnotes",
     "href": "w09/index.html#footnotes",
     "title": "Week 9: Generative vs. Discriminative Models",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\n(More normally-distributed \\(X\\) \\(\\implies\\) more likely to “beat” Logistic Regression)↩︎"
+    "text": "Footnotes\n\n\n(More normally-distributed \\(X\\) \\(\\implies\\) more likely to “beat” Logistic Regression)↩︎",
+    "crumbs": [
+      "Week 9: {{< var w09.date-md >}}"
+    ]
   },
   {
     "objectID": "w09/slides.html#quick-roadmap",
@@ -3382,32 +3448,53 @@
     "text": "Bayes’ Rule\n\nFirst things first, we generalize from \\(Y \\in \\{0, 1\\}\\) to \\(K\\) possible classes (labels), since the notation for \\(K\\) classes here is not much more complex than 2 classes!\nWe label the pieces using ISLR’s notation to make our lives easier:\n\n\\[\n\\underbrace{\\Pr(Y = k \\mid X = x)}_{p_k(x)} = \\frac{\n  \\overbrace{\\Pr(X = x \\mid Y = k)}^{f_k(x)} \\overbrace{\\Pr(Y = k)}^{\\pi_k}\n}{\n  \\sum_{\\ell = 1}^{K} \\underbrace{\\Pr(X = x \\mid Y = \\ell)}_{f_{\\ell}(x)} \\underbrace{\\Pr(Y = \\ell)}_{\\pi_{\\ell}}\n} = \\frac{f_k(x) \\overbrace{\\pi_k}^{\\mathclap{\\text{Prior}(k)}}}{\\sum_{\\ell = 1}^{K}f_{\\ell}(x) \\underbrace{\\pi_\\ell}_{\\mathclap{\\text{Prior}(\\ell)}}}\n\\]\n\nSo if we do have only two classes, \\(K = 2\\) and \\(p_1(x) = \\frac{f_1(x)\\pi_1}{f_1(x)\\pi_1 + f_0(x)\\pi_0}\\)\nPriors can be estimated as \\(n_k / n\\). The hard work is in modeling \\(f_k(x)\\)! With estimates of these two “pieces” for each \\(k\\), we can derive a classifier \\(\\widehat{y}(x) = \\argmax_k p_k(x)\\)"
   },
   {
-    "objectID": "w09/slides.html#the-lda-assumption",
-    "href": "w09/slides.html#the-lda-assumption",
+    "objectID": "w09/slides.html#the-lda-assumption-one-feature-x",
+    "href": "w09/slides.html#the-lda-assumption-one-feature-x",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "The LDA Assumption",
-    "text": "The LDA Assumption\n\nWithin each class \\(k\\), values of \\(x\\) are normally distributed:\n\n\\[\n(X \\mid Y = k) \\sim \\mathcal{N}(\\param{\\mu_k}, \\param{\\sigma^2}) \\iff f_k(x) = \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n\\]\n\nPlugging back into (notationally-simplified) classifier, we get\n\n\\[\n\\widehat{y}(x) = \\argmax_{k}\\left[ \\frac{\n  \\pi_k \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n}{\n  \\sum_{\\ell = 1}^{K}\\pi_{\\ell} \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_\\ell}{\\sigma} \\right)^2\\right]\n}\\right],\n\\]\n\nGross, BUT \\(\\argmax_k p_k(x) = \\argmax_k \\log(p_k(x)) \\leadsto\\) “linear” discriminant \\(\\delta_k(x)\\):\n\n\\[\n\\widehat{y}(x) = \\argmax_k[\\delta_k(x)] = \\argmax_{k}\\left[ \\overbrace{\\frac{\\mu_k}{\\sigma^2}}^{\\smash{m}} x ~ \\overbrace{- \\frac{\\mu_k^2}{2\\sigma^2} + \\log(\\pi_k)}^{\\smash{b}} \\right]\n\\]"
+    "section": "The LDA Assumption (One Feature \\(x\\))",
+    "text": "The LDA Assumption (One Feature \\(x\\))\n\nWithin each class \\(k\\), values of \\(x\\) are normally distributed:\n\n\\[\n(X \\mid Y = k) \\sim \\mathcal{N}(\\param{\\mu_k}, \\param{\\sigma^2}) \\iff f_k(x) = \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n\\]\n\nPlugging back into (notationally-simplified) classifier, we get\n\n\\[\n\\widehat{y}(x) = \\argmax_{k}\\left[ \\frac{\n  \\pi_k \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_k}{\\sigma} \\right)^2\\right]\n}{\n  \\sum_{\\ell = 1}^{K}\\pi_{\\ell} \\frac{1}{\\sqrt{2 \\pi}\\sigma}\\exp\\left[-\\frac{1}{2}\\left( \\frac{x - \\mu_\\ell}{\\sigma} \\right)^2\\right]\n}\\right],\n\\]\n\nGross, BUT \\(\\argmax_k p_k(x) = \\argmax_k \\log(p_k(x)) \\leadsto\\) “linear” discriminant \\(\\delta_k(x)\\):\n\n\\[\n\\widehat{y}(x) = \\argmax_k[\\delta_k(x)] = \\argmax_{k}\\left[ \\overbrace{\\frac{\\mu_k}{\\sigma^2}}^{\\smash{m}} x ~ \\overbrace{- \\frac{\\mu_k^2}{2\\sigma^2} + \\log(\\pi_k)}^{\\smash{b}} \\right]\n\\]"
   },
   {
-    "objectID": "w09/slides.html#estimating-from-data",
-    "href": "w09/slides.html#estimating-from-data",
+    "objectID": "w09/slides.html#decision-boundaries",
+    "href": "w09/slides.html#decision-boundaries",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Estimating From Data",
-    "text": "Estimating From Data\n\nISLR Figure 4.4"
+    "section": "Decision Boundaries",
+    "text": "Decision Boundaries\n\nThe boundary between two classes \\(k\\) and \\(k'\\) will be the point at which \\(\\delta_k(x) = \\delta_{k'}(x)\\)\nFor two classes, can solve \\(\\delta_0(x) = \\delta_1(x)\\) for \\(x\\) to obtain \\(x = \\frac{\\mu_0 + \\mu_1}{2}\\)\nTo derive a boundary from data: \\(x = \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\) \\(\\Rightarrow\\) Predict \\(1\\) if \\(x &gt; \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\), \\(0\\) otherwise\n\n\nISLR Figure 4.4: Estimating the Decision Boundary from data. The dashed line is the “true” boundary \\(x = \\frac{\\mu_0 + \\mu_1}{2}\\), while the solid line in the right panel is the boundary estimated from data as \\(x = \\frac{\\widehat{\\mu}_0 + \\widehat{\\mu}_1}{2}\\)."
   },
   {
-    "objectID": "w09/slides.html#moving-to-multiple-features",
-    "href": "w09/slides.html#moving-to-multiple-features",
+    "objectID": "w09/slides.html#number-of-parameters",
+    "href": "w09/slides.html#number-of-parameters",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Moving to Multiple Features",
-    "text": "Moving to Multiple Features\n\nISLR Figure 4.6"
+    "section": "Number of Parameters",
+    "text": "Number of Parameters\n\n\\(K = 2\\) is special case, since lots of things cancel out, but in general need to estimate:\n\n\n\n\n\n\n\n\n\n\nEnglish\nNotation\nHow Many\nFormula\n\n\n\n\nPrior for class \\(k\\)\n\\(\\widehat{\\pi}_k\\)\n\\(K - 1\\)\n\\(\\widehat{\\pi}_k = n_k / n\\)\n\n\nEstimated mean for class \\(k\\)\n\\(\\widehat{\\mu}_k\\)\n\\(K\\)\n\\(\\widehat{\\mu}_k = \\displaystyle \\frac{1}{n_k}\\sum_{\\{i \\mid y_i = k\\}}x_i\\)\n\n\nEstimated (shared) variance\n\\(\\widehat{\\sigma}^2\\)\n1\n\\(\\widehat{\\sigma}^2 = \\displaystyle \\frac{1}{n - K}\\sum_{k = 1}^{K}\\sum_{i:y_i = k}(x_i - \\widehat{\\mu}_k)^2\\)\n\n\n\nTotal:\n\\(2K\\)\n\n\n\n\n\n(Keep in mind for fancier methods! This may blow up to be much larger than \\(n\\))"
   },
   {
-    "objectID": "w09/slides.html#qudratic-class-boundaries",
-    "href": "w09/slides.html#qudratic-class-boundaries",
+    "objectID": "w09/slides.html#lda-with-multiple-features-here-p-2",
+    "href": "w09/slides.html#lda-with-multiple-features-here-p-2",
     "title": "Week 9: Generative vs. Discriminative Models",
-    "section": "Qudratic Class Boundaries",
-    "text": "Qudratic Class Boundaries\n\nHere, dashed purple line is “true” boundary (Bayes decision boundary), dotted black line is LDA boundary, solid green line is QDA boundary\n\n\nISLR Figure 4.9"
+    "section": "LDA with Multiple Features (Here \\(p = 2\\))",
+    "text": "LDA with Multiple Features (Here \\(p = 2\\))\n\nWithin each class \\(k\\), values of \\(\\mathbf{x}\\) are (multivariate) normally distributed:\n\n\\[\n\\left( \\begin{bmatrix}X_1 \\\\ X_2\\end{bmatrix} \\middle| ~ Y = k \\right) \\sim \\mathbf{\\mathcal{N}}_2(\\param{\\boldsymbol\\mu_k}, \\param{\\mathbf{\\Sigma}})\n\\]\n\nIncreasing \\(p\\) to 2 and \\(K\\) to 3 means more parameters, but still linear boundaries. It turns out: shared variance (\\(\\sigma^2\\) or \\(\\mathbf{\\Sigma}\\)) will always produce linear boundaries 🤔\n\n\nISLR Figure 4.6: Like before, dashed lines are “true” boundaries while solid lines are boundaries estimated from data"
+  },
+  {
+    "objectID": "w09/slides.html#quadratic-class-boundaries",
+    "href": "w09/slides.html#quadratic-class-boundaries",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Quadratic Class Boundaries",
+    "text": "Quadratic Class Boundaries\n\nTo achieve non-linear boundaries, estimate covariance matrix \\(\\mathbf{\\Sigma}_k\\) for each class \\(k\\):\n\n\\[\n\\left( \\begin{bmatrix}X_1 \\\\ X_2\\end{bmatrix} \\middle| ~ Y = k \\right) \\sim \\mathbf{\\mathcal{N}}_2(\\param{\\boldsymbol\\mu_k}, \\param{\\mathbf{\\Sigma}_k})\n\\]\n\nPros: Non-linear class boundaries! Cons: More parameters to estimate, does worse than LDA if data linearly-separable (or nearly linearly-separable).\nDeciding factor: do you think DGP produces normal classes with same variance?\n\n\nISLR Figure 4.9: Dashed purple line is “true” boundary (Bayes decision boundary), dotted black line is LDA boundary, solid green line is QDA boundary"
+  },
+  {
+    "objectID": "w09/slides.html#key-advantage-of-generative-model",
+    "href": "w09/slides.html#key-advantage-of-generative-model",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Key Advantage of Generative Model",
+    "text": "Key Advantage of Generative Model\n\nYou get an actual “picture” of what the data looks like!\n\n\n\n\n\n\n\n\n\n\n\n\\(\\widehat{f}_k(X_1)\\)\n\\(\\widehat{f}_k(X_2)\\)\n\\(\\widehat{f}_k(X_3)\\)\n\n\n\\(k = 1\\)\n\n\n\n\n\n\\(k = 2\\)"
+  },
+  {
+    "objectID": "w09/slides.html#classifying-new-points",
+    "href": "w09/slides.html#classifying-new-points",
+    "title": "Week 9: Generative vs. Discriminative Models",
+    "section": "Classifying New Points",
+    "text": "Classifying New Points\n\nFor new feature values \\(x_{ij}\\), compare how likely this value is under \\(k = 1\\) vs. \\(k = 2\\)\nExample: \\(\\mathbf{x} = (0.4, 1.5, 1)^{\\top}\\)\n\n\n\n\n\n\n\n\n\n\n\n\\(\\widehat{f}_k(X_1)\\)\n\\(\\widehat{f}_k(X_2)\\)\n\\(\\widehat{f}_k(X_3)\\)\n\n\n\\(k = 1\\)\n\n\n\n\n\n\n\\(f_1(0.4) = 0.368\\)\n\\(f_1(1.5) = 0.484\\)\n\\(f_1(1) = 0.226\\)\n\n\n\\(k = 2\\)\n\n\n\n\n\n\n\\(f_2(0.4) = 0.030\\)\n\\(f_2(1.5) = 0.130\\)\n\\(f_2(1) = 0.616\\)"
   },
   {
     "objectID": "w09/slides.html#appendix-fuller-logistic-derivation",

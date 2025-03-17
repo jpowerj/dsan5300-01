@@ -133,7 +133,7 @@ $$
 
 * Priors can be estimated as $n_k / n$. The hard work is in modeling $f_k(x)$! With estimates of these two "pieces" for each $k$, we can derive a classifier $\widehat{y}(x) = \argmax_k p_k(x)$
 
-## The LDA Assumption {.smaller .crunch-title .title-11 .math-90 .crunch-ul .crunch-li-8}
+## The LDA Assumption (One Feature $x$) {.smaller .crunch-title .title-11 .math-90 .crunch-ul .crunch-li-5}
 
 * Within each class $k$, values of $x$ are **normally distributed**:
   
@@ -157,19 +157,79 @@ $$
 \widehat{y}(x) = \argmax_k[\delta_k(x)] = \argmax_{k}\left[ \overbrace{\frac{\mu_k}{\sigma^2}}^{\smash{m}} x ~ \overbrace{- \frac{\mu_k^2}{2\sigma^2} + \log(\pi_k)}^{\smash{b}} \right]
 $$
 
-## Estimating From Data
+## Decision Boundaries {.smaller .crunch-title .crunch-ul .crunch-math .math-90}
 
-![ISLR Figure 4.4](images/4_4.svg){fig-align="center"}
+* The **boundary** between two classes $k$ and $k'$ will be the point at which $\delta_k(x) = \delta_{k'}(x)$
+* For two classes, can solve $\delta_0(x) = \delta_1(x)$ for $x$ to obtain $x = \frac{\mu_0 + \mu_1}{2}$
 
-## Moving to Multiple Features
+* To derive a boundary from **data**: $x = \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}$ $\Rightarrow$ Predict $1$ if $x > \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}$, $0$ otherwise
 
-![ISLR Figure 4.6](images/4_6.svg){fig-align="center"}
+![ISLR Figure 4.4: Estimating the Decision Boundary from data. The dashed line is the "true" boundary $x = \frac{\mu_0 + \mu_1}{2}$, while the solid line in the right panel is the boundary **estimated from data** as $x = \frac{\widehat{\mu}_0 + \widehat{\mu}_1}{2}$.](images/4_4.svg){fig-align="center"}
 
-## Qudratic Class Boundaries {.smaller .crunch-title .title-12}
+## Number of Parameters {.smaller .crunch-title}
 
-* Here, dashed **purple** line is "true" boundary (Bayes decision boundary), dotted **black** line is LDA boundary, solid **green** line is QDA boundary 
+* $K = 2$ is special case, since lots of things cancel out, but in general need to estimate:
 
-![ISLR Figure 4.9](images/4_9.svg){fig-align="center"}
+| English | Notation | How Many | Formula |
+| - | - | - | - |
+| Prior for class $k$ | $\widehat{\pi}_k$ | $K - 1$ | $\widehat{\pi}_k = n_k / n$ |
+| Estimated mean for class $k$ | $\widehat{\mu}_k$ | $K$ | $\widehat{\mu}_k = \displaystyle \frac{1}{n_k}\sum_{\{i \mid y_i = k\}}x_i$ |
+| Estimated (shared) variance | $\widehat{\sigma}^2$ | 1 | $\widehat{\sigma}^2 = \displaystyle \frac{1}{n - K}\sum_{k = 1}^{K}\sum_{i:y_i = k}(x_i - \widehat{\mu}_k)^2$ |
+| | **Total:** | $2K$ | |
+
+* *(Keep in mind for fancier methods! This may blow up to be much larger than $n$)*
+
+## LDA with Multiple Features (Here $p = 2$) {.smaller .crunch-title .title-11 .crunch-ul}
+
+* Within each class $k$, values of $\mathbf{x}$ are **(multivariate) normally distributed**:
+  
+$$
+\left( \begin{bmatrix}X_1 \\ X_2\end{bmatrix} \middle| ~ Y = k \right) \sim \mathbf{\mathcal{N}}_2(\param{\boldsymbol\mu_k}, \param{\mathbf{\Sigma}})
+$$
+
+* Increasing $p$ to 2 and $K$ to 3 means more parameters, but still **linear boundaries**. It turns out: shared variance ($\sigma^2$ or $\mathbf{\Sigma}$) will **always** produce linear boundaries 🤔
+
+![ISLR Figure 4.6: Like before, dashed lines are "true" boundaries while solid lines are boundaries **estimated from data**](images/4_6.svg){fig-align="center"}
+
+## Quadratic Class Boundaries {.smaller .crunch-title .title-12 .crunch-ul .math-90 .crunch-math}
+
+* To achieve **non-linear** boundaries, estimate covariance matrix $\mathbf{\Sigma}_k$ for each class $k$:
+
+$$
+\left( \begin{bmatrix}X_1 \\ X_2\end{bmatrix} \middle| ~ Y = k \right) \sim \mathbf{\mathcal{N}}_2(\param{\boldsymbol\mu_k}, \param{\mathbf{\Sigma}_k})
+$$
+
+* Pros: Non-linear class boundaries! Cons: More parameters to estimate, does worse than LDA if data linearly-separable (or nearly linearly-separable). 
+* Deciding factor: do you think DGP produces normal classes with same variance?
+
+![ISLR Figure 4.9: Dashed [**purple**]{style='color: #b97dc3'} line is "true" boundary (Bayes decision boundary), dotted **black** line is LDA boundary, solid [**green**]{style='color: #009f86'} line is QDA boundary ](images/4_9.svg){fig-align="center"}
+
+## Key Advantage of Generative Model {.smaller .crunch-title .crunch-ul .table-va .title-11 .inline-90 .crunch-quarto-figure .crunch-td}
+
+* You get an actual "picture" of **what the data looks like!**
+
+| | |
+|:-:|:-:|:-:|:-:|
+| | $\widehat{f}_k(X_1)$ | $\widehat{f}_k(X_2)$ | $\widehat{f}_k(X_3)$ |
+| $k = 1$ | ![](images/4_10a1.svg){fig-align="center" width="70%"} | ![](images/4_10a2.svg){fig-align="center" width="70%"} | ![](images/4_10a3.svg){fig-align="center" width="70%"} |
+| $k = 2$ | ![](images/4_10b1.svg){fig-align="center" width="70%"} | ![](images/4_10b2.svg){fig-align="center" width="70%"} | ![](images/4_10b3.svg){fig-align="center" width="70%"} |
+
+: {tbl-colwidths="[10,30,30,30]"}
+
+## Classifying New Points {.smaller .crunch-title .crunch-ul .table-va .title-11 .inline-90 .crunch-quarto-figure .crunch-td}
+
+* For new feature values $x_{ij}$, compare **how likely** this value is under $k = 1$ vs. $k = 2$
+* Example: $\mathbf{x} = (0.4, 1.5, 1)^{\top}$
+
+| | |
+|:-:|:-:|:-:|:-:|
+| | $\widehat{f}_k(X_1)$ | $\widehat{f}_k(X_2)$ | $\widehat{f}_k(X_3)$ |
+| $k = 1$ | ![](images/4_10a1.svg){fig-align="center" width="50%"} | ![](images/4_10a2.svg){fig-align="center" width="50%"} | ![](images/4_10a3.svg){fig-align="center" width="50%"} |
+| | $f_1(0.4) = 0.368$ | $f_1(1.5) = 0.484$ | $f_1(1) = 0.226$ |
+| $k = 2$ | ![](images/4_10b1.svg){fig-align="center" width="50%"} | ![](images/4_10b2.svg){fig-align="center" width="50%"} | ![](images/4_10b3.svg){fig-align="center" width="50%"} |
+| | $f_2(0.4) = 0.030$ | $f_2(1.5) = 0.130$ | $f_2(1) = 0.616$ |
+
+: {tbl-colwidths="[10,30,30,30]"}
 
 # Quiz Time! {data-stack-name="Quiz"}
 
