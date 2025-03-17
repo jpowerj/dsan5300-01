@@ -40,11 +40,11 @@ w08:
   title: "Support Vector Machines (SVMs)"
   footer: "Support Vector Machines (SVMs)"
   date-md: "Mar 10"
-# w09:
-#   weeknum: 9
-#   title: "From Data Ethics to Data Policy"
-#   footer: "From Data Ethics to Data Policy"
-#   date-md: "Mar 12"
+w09:
+  weeknum: 9
+  title: "Generative vs. Discriminative Models"
+  footer: "Discriminant Analysis"
+  date-md: "Mar 17"
 # w10:
 #   weeknum: 10
 #   title: "Econometric Policy Evaluation and Inverse Fairness"
