@@ -368,6 +368,21 @@ ggplot() +
 
 ![Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4](images/nn_multilayer.svg){fig-align="center"}
 
+## Input Representation {.smaller .crunch-title .cols-va}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+![From [*But what is a neural network?*](https://www.youtube.com/watch?v=aircAruvnKk), 3Blue1Brown](images/mnist_repr.jpg){fig-align="center" width="100%"}
+
+:::
+::: {.column width="50%"}
+
+![](images/nn_multilayer.svg){fig-align="center" width="100%"}
+
+:::
+::::
+
 ## But Wait... Ten Outputs? {.smaller .crunch-title .crunch-ul .cols-va}
 
 :::: {.columns}
@@ -427,17 +442,21 @@ $$
 
 </center>
 
-## RNNs {.smaller}
-
-![ISLR Figure 10.12](images/10_12.svg){fig-align="center"}
-
 ## Variational Autoencoders
 
 ![](images/nn_vae.svg){fig-align="center"}
 
-## Ok But How Do We *Learn* The Weights?
+## RNNs {.smaller}
 
-* Backpropagation!
+*...More next week, tbh*
+
+![ISLR Figure 10.12](images/10_12.svg){fig-align="center"}
+
+## Ok But How Do We *Learn* The Weights? {.smaller .title-11}
+
+![[Backpropagation!](https://youtu.be/tIeHLnjs5U8?si=0CSS66763D5s5UVt) (3Blue1Brown Again!)](images/backprop.jpg){fig-align="center"}
+
+*(Full NN playlist [here](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi))*
 
 ## References
 

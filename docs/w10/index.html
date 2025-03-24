@@ -185,6 +185,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#multilayer-neural-networks" id="toc-multilayer-neural-networks" class="nav-link" data-scroll-target="#multilayer-neural-networks">Multilayer Neural Networks</a>
   <ul class="collapse">
+  <li><a href="#input-representation" id="toc-input-representation" class="nav-link" data-scroll-target="#input-representation">Input Representation</a></li>
   <li><a href="#but-wait-ten-outputs" id="toc-but-wait-ten-outputs" class="nav-link" data-scroll-target="#but-wait-ten-outputs">But Wait… Ten Outputs?</a></li>
   <li><a href="#visualizing-softmax-results" id="toc-visualizing-softmax-results" class="nav-link" data-scroll-target="#visualizing-softmax-results">Visualizing Softmax Results</a></li>
   </ul></li>
@@ -192,8 +193,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#cnns" id="toc-cnns" class="nav-link" data-scroll-target="#cnns">CNNs</a></li>
   <li><a href="#decoding-the-thought-vector" id="toc-decoding-the-thought-vector" class="nav-link" data-scroll-target="#decoding-the-thought-vector">Decoding the Thought Vector</a></li>
-  <li><a href="#rnns" id="toc-rnns" class="nav-link" data-scroll-target="#rnns">RNNs</a></li>
   <li><a href="#variational-autoencoders" id="toc-variational-autoencoders" class="nav-link" data-scroll-target="#variational-autoencoders">Variational Autoencoders</a></li>
+  <li><a href="#rnns" id="toc-rnns" class="nav-link" data-scroll-target="#rnns">RNNs</a></li>
   <li><a href="#ok-but-how-do-we-learn-the-weights" id="toc-ok-but-how-do-we-learn-the-weights" class="nav-link" data-scroll-target="#ok-but-how-do-we-learn-the-weights">Ok But How Do We <em>Learn</em> The Weights?</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -697,6 +698,25 @@ Figure&nbsp;3: Here, the blue area represents points where <span class="math inl
 <figcaption>Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4</figcaption>
 </figure>
 </div>
+<section id="input-representation" class="level2 smaller crunch-title cols-va">
+<h2 class="smaller crunch-title cols-va anchored" data-anchor-id="input-representation">Input Representation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/mnist_repr.jpg" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>From <a href="https://www.youtube.com/watch?v=aircAruvnKk"><em>But what is a neural network?</em></a>, 3Blue1Brown</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/nn_multilayer.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="but-wait-ten-outputs" class="level2 smaller crunch-title crunch-ul cols-va">
 <h2 class="smaller crunch-title crunch-ul cols-va anchored" data-anchor-id="but-wait-ten-outputs">But Wait… Ten Outputs?</h2>
 <div class="columns">
@@ -773,15 +793,6 @@ z_d = \Pr(Y = d \mid X) = \frac{e^{y_d}}{\sum_{i=0}^{9}e^{y_i}}
 <p><a href="https://gabgoh.github.io/ThoughtVectors/"><strong>Decoding the Thought Vector</strong></a></p>
 </center>
 </section>
-<section id="rnns" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="rnns">RNNs</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/10_12.svg" class="img-fluid figure-img"></p>
-<figcaption>ISLR Figure 10.12</figcaption>
-</figure>
-</div>
-</section>
 <section id="variational-autoencoders" class="level2">
 <h2 class="anchored" data-anchor-id="variational-autoencoders">Variational Autoencoders</h2>
 <div class="quarto-figure quarto-figure-center">
@@ -790,11 +801,25 @@ z_d = \Pr(Y = d \mid X) = \frac{e^{y_d}}{\sum_{i=0}^{9}e^{y_i}}
 </figure>
 </div>
 </section>
-<section id="ok-but-how-do-we-learn-the-weights" class="level2">
-<h2 class="anchored" data-anchor-id="ok-but-how-do-we-learn-the-weights">Ok But How Do We <em>Learn</em> The Weights?</h2>
-<ul>
-<li>Backpropagation!</li>
-</ul>
+<section id="rnns" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="rnns">RNNs</h2>
+<p><em>…More next week, tbh</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/10_12.svg" class="img-fluid figure-img"></p>
+<figcaption>ISLR Figure 10.12</figcaption>
+</figure>
+</div>
+</section>
+<section id="ok-but-how-do-we-learn-the-weights" class="level2 smaller title-11">
+<h2 class="smaller title-11 anchored" data-anchor-id="ok-but-how-do-we-learn-the-weights">Ok But How Do We <em>Learn</em> The Weights?</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/backprop.jpg" class="img-fluid figure-img"></p>
+<figcaption><a href="https://youtu.be/tIeHLnjs5U8?si=0CSS66763D5s5UVt">Backpropagation!</a> (3Blue1Brown Again!)</figcaption>
+</figure>
+</div>
+<p><em>(Full NN playlist <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">here</a>)</em></p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References</h2>
