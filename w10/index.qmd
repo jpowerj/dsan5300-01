@@ -1,0 +1,274 @@
+---
+title: "Week 10: Deep Learning"
+subtitle: "*DSAN 5300: Statistical Learning*<br><span class='subsubtitle'>Spring 2025, Georgetown University</span>"
+author: "Jeff Jacobs"
+institute: "[`jj1088@georgetown.edu`](mailto:jj1088@georgetown.edu)"
+bibliography: "../_DSAN5300.bib"
+date: 2025-03-24
+date-format: full
+lecnum: 10
+categories:
+  - "Class Sessions"
+format:
+  revealjs:
+    df-print: kable
+    footer: "DSAN 5300-01 Week 10: {{< var w10.footer >}}"
+    output-file: "slides.html"
+    html-math-method: mathjax
+    scrollable: true
+    theme: [default, "../dsan-globals/jjquarto.scss"]
+    slide-number: true
+    echo: true
+    code-fold: true
+    link-external-icon: true
+    link-external-newwindow: true
+    include-in-header:
+      text: "<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'><link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css'>"
+    simplemenu:
+      flat: true
+      barhtml:
+        header: "<div class='menubar'><span style='position: absolute; left: 8; padding-left: 8px;'><a href='./index.html'>&larr; Return to Notes</a></span><ul class='menu'></ul></div>"
+      scale: 0.5
+    revealjs-plugins:
+      - simplemenu
+  html:
+    df-print: kable
+    output-file: "index.html"
+    html-math-method: mathjax
+    echo: true
+    code-fold: true
+---
+
+::: {.content-visible unless-format="revealjs"}
+
+<center class='mb-3'>
+<a class="h2" href="./slides.html" target="_blank">Open slides in new tab &rarr;</a>
+</center>
+
+:::
+
+# Schedule {.smaller .small-title .crunch-title .crunch-callout data-stack-name="Schedule"}
+
+Today's Planned Schedule:
+
+| | Start | End | Topic |
+|:- |:- |:- |:- |
+| **Lecture** | 6:30pm | 7:00pm | [Single Layer Neural Networks &rarr;](#learning-decision-boundaries) |
+| | 7:00pm | 7:20pm | [Max-Margin Classifiers &rarr;](#max-margin-classifiers) | 
+| | 7:20pm | 8:00pm | [Support Vector *Classifiers* &rarr;](#support-vector-classifiers) |
+| **Break!** | 8:00pm | 8:10pm | |
+| | 8:10pm | 9:00pm | [Fancier Neural Networks &rarr;](#quiz-time) |
+
+: {tbl-colwidths="[12,12,12,64]"}
+
+::: {.hidden}
+
+```{r}
+#| label: r-source-globals
+source("../dsan-globals/_globals.r")
+set.seed(5300)
+```
+
+:::
+
+{{< include ../dsan-globals/_globals-tex.qmd >}}
+
+## Quick Roadmap {.smaller .crunch-title .crunch-ul .text-90 .crunch-li-first}
+
+* We made it! Cutting-edge method for [statistical]{style='text-decoration: line-through;'} *neural* learning
+
+{{< video https://www.youtube.com/watch?v=L5GMVdGy8rU width="100%" height="450" >}}
+
+# Single-Layer Neural Networks {.smaller .title-12 data-stack-name="Single-Layer NNs"}
+
+![Single-Layer NN, Adapted from ISLR Fig 10.1](images/nn_single_layer.svg){fig-align="center"}
+
+## Diagram $\leftrightarrow$ Math {.crunch-title .cols-va .crunch-math .crunch-quarto-figure .math-90 .inline-90 .crunch-ul .crunch-li-8 .title-09}
+
+:::: {.columns}
+::: {.column width="66%"}
+
+* $p = 4$ features in [**Input Layer**]{.cb-in}
+* $K = 5$ [**Hidden Units**]{.cb-hidden}
+* [**Output Layer**]{.cb-out}: Regression on **activations** $A_k$ ([Hidden Unit]{.cb-hidden} outputs)
+
+$$
+\begin{align*}
+{\color{#976464} Y} &= { \color{#976464} \beta_0 } + {\color{#666693} \sum_{k=1}^{5} } {\color{#976464} \beta_k } { \color{#666693} \overbrace{\boxed{A_k} }^{\mathclap{k^\text{th}\text{ activation}}} } \\
+{\color{#976464} Y} &= { \color{#976464} \beta_0 } + {\color{#666693} \sum_{k=1}^{5} } {\color{#976464} \beta_k } { \color{#666693} \underbrace{ g \mkern-4mu \left( w_{k0} + {\color{#679d67} \sum_{j=1}^{4} } w_{kj} {\color{#679d67} X_j} \right) }_{k^\text{th}\text{ activation}}}
+\end{align*}
+$$
+
+:::
+::: {.column width="34%"}
+
+![](images/nn_single_layer.svg){fig-align="center" width="100%"}
+
+:::
+::::
+
+## Example
+
+* Rather than pondering over what that diagram can/can't do, consider two "true" DGPs:
+
+$$
+\begin{align*}
+Y &= {\color{#e69f00} X_1 X_2 } \\
+Y &= {\color{#56b4e9} X_1^2 + X_2^2 } \\
+Y &= {\color{#009E73} X_1 \underset{\mathclap{\small \text{XOR}}}{\oplus} X_2}
+\end{align*}
+$$
+
+* How exactly is a neural net able to learn these relationships?
+
+## Sum of Squares {.smaller .crunch-title .crunch-math .cols-va .crunch-quarto-figure .crunch-ul}
+
+:::: {.columns}
+::: {.column width="45%"}
+
+* Can we learn $Y = {\color{#56b4e9} X_1^2 + X_2^2 }$?
+* Let's use $g(x) = x^2$.
+* Let $\mathbf{w}_1 = (0, 1, 0)$, $\mathbf{w}_2 = (0, 0, 1)$.
+* Our two activations are:
+
+:::
+::: {.column width="55%"}
+
+![](images/nn_2_2.svg){fig-align="center" width="66.6%"}
+
+:::
+::::
+
+$$
+\begin{align*}
+{\color{#666693} A_1^{(1)} } &= g(0 + (1)(X_1) + (0)(X_2)) = X_1^2 \\
+{\color{#666693} A_2^{(1)} } &= g(0 + (0)(X_1) + (1)(X_2)) = X_2^2
+\end{align*}
+$$
+
+* So, if $\boldsymbol\beta = (0, 1, 1)$, then
+
+$$
+{\color{#976464} Y } = 0 + (1)(X_1^2) + (1)(X_2^2) = {\color{#56b4e9} X_1^2 + X_2^2} \; ✅
+$$
+
+## Interaction Term {.smaller .crunch-title .crunch-math .cols-va .crunch-quarto-figure .crunch-ul}
+
+:::: {.columns}
+::: {.column width="45%"}
+
+* Can we learn $Y = {\color{#e69f00} X_1X_2}$?
+* Let's use $g(x) = x^2$.
+* Let $\mathbf{w}_1 = (0, 1, 1)$, $\mathbf{w}_2 = (0, 1, -1)$.
+* Our two activations are:
+
+:::
+::: {.column width="55%"}
+
+![](images/nn_2_2.svg){fig-align="center" width="66.6%"}
+
+:::
+::::
+
+$$
+\begin{align*}
+{\color{#666693} A_1^{(1)} } &= g(0 + (1)(X_1) + (1)(X_2)) = (X_1 + X_2)^2 = X_1^2 + X_2^2 +2X_1X_2 \\
+{\color{#666693} A_2^{(1)} } &= g(0 + (1)(X_1) + (-1)(X_2)) = (X_1 - X_2)^2 = X_1^2 + X_2^2 - 2X_1X_2
+\end{align*}
+$$
+
+* So, if we let $\boldsymbol\beta = \left( 0, \frac{1}{4}, -\frac{1}{4} \right)$, then
+
+$$
+{\color{#976464} Y } = 0 + \left(\frac{1}{4}\right)(X_1^2 + X_2^2 + 2X_1X_2) + \left(-\frac{1}{4}\right)(X_1^2 + X_2^2 - 2X_1X_2) = {\color{#e69f00} X_1X_2} \; ✅
+$$
+
+
+## The XOR Problem {.smaller .crunch-title .crunch-math .cols-va .crunch-quarto-figure .crunch-ul}
+
+:::: {.columns}
+::: {.column width="45%"}
+
+* Can we learn $Y = {\color{#009E73} X_1 \underset{\mathclap{\small \text{XOR}}}{\oplus} X_2}$?
+* Let's use $g(x) = x^2$.
+* Let $\mathbf{w}_1 = (0, 1, 1)$, $\mathbf{w}_2 = (0, 1, -1)$.
+* Our two activations are:
+
+:::
+::: {.column width="55%"}
+
+![](images/nn_2_2.svg){fig-align="center" width="66.6%"}
+
+:::
+::::
+
+$$
+\begin{align*}
+{\color{#666693} A_1^{(1)} } &= g(0 + (1)(X_1) + (1)(X_2)) = (X_1 + X_2)^2 = X_1^2 + X_2^2 +2X_1X_2 \\
+{\color{#666693} A_2^{(1)} } &= g(0 + (1)(X_1) + (-1)(X_2)) = (X_1 - X_2)^2 = X_1^2 + X_2^2 - 2X_1X_2
+\end{align*}
+$$
+
+* So, if we let $\boldsymbol\beta = (0, 0, 1)$, then
+
+$$
+\begin{align*}
+{\color{#976464} Y }(0,0) &= 0 + (0)(0^2 + 0^2 + 2X_1X_2) + (1)(0^2 + 0^2 - 2(0)(0)) = {\color{#009e73} 0} \; ✅ \\
+{\color{#976464} Y }(0,1) &= 0 + (0)(0^2 + 1^2 + 2(0)(1)) + (1)(0^2 + 1^2 - 2(0)(1)) = {\color{#009e73} 1} \; ✅ \\
+{\color{#976464} Y }(1,0) &= 0 + (0)(1^2 + 0^2 + 2(1)(0)) + (1)(1^2 + 0^2 - 2(1)(0)) = {\color{#009e73} 1} \; ✅ \\
+{\color{#976464} Y }(1,1) &= 0 + (0)(1^2 + 1^2 + 2(1)(1)) + (1)(1^2 + 1^2 - 2(1)(1)) = {\color{#009e73} 0} \; ✅
+\end{align*}
+$$
+
+# Multilayer Neural Networks {.smaller .crunch-title .title-12 data-stack-name="Multilayer NNs"}
+
+![Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4](images/nn_multilayer.svg){fig-align="center"}
+
+## How Many Parameters?
+
+:::: {.columns}
+::: {.column width="40%"}
+
+* $\mathbf{W}_1$?
+* $\mathbf{W}_2$?
+
+:::
+::: {.column width="60%"}
+
+![](images/nn_multilayer.svg){fig-align="center" width="100%"}
+
+:::
+::::
+
+## But Wait... Ten Outputs? {.smaller .crunch-title .crunch-ul .cols-va}
+
+:::: {.columns}
+::: {.column width="50%"}
+
+![](images/nn_multilayer.svg){fig-align="center" width="100%"}
+
+:::
+::: {.column width="50%"}
+
+* The (magical) **softmax** function!
+
+$$
+Z_m = \Pr(Y = m \mid X) = \frac{e^{Y_m}}{\sum_{\ell=0}^{9}e^{Y_\ell}}
+$$
+
+* Ensures that each $Z_m$ is a **probability!**
+
+$$
+\begin{align}
+0 \leq Z_m &\leq 1 \; \; \forall m \in \{0,\ldots,9\} \\
+\sum_{\ell=0}^{9}Z_m &= 1
+\end{align}
+$$
+
+:::
+::::
+
+## References
+
+::: {#refs}
+:::

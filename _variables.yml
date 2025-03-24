@@ -45,11 +45,11 @@ w09:
   title: "Generative vs. Discriminative Models"
   footer: "Discriminant Analysis"
   date-md: "Mar 17"
-# w10:
-#   weeknum: 10
-#   title: "Econometric Policy Evaluation and Inverse Fairness"
-#   footer: "Econometric Policy Evaluation and Inverse Fairness"
-#   date-md: "Mar 19"
+w10:
+  weeknum: 10
+  title: "Deep Learning"
+  footer: "Deep Learning"
+  date-md: "Mar 24"
 # w11:
 #   weeknum: 11
 #   title: "Fairness vs. Social Welfare"
