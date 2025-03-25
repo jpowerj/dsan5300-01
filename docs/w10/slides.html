@@ -492,8 +492,8 @@ Y &amp;= {\color{#009E73} X_1 \underset{\mathclap{\small \text{XOR}}}{\oplus} X_
 <div class="cell" data-layout-align="center" data-crop="false">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-2"><a></a><span class="fu">library</span>(latex2exp)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">library</span>(tidyverse) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
+<span id="cb2-2"><a></a><span class="fu">library</span>(latex2exp) <span class="sc">|&gt;</span> <span class="fu">suppressPackageStartupMessages</span>()</span>
 <span id="cb2-3"><a></a>xor_df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
 <span id="cb2-4"><a></a>    <span class="sc">~</span>x1, <span class="sc">~</span>x2, <span class="sc">~</span>label,</span>
 <span id="cb2-5"><a></a>    <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>

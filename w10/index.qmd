@@ -238,8 +238,8 @@ $$
 #| crop: false
 #| fig-height: 8
 #| fig-cap: The DGP $Y = x_1 \oplus x_2$ produces points in $[0,1]^2$ which are not linearly separable
-library(tidyverse)
-library(latex2exp)
+library(tidyverse) |> suppressPackageStartupMessages()
+library(latex2exp) |> suppressPackageStartupMessages()
 xor_df <- tribble(
     ~x1, ~x2, ~label,
     0, 0, 0,
