@@ -1190,126 +1190,180 @@
     "href": "w10/index.html",
     "title": "Week 10: Deep Learning",
     "section": "",
-    "text": "Open slides in new tab →"
+    "text": "Open slides in new tab →",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#quick-roadmap",
     "href": "w10/index.html#quick-roadmap",
     "title": "Week 10: Deep Learning",
     "section": "Quick Roadmap",
-    "text": "Quick Roadmap\n\nWe made it! Cutting-edge method for statistical neural learning"
+    "text": "Quick Roadmap\n\nWe made it! Cutting-edge method for statistical neural learning",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#diagram-leftrightarrow-math",
     "href": "w10/index.html#diagram-leftrightarrow-math",
     "title": "Week 10: Deep Learning",
     "section": "Diagram \\(\\leftrightarrow\\) Math",
-    "text": "Diagram \\(\\leftrightarrow\\) Math\n\n\n\n\\(p = 4\\) features in Input Layer\n\\(K = 5\\) Hidden Units\nOutput Layer: Regression on activations \\(a_k\\) (Hidden Unit outputs)\n\n\\[\n\\begin{align*}\n{\\color{#976464} y} &= { \\color{#976464} \\beta_0 } + {\\color{#666693} \\sum_{k=1}^{5} } {\\color{#976464} \\beta_k } { \\color{#666693} \\overbrace{\\boxed{a_k} }^{\\mathclap{k^\\text{th}\\text{ activation}}} } \\\\\n{\\color{#976464} y} &= { \\color{#976464} \\beta_0 } + {\\color{#666693} \\sum_{k=1}^{5} } {\\color{#976464} \\beta_k } { \\color{#666693} \\underbrace{ g \\mkern-4mu \\left( w_{k0} + {\\color{#679d67} \\sum_{j=1}^{4} } w_{kj} {\\color{#679d67} x_j} \\right) }_{k^\\text{th}\\text{ activation}}}\n\\end{align*}\n\\]"
+    "text": "Diagram \\(\\leftrightarrow\\) Math\n\n\n\n\\(p = 4\\) features in Input Layer\n\\(K = 5\\) Hidden Units\nOutput Layer: Regression on activations \\(a_k\\) (Hidden Unit outputs)\n\n\\[\n\\begin{align*}\n{\\color{#976464} y} &= { \\color{#976464} \\beta_0 } + {\\color{#666693} \\sum_{k=1}^{5} } {\\color{#976464} \\beta_k } { \\color{#666693} \\overbrace{\\boxed{a_k} }^{\\mathclap{k^\\text{th}\\text{ activation}}} } \\\\\n{\\color{#976464} y} &= { \\color{#976464} \\beta_0 } + {\\color{#666693} \\sum_{k=1}^{5} } {\\color{#976464} \\beta_k } { \\color{#666693} \\underbrace{ g \\mkern-4mu \\left( w_{k0} + {\\color{#679d67} \\sum_{j=1}^{4} } w_{kj} {\\color{#679d67} x_j} \\right) }_{k^\\text{th}\\text{ activation}}}\n\\end{align*}\n\\]",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#matrix-form-only-if-sanity-helping",
     "href": "w10/index.html#matrix-form-only-if-sanity-helping",
     "title": "Week 10: Deep Learning",
     "section": "Matrix Form (Only if Sanity-Helping)",
-    "text": "Matrix Form (Only if Sanity-Helping)"
+    "text": "Matrix Form (Only if Sanity-Helping)",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#example",
     "href": "w10/index.html#example",
     "title": "Week 10: Deep Learning",
     "section": "Example",
-    "text": "Example\n\nRather than pondering over what that diagram can/can’t do, consider two “true” DGPs:\n\n\\[\n\\begin{align*}\nY &= {\\color{#e69f00} X_1 X_2 } \\\\\nY &= {\\color{#56b4e9} X_1^2 + X_2^2 } \\\\\nY &= {\\color{#009E73} X_1 \\underset{\\mathclap{\\small \\text{XOR}}}{\\oplus} X_2}\n\\end{align*}\n\\]\n\nHow exactly is a neural net able to learn these relationships?"
+    "text": "Example\n\nRather than pondering over what that diagram can/can’t do, consider two “true” DGPs:\n\n\\[\n\\begin{align*}\nY &= {\\color{#e69f00} X_1 X_2 } \\\\\nY &= {\\color{#56b4e9} X_1^2 + X_2^2 } \\\\\nY &= {\\color{#009E73} X_1 \\underset{\\mathclap{\\small \\text{XOR}}}{\\oplus} X_2}\n\\end{align*}\n\\]\n\nHow exactly is a neural net able to learn these relationships?",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#sum-of-squares",
     "href": "w10/index.html#sum-of-squares",
     "title": "Week 10: Deep Learning",
     "section": "Sum of Squares",
-    "text": "Sum of Squares\n\n\n\nCan we learn \\(y = {\\color{#56b4e9} x_1^2 + x_2^2 }\\)?\nLet’s use \\(g(x) = x^2\\).\nLet \\(\\mathbf{w}_1 = (0, 1, 0)\\), \\(\\mathbf{w}_2 = (0, 0, 1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (0)(x_2)) = x_1^2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (0)(x_1) + (1)(x_2)) = x_2^2\n\\end{align*}\n\\]\n\nSo, if \\(\\boldsymbol\\beta = (0, 1, 1)\\), then\n\n\\[\n{\\color{#976464} y } = 0 + (1)(x_1^2) + (1)(x_2^2) = {\\color{#56b4e9} x_1^2 + x_2^2} \\; ✅\n\\]"
+    "text": "Sum of Squares\n\n\n\nCan we learn \\(y = {\\color{#56b4e9} x_1^2 + x_2^2 }\\)?\nLet’s use \\(g(x) = x^2\\).\nLet \\(\\mathbf{w}_1 = (0, 1, 0)\\), \\(\\mathbf{w}_2 = (0, 0, 1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (0)(x_2)) = x_1^2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (0)(x_1) + (1)(x_2)) = x_2^2\n\\end{align*}\n\\]\n\nSo, if \\(\\boldsymbol\\beta = (0, 1, 1)\\), then\n\n\\[\n{\\color{#976464} y } = 0 + (1)(x_1^2) + (1)(x_2^2) = {\\color{#56b4e9} x_1^2 + x_2^2} \\; ✅\n\\]",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#interaction-term",
     "href": "w10/index.html#interaction-term",
     "title": "Week 10: Deep Learning",
     "section": "Interaction Term",
-    "text": "Interaction Term\n\n\n\nCan we learn \\(Y = {\\color{#e69f00} x_1x_2}\\)?\nLet’s use \\(g(x) = x^2\\) again.\nLet \\(\\mathbf{w}_1 = (0, 1, 1)\\), \\(\\mathbf{w}_2 = (0, 1, -1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (1)(x_2)) = (x_1 + x_2)^2 = x_1^2 + x_2^2 +2x_1x_2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (1)(x_1) + (-1)(x_2)) = (x_1 - x_2)^2 = x_1^2 + x_2^2 - 2x_1x_2\n\\end{align*}\n\\]\n\nSo, if we let \\(\\boldsymbol\\beta = \\left( 0, \\frac{1}{4}, -\\frac{1}{4} \\right)\\), then\n\n\\[\n{\\color{#976464} y } = 0 + \\left(\\frac{1}{4}\\right)(x_1^2 + x_2^2 + 2x_1x_2) + \\left(-\\frac{1}{4}\\right)(x_1^2 + x_2^2 - 2x_1x_2) = {\\color{#e69f00} x_1x_2} \\; ✅\n\\]"
+    "text": "Interaction Term\n\n\n\nCan we learn \\(Y = {\\color{#e69f00} x_1x_2}\\)?\nLet’s use \\(g(x) = x^2\\) again.\nLet \\(\\mathbf{w}_1 = (0, 1, 1)\\), \\(\\mathbf{w}_2 = (0, 1, -1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (1)(x_2)) = (x_1 + x_2)^2 = x_1^2 + x_2^2 +2x_1x_2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (1)(x_1) + (-1)(x_2)) = (x_1 - x_2)^2 = x_1^2 + x_2^2 - 2x_1x_2\n\\end{align*}\n\\]\n\nSo, if we let \\(\\boldsymbol\\beta = \\left( 0, \\frac{1}{4}, -\\frac{1}{4} \\right)\\), then\n\n\\[\n{\\color{#976464} y } = 0 + \\left(\\frac{1}{4}\\right)(x_1^2 + x_2^2 + 2x_1x_2) + \\left(-\\frac{1}{4}\\right)(x_1^2 + x_2^2 - 2x_1x_2) = {\\color{#e69f00} x_1x_2} \\; ✅\n\\]",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#the-xor-problem",
     "href": "w10/index.html#the-xor-problem",
     "title": "Week 10: Deep Learning",
     "section": "The XOR Problem",
-    "text": "The XOR Problem\n\n\n\nCan we learn \\(Y = {\\color{#009E73} x_1 \\underset{\\mathclap{\\small \\text{XOR}}}{\\oplus} x_2}\\)?\nLet’s use \\(g(x) = x^2\\) once more.\nLet \\(\\mathbf{w}_1 = (0, 1, 1)\\), \\(\\mathbf{w}_2 = (0, 1, -1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (1)(x_2)) = (x_1 + x_2)^2 = x_1^2 + x_2^2 +2x_1x_2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (1)(x_1) + (-1)(x_2)) = (x_1 - x_2)^2 = x_1^2 + x_2^2 - 2x_1x_2\n\\end{align*}\n\\]\n\nSo, if we let \\(\\boldsymbol\\beta = (0, 0, 1)\\), then\n\n\\[\n\\begin{align*}\n{\\color{#976464} y }(0,0) &= 0 + (0)(0^2 + 0^2 + 2(0)(0)) + (1)(0^2 + 0^2 - 2(0)(0)) = {\\color{#009e73} 0} \\; ✅ \\\\\n{\\color{#976464} y }(0,1) &= 0 + (0)(0^2 + 1^2 + 2(0)(1)) + (1)(0^2 + 1^2 - 2(0)(1)) = {\\color{#009e73} 1} \\; ✅ \\\\\n{\\color{#976464} y }(1,0) &= 0 + (0)(1^2 + 0^2 + 2(1)(0)) + (1)(1^2 + 0^2 - 2(1)(0)) = {\\color{#009e73} 1} \\; ✅ \\\\\n{\\color{#976464} y }(1,1) &= 0 + (0)(1^2 + 1^2 + 2(1)(1)) + (1)(1^2 + 1^2 - 2(1)(1)) = {\\color{#009e73} 0} \\; ✅\n\\end{align*}\n\\]"
+    "text": "The XOR Problem\n\n\n\nCan we learn \\(Y = {\\color{#009E73} x_1 \\underset{\\mathclap{\\small \\text{XOR}}}{\\oplus} x_2}\\)?\nLet’s use \\(g(x) = x^2\\) once more.\nLet \\(\\mathbf{w}_1 = (0, 1, 1)\\), \\(\\mathbf{w}_2 = (0, 1, -1)\\).\nOur two activations are:\n\n\n\n\n\n\n\n\n\n\\[\n\\begin{align*}\n{\\color{#666693} a_1 } &= g(0 + (1)(x_1) + (1)(x_2)) = (x_1 + x_2)^2 = x_1^2 + x_2^2 +2x_1x_2 \\\\\n{\\color{#666693} a_2 } &= g(0 + (1)(x_1) + (-1)(x_2)) = (x_1 - x_2)^2 = x_1^2 + x_2^2 - 2x_1x_2\n\\end{align*}\n\\]\n\nSo, if we let \\(\\boldsymbol\\beta = (0, 0, 1)\\), then\n\n\\[\n\\begin{align*}\n{\\color{#976464} y }(0,0) &= 0 + (0)(0^2 + 0^2 + 2(0)(0)) + (1)(0^2 + 0^2 - 2(0)(0)) = {\\color{#009e73} 0} \\; ✅ \\\\\n{\\color{#976464} y }(0,1) &= 0 + (0)(0^2 + 1^2 + 2(0)(1)) + (1)(0^2 + 1^2 - 2(0)(1)) = {\\color{#009e73} 1} \\; ✅ \\\\\n{\\color{#976464} y }(1,0) &= 0 + (0)(1^2 + 0^2 + 2(1)(0)) + (1)(1^2 + 0^2 - 2(1)(0)) = {\\color{#009e73} 1} \\; ✅ \\\\\n{\\color{#976464} y }(1,1) &= 0 + (0)(1^2 + 1^2 + 2(1)(1)) + (1)(1^2 + 1^2 - 2(1)(1)) = {\\color{#009e73} 0} \\; ✅\n\\end{align*}\n\\]",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#but-how",
     "href": "w10/index.html#but-how",
     "title": "Week 10: Deep Learning",
     "section": "But How?",
-    "text": "But How?\n\nOutput Layer is just linear regression on activations (Hidden Layer outputs)\nWe saw in Week 7 how good basis function allows regression to learn any function\nNeural Networks: GOAT non-linear basis function learners!\n\n\n\n\n\nCode\nlibrary(tidyverse)\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ lubridate 1.9.3     ✔ tibble    3.2.1\n✔ purrr     1.0.2     ✔ tidyr     1.3.1\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\nCode\nlibrary(latex2exp)\nxor_df &lt;- tribble(\n    ~x1, ~x2, ~label,\n    0, 0, 0,\n    0, 1, 1,\n    1, 0, 1,\n    1, 1, 0\n) |&gt;\nmutate(\n    h1 = (x1 - x2)^2,\n    label = factor(label)\n)\nxor_df |&gt; ggplot(aes(x=x1, y=x2, label=label)) +\n  geom_point(\n    aes(color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(aes(fill=label), color='black', shape=21, size=g_pointsize * 2.5, stroke=0.75, alpha=0.4) +\n  scale_x_continuous(breaks=c(0, 1)) +\n  scale_y_continuous(breaks=c(0, 1)) +\n  expand_limits(y=c(-0.1,1.1)) +\n  # 45 is minus sign, 95 is em-dash\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    x=TeX(\"$x_1$\"),\n    y=TeX(\"$x_2$\"),\n    title=\"XOR Problem: Original Features\"\n  )\n\n\n\n\n\n\n\n\nFigure 1: The DGP \\(Y = x_1 \\oplus x_2\\) produces points in \\([0,1]^2\\) which are not linearly separable\n\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\nxor_df &lt;- tribble(\n    ~x1, ~x2, ~label,\n    0, 0, 0,\n    0, 1, 1,\n    1, 0, 1,\n    1, 1, 0\n) |&gt;\nmutate(\n    h1 = (x1 - x2)^2,\n    h2 = (x1 + x2)^2,\n    h2 = ifelse(h1 &gt; 0.5 & x2==0, h2 + 0.5, h2),\n    label = factor(label)\n)\nxor_df |&gt; ggplot(aes(x=h1, y=h2, label=label)) +\n  geom_vline(xintercept=0.5, linetype=\"dashed\", linewidth=1) +\n  # Negative space\n  geom_rect(xmin=-Inf, xmax=0.5, ymin=-Inf, ymax=Inf, fill=cb_palette[1], alpha=0.15) +\n  # Positive space\n  geom_rect(xmin=0.5, xmax=Inf, ymin=-Inf, ymax=Inf, fill=cb_palette[2], alpha=0.15) +\n  geom_point(\n    aes(color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(aes(fill=label), color='black', shape=21, size=g_pointsize*2.5, stroke=0.75, alpha=0.4) +\n  expand_limits(y=c(-0.2,4.2)) +\n  # 45 is minus sign, 95 is em-dash\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    title=\"NN-Learned Feature Space\",\n    x=TeX(\"$h_1(x_1, x_2)$\"),\n    y=TeX(\"$h_2(x_1, x_2)$\")\n  )\n\n\n\n\n\n\n\n\nFigure 2: Learned bases \\(h_1 = (x_1 - x_2)^2\\) and \\(h_2 = (x_1 + x_2)^2\\) enable separating hyperplane \\(h_1 = 0.5\\)\n\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\nx1_vals &lt;- seq(from=0, to=1, by=0.0075)\nx2_vals &lt;- seq(from=0, to=1, by=0.0075)\ngrid_df &lt;- expand.grid(x1=x1_vals, x2=x2_vals) |&gt;\n  as_tibble() |&gt;\n  mutate(\n    label=factor(as.numeric((x1-x2)^2 &gt; 0.5))\n  )\nggplot() +\n  geom_point(\n    data=grid_df,\n    aes(x=x1, y=x2, color=label),\n    alpha=0.4\n  ) +\n  geom_point(\n    data=xor_df,\n    aes(x=x1, y=x2, color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(\n    data=xor_df,\n    aes(x=x1, y=x2, fill=label),\n    color='black', shape=21, size=g_pointsize*2.5, stroke=0.75, alpha=0.4\n  ) +\n  geom_abline(slope=1, intercept=0.7, linetype=\"dashed\", linewidth=1) +\n  geom_abline(slope=1, intercept=-0.7, linetype=\"dashed\", linewidth=1) +\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    title=\"XOR Problem: Inverted NN Features\",\n    x=TeX(\"$X_1$\"), y=TeX(\"$X_2$\")\n  )\n\n\n\n\n\n\n\n\nFigure 3: Here, the blue area represents points where \\(h_1 = (x_1 - x_2)^2 &gt; 0.5\\)"
+    "text": "But How?\n\nOutput Layer is just linear regression on activations (Hidden Layer outputs)\nWe saw in Week 7 how good basis function allows regression to learn any function\nNeural Networks: GOAT non-linear basis function learners!\n\n\n\n\n\nCode\nlibrary(tidyverse)\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ lubridate 1.9.3     ✔ tibble    3.2.1\n✔ purrr     1.0.2     ✔ tidyr     1.3.1\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\nCode\nlibrary(latex2exp)\nxor_df &lt;- tribble(\n    ~x1, ~x2, ~label,\n    0, 0, 0,\n    0, 1, 1,\n    1, 0, 1,\n    1, 1, 0\n) |&gt;\nmutate(\n    h1 = (x1 - x2)^2,\n    label = factor(label)\n)\nxor_df |&gt; ggplot(aes(x=x1, y=x2, label=label)) +\n  geom_point(\n    aes(color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(aes(fill=label), color='black', shape=21, size=g_pointsize * 2.5, stroke=0.75, alpha=0.4) +\n  scale_x_continuous(breaks=c(0, 1)) +\n  scale_y_continuous(breaks=c(0, 1)) +\n  expand_limits(y=c(-0.1,1.1)) +\n  # 45 is minus sign, 95 is em-dash\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    x=TeX(\"$x_1$\"),\n    y=TeX(\"$x_2$\"),\n    title=\"XOR Problem: Original Features\"\n  )\n\n\n\n\n\n\n\n\nFigure 1: The DGP \\(Y = x_1 \\oplus x_2\\) produces points in \\([0,1]^2\\) which are not linearly separable\n\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\nxor_df &lt;- tribble(\n    ~x1, ~x2, ~label,\n    0, 0, 0,\n    0, 1, 1,\n    1, 0, 1,\n    1, 1, 0\n) |&gt;\nmutate(\n    h1 = (x1 - x2)^2,\n    h2 = (x1 + x2)^2,\n    h2 = ifelse(h1 &gt; 0.5 & x2==0, h2 + 0.5, h2),\n    label = factor(label)\n)\nxor_df |&gt; ggplot(aes(x=h1, y=h2, label=label)) +\n  geom_vline(xintercept=0.5, linetype=\"dashed\", linewidth=1) +\n  # Negative space\n  geom_rect(xmin=-Inf, xmax=0.5, ymin=-Inf, ymax=Inf, fill=cb_palette[1], alpha=0.15) +\n  # Positive space\n  geom_rect(xmin=0.5, xmax=Inf, ymin=-Inf, ymax=Inf, fill=cb_palette[2], alpha=0.15) +\n  geom_point(\n    aes(color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(aes(fill=label), color='black', shape=21, size=g_pointsize*2.5, stroke=0.75, alpha=0.4) +\n  expand_limits(y=c(-0.2,4.2)) +\n  # 45 is minus sign, 95 is em-dash\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    title=\"NN-Learned Feature Space\",\n    x=TeX(\"$h_1(x_1, x_2)$\"),\n    y=TeX(\"$h_2(x_1, x_2)$\")\n  )\n\n\n\n\n\n\n\n\nFigure 2: Learned bases \\(h_1 = (x_1 - x_2)^2\\) and \\(h_2 = (x_1 + x_2)^2\\) enable separating hyperplane \\(h_1 = 0.5\\)\n\n\n\n\n\n\n\n\nCode\nlibrary(tidyverse)\nx1_vals &lt;- seq(from=0, to=1, by=0.0075)\nx2_vals &lt;- seq(from=0, to=1, by=0.0075)\ngrid_df &lt;- expand.grid(x1=x1_vals, x2=x2_vals) |&gt;\n  as_tibble() |&gt;\n  mutate(\n    label=factor(as.numeric((x1-x2)^2 &gt; 0.5))\n  )\nggplot() +\n  geom_point(\n    data=grid_df,\n    aes(x=x1, y=x2, color=label),\n    alpha=0.4\n  ) +\n  geom_point(\n    data=xor_df,\n    aes(x=x1, y=x2, color=label, shape=label),\n    size=g_pointsize * 2,\n    stroke=6\n  ) +\n  geom_point(\n    data=xor_df,\n    aes(x=x1, y=x2, fill=label),\n    color='black', shape=21, size=g_pointsize*2.5, stroke=0.75, alpha=0.4\n  ) +\n  geom_abline(slope=1, intercept=0.7, linetype=\"dashed\", linewidth=1) +\n  geom_abline(slope=1, intercept=-0.7, linetype=\"dashed\", linewidth=1) +\n  scale_shape_manual(values=c(95, 43)) +\n  theme_dsan(base_size=32) +\n  remove_legend_title() +\n  labs(\n    title=\"XOR Problem: Inverted NN Features\",\n    x=TeX(\"$X_1$\"), y=TeX(\"$X_2$\")\n  )\n\n\n\n\n\n\n\n\nFigure 3: Here, the blue area represents points where \\(h_1 = (x_1 - x_2)^2 &gt; 0.5\\)",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#input-representation",
     "href": "w10/index.html#input-representation",
     "title": "Week 10: Deep Learning",
     "section": "Input Representation",
-    "text": "Input Representation\n\n\n\n\n\nFrom But what is a neural network?, 3Blue1Brown"
+    "text": "Input Representation\n\n\n\n\n\nFrom But what is a neural network?, 3Blue1Brown",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#but-wait-ten-outputs",
     "href": "w10/index.html#but-wait-ten-outputs",
     "title": "Week 10: Deep Learning",
     "section": "But Wait… Ten Outputs?",
-    "text": "But Wait… Ten Outputs?\n\n\n\n\n\n\n\n\n\nThe (magical) softmax function!\n\n\\[\nz_d = \\Pr(Y = d \\mid X) = \\frac{e^{y_d}}{\\sum_{i=0}^{9}e^{y_i}}\n\\]\n\nEnsures that each \\(Z_d\\) is a probability!\n\n\\[\n\\begin{align}\n0 \\leq z_d &\\leq 1 \\; \\; \\forall ~ d \\in \\{0,\\ldots,9\\} \\\\\n\\sum_{d=0}^{9}z_d &= 1\n\\end{align}\n\\]"
+    "text": "But Wait… Ten Outputs?\n\n\n\n\n\n\n\n\n\nThe (magical) softmax function!\n\n\\[\nz_d = \\Pr(Y = d \\mid X) = \\frac{e^{y_d}}{\\sum_{i=0}^{9}e^{y_i}}\n\\]\n\nEnsures that each \\(Z_d\\) is a probability!\n\n\\[\n\\begin{align}\n0 \\leq z_d &\\leq 1 \\; \\; \\forall ~ d \\in \\{0,\\ldots,9\\} \\\\\n\\sum_{d=0}^{9}z_d &= 1\n\\end{align}\n\\]",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#visualizing-softmax-results",
     "href": "w10/index.html#visualizing-softmax-results",
     "title": "Week 10: Deep Learning",
     "section": "Visualizing Softmax Results",
-    "text": "Visualizing Softmax Results\n\n\n\nInteractive Visualization: Handwritten-Digit Space"
+    "text": "Visualizing Softmax Results\n\n\n\nInteractive Visualization: Handwritten-Digit Space",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#cnns",
     "href": "w10/index.html#cnns",
     "title": "Week 10: Deep Learning",
     "section": "CNNs",
-    "text": "CNNs\n\nKey point: Convolutional layers are not fully connected!\nEach layer “pools” info from two units in previous layer"
+    "text": "CNNs\n\nKey point: Convolutional layers are not fully connected!\nEach layer “pools” info from two units in previous layer",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#decoding-the-thought-vector",
     "href": "w10/index.html#decoding-the-thought-vector",
     "title": "Week 10: Deep Learning",
     "section": "Decoding the Thought Vector",
-    "text": "Decoding the Thought Vector\n\nHidden layers closer to input layer detect low-level “fine-grained” features\nHidden layers closer to output layer detect high-level “coarse-grained” features\n\n\n\n\n\n\n\n\n\n\n\n\nDecoding the Thought Vector"
+    "text": "Decoding the Thought Vector\n\nHidden layers closer to input layer detect low-level “fine-grained” features\nHidden layers closer to output layer detect high-level “coarse-grained” features\n\n\n\n\n\n\n\n\n\n\n\n\nDecoding the Thought Vector",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#variational-autoencoders",
     "href": "w10/index.html#variational-autoencoders",
     "title": "Week 10: Deep Learning",
     "section": "Variational Autoencoders",
-    "text": "Variational Autoencoders"
+    "text": "Variational Autoencoders",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#rnns",
     "href": "w10/index.html#rnns",
     "title": "Week 10: Deep Learning",
     "section": "RNNs",
-    "text": "RNNs\n…More next week, tbh\n\n\n\nISLR Figure 10.12"
+    "text": "RNNs\n…More next week, tbh\n\n\n\nISLR Figure 10.12",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#ok-but-how-do-we-learn-the-weights",
     "href": "w10/index.html#ok-but-how-do-we-learn-the-weights",
     "title": "Week 10: Deep Learning",
     "section": "Ok But How Do We Learn The Weights?",
-    "text": "Ok But How Do We Learn The Weights?\n\n\n\nBackpropagation! (3Blue1Brown Again!)\n\n\n(Full NN playlist here)"
+    "text": "Ok But How Do We Learn The Weights?\n\n\n\nBackpropagation! (3Blue1Brown Again!)\n\n\n(Full NN playlist here)",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "w10/index.html#references",
     "href": "w10/index.html#references",
     "title": "Week 10: Deep Learning",
     "section": "References",
-    "text": "References"
+    "text": "References",
+    "crumbs": [
+      "Week 10: {{< var w10.date-md >}}"
+    ]
   },
   {
     "objectID": "writeups/machine-learning/slides.html#supervised-vs.-unsupervised-learning",
@@ -1421,14 +1475,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5293437\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5523538\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5681437\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.4968714\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.9082032\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1044492\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4291607\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6495189"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8625261\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1616222\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4315312\n\n\nCode\npoly_rss_test\n\n\n[1] 0.6683245"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -1603,14 +1657,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5464871\n\nget_rss(lin_model)\n\n[1] 0.5235776\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5217666\n\nget_rss(lin_model)\n\n[1] 0.5461105\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8855699\n\nlin_rss_test\n\n[1] 0.129281\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3944005\n\npoly_rss_test\n\n[1] 0.6841951"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.903767\n\nlin_rss_test\n\n[1] 0.09972322\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.3790772\n\npoly_rss_test\n\n[1] 0.6434429"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
