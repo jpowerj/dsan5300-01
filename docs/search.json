@@ -3332,14 +3332,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5495928\n\nget_rss(lin_model)\n\n[1] 0.5936585\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5675542\n\nget_rss(lin_model)\n\n[1] 0.5450464\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.9385914\n\nlin_rss_test\n\n[1] 0.06979399\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.4973177\n\npoly_rss_test\n\n[1] 0.5713243"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8971702\n\nlin_rss_test\n\n[1] 0.1131597\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.500948\n\npoly_rss_test\n\n[1] 0.5491844"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -3514,14 +3514,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5747593\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5497178\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5562137\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5543628\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8878702\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1340769\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.3876179\n\n\nCode\npoly_rss_test\n\n\n[1] 0.7322432"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.888782\n\n\nCode\nlin_rss_test\n\n\n[1] 0.122772\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4107193\n\n\nCode\npoly_rss_test\n\n\n[1] 0.650499"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -3610,6 +3610,26 @@
     ]
   },
   {
+    "objectID": "w11/index.html#how-do-we-evaluate-output",
+    "href": "w11/index.html#how-do-we-evaluate-output",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "How Do We Evaluate Output?",
+    "text": "How Do We Evaluate Output?\n\n\n\nMultilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w11/index.html#entropy-in-general",
+    "href": "w11/index.html#entropy-in-general",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Entropy in General",
+    "text": "Entropy in General",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
     "objectID": "w11/index.html#entropy-loss-output-layer-uncertainty",
     "href": "w11/index.html#entropy-loss-output-layer-uncertainty",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
@@ -3624,7 +3644,7 @@
     "href": "w11/index.html#the-problem-with-entropy-loss",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
     "section": "The Problem With Entropy Loss",
-    "text": "The Problem With Entropy Loss\n\n\nMax entropy = max uncertainty (0-9 equally likely)\n\\[\n\\begin{align*}\n\\Pr(y = 0) &= 0.1 \\\\\n\\Pr(y = 1) &= 0.1 \\\\\n&\\vdots \\\\\n\\Pr(y = 9) &= 0.1\n\\end{align*}\n\\]\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\nMiddle entropy = less uncertainty\n\\[\n\\Pr(y = 9) &gt; \\Pr(y = 3) &gt; \\Pr(y = d')\n\\]\n\n\n\nStep 2: NN starting to converge: probably \\(d = 9\\), maybe \\(d = 3\\), low probability on all other values\n\n\n\nMin entropy = no uncertainty\n\\[\n\\Pr(y = 9) = 1\n\\]\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 9 \\mid X)\\)",
+    "text": "The Problem With Entropy Loss\n\n\n\n\n\n\n\nMax entropy = max uncertainty\n\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\n\n\nLess entropy = less uncertainty\n\n\n\n\nStep 2: NN starting to converge: probably \\(d = 3\\), maybe \\(d = 9\\), low probability on all other values\n\n\n\n\n\nMin entropy = no uncertainty\n\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 3)\\)",
     "crumbs": [
       "Week 11: {{< var w11.date-md >}}"
     ]
@@ -3634,7 +3654,17 @@
     "href": "w11/index.html#cross-entropy-loss-output-layer-vs.-truth",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
     "section": "Cross-Entropy Loss: Output Layer vs. Truth",
-    "text": "Cross-Entropy Loss: Output Layer vs. Truth\n\n\nMax entropy = max uncertainty (0-9 equally likely)\n\\[\n\\begin{align*}\n\\Pr(y = 0) &= 0.1 \\\\\n\\Pr(y = 1) &= 0.1 \\\\\n&\\vdots \\\\\n\\Pr(y = 9) &= 0.1\n\\end{align*}\n\\]\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\nMiddle entropy = less uncertainty\n\\[\n\\Pr(y = 9) &gt; \\Pr(y = 3) &gt; \\Pr(y = d')\n\\]\n\n\n\nStep 2: NN is starting to converge to correct prediction: probably \\(d = 9\\), maybe \\(d = 3\\), low probability on all other values\n\n\n\nMin entropy = no uncertainty\n\\[\n\\Pr(y = 9) = 1\n\\]\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 9 \\mid X)\\)",
+    "text": "Cross-Entropy Loss: Output Layer vs. Truth\n\n\n\n\n\n\n\nMax entropy = max uncertainty\n\n\n\n\nStep 1: \\(H(y, \\widehat{y}) = -1\\cdot \\log_2(0.1) \\approx 3.32\\)\n\n\n\n\n\nLess entropy = less uncertainty\n\n\n\n\nStep 2: \\(H(y,\\widehat{y}) = -1\\cdot \\log_2(0.4) \\approx 1.32\\)\n\n\n\n\n\nMin entropy = no uncertainty\n\n\n\n\nStep 3: \\(H(y,\\widehat{y}) = -1\\cdot \\log_2(1) = 0\\)",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w11/index.html#its-not-as-silly-as-you-think",
+    "href": "w11/index.html#its-not-as-silly-as-you-think",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "It’s Not as Silly as You Think!",
+    "text": "It’s Not as Silly as You Think!\n\nIn our example, we know the true digit… But remember the origin of the dataset: postal workers trying to figure out handwritten digits\nMay not know with certainty, but may be able to say, e.g., “It’s either a 1 or a 7”\n\n\n\n\nFrom Perceptions of Probability Dataset",
     "crumbs": [
       "Week 11: {{< var w11.date-md >}}"
     ]
@@ -3674,6 +3704,20 @@
     "text": "Step-by-Step\n\n\n\n\n\n\n\nNeural Network Training Procedure\n\n\nFor each training observation \\((\\mathbf{x}_i, y_i)\\)…\n Predict \\(\\widehat{y}_i\\) from \\(\\mathbf{x}_i\\)\n Evaluate loss \\(\\mathcal{L}(\\widehat{y}_i, y_i)\\): Cross-Entropy Loss\n Update parameters (weights/biases): Backpropagation\n\n\n\n\nKey for success of NNs: Non-linear but differentiable\n\n\\(\\Rightarrow\\) parameters \\(w^*\\) most responsible for the loss value can be\n\nidentified: \\(w^* = \\argmax_w\\left[ \\frac{\\partial \\mathcal{L}}{\\partial w} \\right]\\), then\nchanged the most \\(w^*_t \\rightarrow w^*_{t+1}\\)"
   },
   {
+    "objectID": "w11/slides.html#how-do-we-evaluate-output",
+    "href": "w11/slides.html#how-do-we-evaluate-output",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "How Do We Evaluate Output?",
+    "text": "How Do We Evaluate Output?\n\nMultilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4"
+  },
+  {
+    "objectID": "w11/slides.html#entropy-in-general",
+    "href": "w11/slides.html#entropy-in-general",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Entropy in General",
+    "text": "Entropy in General"
+  },
+  {
     "objectID": "w11/slides.html#entropy-loss-output-layer-uncertainty",
     "href": "w11/slides.html#entropy-loss-output-layer-uncertainty",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
@@ -3685,14 +3729,21 @@
     "href": "w11/slides.html#the-problem-with-entropy-loss",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
     "section": "The Problem With Entropy Loss",
-    "text": "The Problem With Entropy Loss\n\n\nMax entropy = max uncertainty (0-9 equally likely)\n\\[\n\\begin{align*}\n\\Pr(y = 0) &= 0.1 \\\\\n\\Pr(y = 1) &= 0.1 \\\\\n&\\vdots \\\\\n\\Pr(y = 9) &= 0.1\n\\end{align*}\n\\]\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\nMiddle entropy = less uncertainty\n\\[\n\\Pr(y = 9) &gt; \\Pr(y = 3) &gt; \\Pr(y = d')\n\\]\n\n\n\nStep 2: NN starting to converge: probably \\(d = 9\\), maybe \\(d = 3\\), low probability on all other values\n\n\n\nMin entropy = no uncertainty\n\\[\n\\Pr(y = 9) = 1\n\\]\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 9 \\mid X)\\)"
+    "text": "The Problem With Entropy Loss\n\n\n\n\n\n\n\nMax entropy = max uncertainty\n\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\n\n\nLess entropy = less uncertainty\n\n\n\n\nStep 2: NN starting to converge: probably \\(d = 3\\), maybe \\(d = 9\\), low probability on all other values\n\n\n\n\n\nMin entropy = no uncertainty\n\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 3)\\)"
   },
   {
     "objectID": "w11/slides.html#cross-entropy-loss-output-layer-vs.-truth",
     "href": "w11/slides.html#cross-entropy-loss-output-layer-vs.-truth",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
     "section": "Cross-Entropy Loss: Output Layer vs. Truth",
-    "text": "Cross-Entropy Loss: Output Layer vs. Truth\n\n\nMax entropy = max uncertainty (0-9 equally likely)\n\\[\n\\begin{align*}\n\\Pr(y = 0) &= 0.1 \\\\\n\\Pr(y = 1) &= 0.1 \\\\\n&\\vdots \\\\\n\\Pr(y = 9) &= 0.1\n\\end{align*}\n\\]\n\n\n\nStep 1: NN has no idea, guesses (via softmax) \\(\\Pr(y = d) = 0.1\\) for every \\(d\\)\n\n\n\nMiddle entropy = less uncertainty\n\\[\n\\Pr(y = 9) &gt; \\Pr(y = 3) &gt; \\Pr(y = d')\n\\]\n\n\n\nStep 2: NN is starting to converge to correct prediction: probably \\(d = 9\\), maybe \\(d = 3\\), low probability on all other values\n\n\n\nMin entropy = no uncertainty\n\\[\n\\Pr(y = 9) = 1\n\\]\n\n\n\nStep 3: NN has converged to predicting ultra-high \\(\\Pr(y = 9 \\mid X)\\)"
+    "text": "Cross-Entropy Loss: Output Layer vs. Truth\n\n\n\n\n\n\n\nMax entropy = max uncertainty\n\n\n\n\nStep 1: \\(H(y, \\widehat{y}) = -1\\cdot \\log_2(0.1) \\approx 3.32\\)\n\n\n\n\n\nLess entropy = less uncertainty\n\n\n\n\nStep 2: \\(H(y,\\widehat{y}) = -1\\cdot \\log_2(0.4) \\approx 1.32\\)\n\n\n\n\n\nMin entropy = no uncertainty\n\n\n\n\nStep 3: \\(H(y,\\widehat{y}) = -1\\cdot \\log_2(1) = 0\\)"
+  },
+  {
+    "objectID": "w11/slides.html#its-not-as-silly-as-you-think",
+    "href": "w11/slides.html#its-not-as-silly-as-you-think",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "It’s Not as Silly as You Think!",
+    "text": "It’s Not as Silly as You Think!\n\nIn our example, we know the true digit… But remember the origin of the dataset: postal workers trying to figure out handwritten digits\nMay not know with certainty, but may be able to say, e.g., “It’s either a 1 or a 7”\n\n\nFrom Perceptions of Probability Dataset"
   },
   {
     "objectID": "w11/slides.html#simplest-possible-backprop",

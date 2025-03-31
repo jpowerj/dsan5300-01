@@ -106,7 +106,15 @@ Key for success of NNs: Non-linear **but differentiable**
 
 ![Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4](images/nn_multilayer.svg){fig-align="center"}
 
-## "Entropy Loss": Output Layer Uncertainty {.smaller .crunch-title .title-10 .math-80 .text-70 .crunch-quarto-figure}
+## How Do We Evaluate Output? {.smaller .title-12 data-stack-name="Cross-Entropy Loss"}
+
+![Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4](images/nn_multilayer_output.svg){fig-align="center"}
+
+## Entropy in General
+
+![](images/entropy_general.svg){fig-align="center"}
+
+## "Entropy Loss": Output Layer Uncertainty {.smaller .crunch-title .title-10 .math-80 .text-70 .crunch-quarto-figure .crunch-math .crunch-p}
 
 :::: {layout="[1,1,1]"}
 ::: {#maxent-img}
@@ -128,7 +136,7 @@ Key for success of NNs: Non-linear **but differentiable**
 
 </center>
 
-![Step 2: NN starting to converge: $\Pr(Y = 9)$ high, $\Pr(Y = 3)$ medium, $\Pr(Y = d)$ low for all other $d$](images/nn_crossent_success.svg){fig-align="center"}
+![Step 2: NN starting to converge: $\Pr(Y = 9)$ high, $\Pr(Y = 3)$ medium, $\Pr(Y = d)$ low for all other $d$](images/nn_crossent_mident.svg){fig-align="center"}
 
 :::
 ::: {#minent-img}
@@ -144,91 +152,88 @@ Key for success of NNs: Non-linear **but differentiable**
 :::
 ::::
 
-## The Problem With Entropy Loss {.smaller .crunch-title .title-10 .math-80 .text-70}
+## The Problem With Entropy Loss {.smaller .crunch-title .title-10 .math-80 .text-70 .crunch-p .crunch-quarto-figure}
 
-:::: {.columns}
-::: {.column width="33%"}
+:::: {layout="[1,1,1]"}
+::: {#maxent-problem}
 
-Max entropy = max uncertainty (0-9 equally likely)
+<center>
 
-$$
-\begin{align*}
-\Pr(y = 0) &= 0.1 \\
-\Pr(y = 1) &= 0.1 \\
-&\vdots \\
-\Pr(y = 9) &= 0.1
-\end{align*}
-$$
+[Max entropy = **max** uncertainty]{style="font-size: 80%;"}
 
-![Step 1: NN has no idea, guesses (via softmax) $\Pr(y = d) = 0.1$ for every $d$](images/nn_crossent.svg){fig-align="center"}
+</center>
+
+![Step 1: NN has no idea, guesses (via softmax) $\Pr(y = d) = 0.1$ for every $d$](images/nn_crossent_eq.svg){fig-align="center"}
 
 :::
-::: {.column width="33%"}
+::: {#mident-problem}
 
-Middle entropy = less uncertainty
+<center>
 
-$$
-\Pr(y = 9) > \Pr(y = 3) > \Pr(y = d')
-$$
+[Less entropy = less uncertainty]{style="font-size: 80%;"}
 
-![Step 2: NN starting to converge: probably $d = 9$, maybe $d = 3$, low probability on all other values](images/nn_crossent_success.svg){fig-align="center"}
+</center>
+
+![Step 2: NN starting to converge: probably $d = 3$, maybe $d = 9$, low probability on all other values](images/nn_crossent_miderr.svg){fig-align="center"}
 
 :::
-::: {.column width="33%"}
+::: {#minent-problem}
 
-Min entropy = no uncertainty
+<center>
 
-$$
-\Pr(y = 9) = 1
-$$
+[Min entropy = **no** uncertainty]{style="font-size: 80%;"}
 
-![Step 3: NN has converged to predicting ultra-high $\Pr(y = 9 \mid X)$](images/nn_minent.svg){fig-align="center"}
+</center>
+
+![Step 3: NN has converged to predicting ultra-high $\Pr(y = 3)$](images/nn_minent_err.svg){fig-align="center"}
 
 :::
 ::::
 
 ## *Cross*-Entropy Loss: Output Layer vs. Truth {.smaller .crunch-title .title-10 .math-80 .text-70}
 
-:::: {.columns}
-::: {.column width="33%"}
+:::: {layout="[1,1,1]"}
+::: {#crossent-max}
 
-Max entropy = max uncertainty (0-9 equally likely)
+<center>
 
-$$
-\begin{align*}
-\Pr(y = 0) &= 0.1 \\
-\Pr(y = 1) &= 0.1 \\
-&\vdots \\
-\Pr(y = 9) &= 0.1
-\end{align*}
-$$
+[Max entropy = **max** uncertainty]{style="font-size: 80%;"}
 
-![Step 1: NN has no idea, guesses (via softmax) $\Pr(y = d) = 0.1$ for every $d$](images/nn_crossent.svg){fig-align="center"}
+</center>
+
+![Step 1: $H(y, \widehat{y}) = -1\cdot \log_2(0.1) \approx 3.32$](images/nn_crossent_eq.svg){fig-align="center"}
 
 :::
-::: {.column width="33%"}
+::: {#crossent-mid}
 
-Middle entropy = less uncertainty
+<center>
 
-$$
-\Pr(y = 9) > \Pr(y = 3) > \Pr(y = d')
-$$
+[Less entropy = less uncertainty]{style="font-size: 80%;"}
 
-![Step 2: NN is starting to converge to correct prediction: probably $d = 9$, maybe $d = 3$, low probability on all other values](images/nn_crossent_success.svg){fig-align="center"}
+</center>
+
+![Step 2: $H(y,\widehat{y}) = -1\cdot \log_2(0.4) \approx 1.32$](images/nn_crossent_mident.svg){fig-align="center"}
 
 :::
-::: {.column width="33%"}
+::: {#crossent-min}
 
-Min entropy = no uncertainty
+<center>
 
-$$
-\Pr(y = 9) = 1
-$$
+[Min entropy = **no** uncertainty]{style="font-size: 80%;"}
 
-![Step 3: NN has converged to predicting ultra-high $\Pr(y = 9 \mid X)$](images/nn_minent.svg){fig-align="center"}
+</center>
+
+![Step 3: $H(y,\widehat{y}) = -1\cdot \log_2(1) = 0$](images/nn_minent.svg){fig-align="center"}
 
 :::
 ::::
+
+## It's Not as Silly as You Think! {.smaller .title-12 .crunch-title .crunch-ul .crunch-quarto-figure}
+
+* In our example, we **know** the **true** digit... But remember the **origin of the dataset**: postal workers trying to figure out handwritten digits
+* May not **know** with certainty, but may be able to say, e.g., "It's either a 1 or a 7"
+
+![From [*Perceptions of Probability* Dataset](https://github.com/zonination/perceptions)](images/word-prob-joy.png){fig-align="center"}
 
 # Ok But How Do We *Learn* The Weights? {.smaller .title-11 data-stack-name="Backpropagation"}
 

@@ -301,7 +301,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-03-31, 05:58:56 AM</em></p>
+<p><em>Updated 2025-03-31, 05:29:07 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -317,9 +317,12 @@ window.Quarto = {
   </ul></li>
   <li><a href="#recall-mnist-digits" id="toc-recall-mnist-digits" class="nav-link" data-scroll-target="#recall-mnist-digits">Recall: MNIST Digits</a>
   <ul class="collapse">
+  <li><a href="#how-do-we-evaluate-output" id="toc-how-do-we-evaluate-output" class="nav-link" data-scroll-target="#how-do-we-evaluate-output">How Do We Evaluate Output?</a></li>
+  <li><a href="#entropy-in-general" id="toc-entropy-in-general" class="nav-link" data-scroll-target="#entropy-in-general">Entropy in General</a></li>
   <li><a href="#entropy-loss-output-layer-uncertainty" id="toc-entropy-loss-output-layer-uncertainty" class="nav-link" data-scroll-target="#entropy-loss-output-layer-uncertainty">“Entropy Loss”: Output Layer Uncertainty</a></li>
   <li><a href="#the-problem-with-entropy-loss" id="toc-the-problem-with-entropy-loss" class="nav-link" data-scroll-target="#the-problem-with-entropy-loss">The Problem With Entropy Loss</a></li>
   <li><a href="#cross-entropy-loss-output-layer-vs.-truth" id="toc-cross-entropy-loss-output-layer-vs.-truth" class="nav-link" data-scroll-target="#cross-entropy-loss-output-layer-vs.-truth"><em>Cross</em>-Entropy Loss: Output Layer vs.&nbsp;Truth</a></li>
+  <li><a href="#its-not-as-silly-as-you-think" id="toc-its-not-as-silly-as-you-think" class="nav-link" data-scroll-target="#its-not-as-silly-as-you-think">It’s Not as Silly as You Think!</a></li>
   </ul></li>
   <li><a href="#ok-but-how-do-we-learn-the-weights" id="toc-ok-but-how-do-we-learn-the-weights" class="nav-link" data-scroll-target="#ok-but-how-do-we-learn-the-weights">Ok But How Do We <em>Learn</em> The Weights?</a>
   <ul class="collapse">
@@ -525,8 +528,25 @@ Neural Network Training Procedure
 <figcaption>Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4</figcaption>
 </figure>
 </div>
-<section id="entropy-loss-output-layer-uncertainty" class="level2 smaller crunch-title title-10 math-80 text-70 crunch-quarto-figure">
-<h2 class="smaller crunch-title title-10 math-80 text-70 crunch-quarto-figure anchored" data-anchor-id="entropy-loss-output-layer-uncertainty">“Entropy Loss”: Output Layer Uncertainty</h2>
+<section id="how-do-we-evaluate-output" class="level2 smaller title-12" data-stack-name="Cross-Entropy Loss">
+<h2 class="smaller title-12 anchored" data-stack-name="Cross-Entropy Loss" data-anchor-id="how-do-we-evaluate-output">How Do We Evaluate Output?</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/nn_multilayer_output.svg" class="img-fluid figure-img"></p>
+<figcaption>Multilayer NN for MNIST Handwritten Digit Recognition, Adapted from ISLR Fig 10.4</figcaption>
+</figure>
+</div>
+</section>
+<section id="entropy-in-general" class="level2">
+<h2 class="anchored" data-anchor-id="entropy-in-general">Entropy in General</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/entropy_general.svg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="entropy-loss-output-layer-uncertainty" class="level2 smaller crunch-title title-10 math-80 text-70 crunch-quarto-figure crunch-math crunch-p">
+<h2 class="smaller crunch-title title-10 math-80 text-70 crunch-quarto-figure crunch-math crunch-p anchored" data-anchor-id="entropy-loss-output-layer-uncertainty">“Entropy Loss”: Output Layer Uncertainty</h2>
 <div>
 
 </div>
@@ -549,7 +569,7 @@ Neural Network Training Procedure
 </center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_crossent_success.svg" class="img-fluid figure-img"></p>
+<p><img src="images/nn_crossent_mident.svg" class="img-fluid figure-img"></p>
 <figcaption>Step 2: NN starting to converge: <span class="math inline">\(\Pr(Y = 9)\)</span> high, <span class="math inline">\(\Pr(Y = 3)\)</span> medium, <span class="math inline">\(\Pr(Y = d)\)</span> low for all other <span class="math inline">\(d\)</span></figcaption>
 </figure>
 </div>
@@ -568,92 +588,103 @@ Neural Network Training Procedure
 </div>
 </div>
 </section>
-<section id="the-problem-with-entropy-loss" class="level2 smaller crunch-title title-10 math-80 text-70">
-<h2 class="smaller crunch-title title-10 math-80 text-70 anchored" data-anchor-id="the-problem-with-entropy-loss">The Problem With Entropy Loss</h2>
-<div class="columns">
-<div class="column" style="width:33%;">
-<p>Max entropy = max uncertainty (0-9 equally likely)</p>
-<p><span class="math display">\[
-\begin{align*}
-\Pr(y = 0) &amp;= 0.1 \\
-\Pr(y = 1) &amp;= 0.1 \\
-&amp;\vdots \\
-\Pr(y = 9) &amp;= 0.1
-\end{align*}
-\]</span></p>
+<section id="the-problem-with-entropy-loss" class="level2 smaller crunch-title title-10 math-80 text-70 crunch-p crunch-quarto-figure">
+<h2 class="smaller crunch-title title-10 math-80 text-70 crunch-p crunch-quarto-figure anchored" data-anchor-id="the-problem-with-entropy-loss">The Problem With Entropy Loss</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[1,1,1]">
+<div class="quarto-layout-row">
+<div id="maxent-problem" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Max entropy = <strong>max</strong> uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_crossent.svg" class="img-fluid figure-img"></p>
+<p><img src="images/nn_crossent_eq.svg" class="img-fluid figure-img"></p>
 <figcaption>Step 1: NN has no idea, guesses (via softmax) <span class="math inline">\(\Pr(y = d) = 0.1\)</span> for every <span class="math inline">\(d\)</span></figcaption>
 </figure>
 </div>
-</div><div class="column" style="width:33%;">
-<p>Middle entropy = less uncertainty</p>
-<p><span class="math display">\[
-\Pr(y = 9) &gt; \Pr(y = 3) &gt; \Pr(y = d')
-\]</span></p>
+</div>
+<div id="mident-problem" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Less entropy = less uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_crossent_success.svg" class="img-fluid figure-img"></p>
-<figcaption>Step 2: NN starting to converge: probably <span class="math inline">\(d = 9\)</span>, maybe <span class="math inline">\(d = 3\)</span>, low probability on all other values</figcaption>
+<p><img src="images/nn_crossent_miderr.svg" class="img-fluid figure-img"></p>
+<figcaption>Step 2: NN starting to converge: probably <span class="math inline">\(d = 3\)</span>, maybe <span class="math inline">\(d = 9\)</span>, low probability on all other values</figcaption>
 </figure>
 </div>
-</div><div class="column" style="width:33%;">
-<p>Min entropy = no uncertainty</p>
-<p><span class="math display">\[
-\Pr(y = 9) = 1
-\]</span></p>
+</div>
+<div id="minent-problem" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Min entropy = <strong>no</strong> uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_minent.svg" class="img-fluid figure-img"></p>
-<figcaption>Step 3: NN has converged to predicting ultra-high <span class="math inline">\(\Pr(y = 9 \mid X)\)</span></figcaption>
+<p><img src="images/nn_minent_err.svg" class="img-fluid figure-img"></p>
+<figcaption>Step 3: NN has converged to predicting ultra-high <span class="math inline">\(\Pr(y = 3)\)</span></figcaption>
 </figure>
+</div>
 </div>
 </div>
 </div>
 </section>
 <section id="cross-entropy-loss-output-layer-vs.-truth" class="level2 smaller crunch-title title-10 math-80 text-70">
 <h2 class="smaller crunch-title title-10 math-80 text-70 anchored" data-anchor-id="cross-entropy-loss-output-layer-vs.-truth"><em>Cross</em>-Entropy Loss: Output Layer vs.&nbsp;Truth</h2>
-<div class="columns">
-<div class="column" style="width:33%;">
-<p>Max entropy = max uncertainty (0-9 equally likely)</p>
-<p><span class="math display">\[
-\begin{align*}
-\Pr(y = 0) &amp;= 0.1 \\
-\Pr(y = 1) &amp;= 0.1 \\
-&amp;\vdots \\
-\Pr(y = 9) &amp;= 0.1
-\end{align*}
-\]</span></p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout="[1,1,1]">
+<div class="quarto-layout-row">
+<div id="crossent-max" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Max entropy = <strong>max</strong> uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_crossent.svg" class="img-fluid figure-img"></p>
-<figcaption>Step 1: NN has no idea, guesses (via softmax) <span class="math inline">\(\Pr(y = d) = 0.1\)</span> for every <span class="math inline">\(d\)</span></figcaption>
+<p><img src="images/nn_crossent_eq.svg" class="img-fluid figure-img"></p>
+<figcaption>Step 1: <span class="math inline">\(H(y, \widehat{y}) = -1\cdot \log_2(0.1) \approx 3.32\)</span></figcaption>
 </figure>
 </div>
-</div><div class="column" style="width:33%;">
-<p>Middle entropy = less uncertainty</p>
-<p><span class="math display">\[
-\Pr(y = 9) &gt; \Pr(y = 3) &gt; \Pr(y = d')
-\]</span></p>
+</div>
+<div id="crossent-mid" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Less entropy = less uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/nn_crossent_success.svg" class="img-fluid figure-img"></p>
-<figcaption>Step 2: NN is starting to converge to correct prediction: probably <span class="math inline">\(d = 9\)</span>, maybe <span class="math inline">\(d = 3\)</span>, low probability on all other values</figcaption>
+<p><img src="images/nn_crossent_mident.svg" class="img-fluid figure-img"></p>
+<figcaption>Step 2: <span class="math inline">\(H(y,\widehat{y}) = -1\cdot \log_2(0.4) \approx 1.32\)</span></figcaption>
 </figure>
 </div>
-</div><div class="column" style="width:33%;">
-<p>Min entropy = no uncertainty</p>
-<p><span class="math display">\[
-\Pr(y = 9) = 1
-\]</span></p>
+</div>
+<div id="crossent-min" class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: flex-start;">
+<center>
+<p><span style="font-size: 80%;">Min entropy = <strong>no</strong> uncertainty</span></p>
+</center>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/nn_minent.svg" class="img-fluid figure-img"></p>
-<figcaption>Step 3: NN has converged to predicting ultra-high <span class="math inline">\(\Pr(y = 9 \mid X)\)</span></figcaption>
+<figcaption>Step 3: <span class="math inline">\(H(y,\widehat{y}) = -1\cdot \log_2(1) = 0\)</span></figcaption>
 </figure>
 </div>
 </div>
+</div>
+</div>
+</section>
+<section id="its-not-as-silly-as-you-think" class="level2 smaller title-12 crunch-title crunch-ul crunch-quarto-figure">
+<h2 class="smaller title-12 crunch-title crunch-ul crunch-quarto-figure anchored" data-anchor-id="its-not-as-silly-as-you-think">It’s Not as Silly as You Think!</h2>
+<ul>
+<li>In our example, we <strong>know</strong> the <strong>true</strong> digit… But remember the <strong>origin of the dataset</strong>: postal workers trying to figure out handwritten digits</li>
+<li>May not <strong>know</strong> with certainty, but may be able to say, e.g., “It’s either a 1 or a 7”</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/word-prob-joy.png" class="img-fluid figure-img"></p>
+<figcaption>From <a href="https://github.com/zonination/perceptions"><em>Perceptions of Probability</em> Dataset</a></figcaption>
+</figure>
 </div>
 </section>
 </section>
