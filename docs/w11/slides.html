@@ -525,8 +525,36 @@ Jeff Jacobs
 
 <img data-src="images/word-prob-joy.png" class="r-stretch quarto-figure-center"><p class="caption">From <a href="https://github.com/zonination/perceptions"><em>Perceptions of Probability</em> Dataset</a></p></section></section>
 <section>
-<section id="ok-but-how-do-we-learn-the-weights" class="title-slide slide level1 smaller title-11 center" data-stack-name="Backpropagation">
+<section id="ok-but-how-do-we-learn-the-weights" class="title-slide slide level1 center" data-stack-name="Backpropagation">
 <h1>Ok But How Do We <em>Learn</em> The Weights?</h1>
+<ul>
+<li>…<strong>Backpropagation!</strong></li>
+</ul>
+</section>
+<section id="backpropagation-simple-example" class="slide level2 smaller crunch-title title-11">
+<h2>Backpropagation: Simple Example</h2>
+<ul>
+<li>Literally just <strong>one</strong> neuron (which is the output layer), <span class="math inline">\(\mathcal{L}(\widehat{y},y) = (\widehat{y} - y)^2\)</span></li>
+<li>Consider a training datapoint <span class="math inline">\((x,y) = (2,10)\)</span></li>
+<li>And say our current parameters are <span class="math inline">\(\beta_0 = 1, \beta_1 = 3\)</span></li>
+<li>Predicted output: <span class="math inline">\(\widehat{y} = \beta_0 + \beta_1 x = 1 + 3\cdot 2 = 7\)</span></li>
+<li>Since true output is <span class="math inline">\(y = 10\)</span>, we have loss <span class="math inline">\(\mathcal{L} = (10-7)^2 = 9\)</span></li>
+<li>Now, let’s <strong>backpropagate</strong> to update <span class="math inline">\(\beta_1\)</span> (on the board!)
+<ul>
+<li>(Using learning rate of <span class="math inline">\(0.1\)</span>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="top-secret-answer-slide" class="slide level2">
+<h2>Top Secret Answer Slide</h2>
+<ul>
+<li>Weight <span class="math inline">\(\beta_1\)</span> becomes 4.2…</li>
+<li>New prediction: <span class="math inline">\(\widehat{y} = 1 + 4.2\cdot 2 = 9.4\)</span></li>
+<li>New loss: <span class="math inline">\((10-9.4)^2 = 0.36\)</span> 🥳</li>
+</ul>
+</section>
+<section id="backpropagation-deeper-dive" class="slide level2 smaller">
+<h2>Backpropagation Deeper Dive</h2>
 
 <img data-src="images/backprop.jpg" class="r-stretch quarto-figure-center"><p class="caption"><a href="https://youtu.be/tIeHLnjs5U8?si=0CSS66763D5s5UVt">Backpropagation!</a> (3Blue1Brown Again!)</p><p><em>(Full NN playlist <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">here</a>)</em></p>
 </section>

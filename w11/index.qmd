@@ -235,7 +235,27 @@ Key for success of NNs: Non-linear **but differentiable**
 
 ![From [*Perceptions of Probability* Dataset](https://github.com/zonination/perceptions)](images/word-prob-joy.png){fig-align="center"}
 
-# Ok But How Do We *Learn* The Weights? {.smaller .title-11 data-stack-name="Backpropagation"}
+# Ok But How Do We *Learn* The Weights? {data-stack-name="Backpropagation"}
+
+* ...**Backpropagation!**
+
+## Backpropagation: Simple Example {.smaller .crunch-title .title-11}
+
+* Literally just **one** neuron (which is the output layer), $\mathcal{L}(\widehat{y},y) = (\widehat{y} - y)^2$
+* Consider a training datapoint $(x,y) = (2,10)$
+* And say our current parameters are $\beta_0 = 1, \beta_1 = 3$
+* Predicted output: $\widehat{y} = \beta_0 + \beta_1 x = 1 + 3\cdot 2 = 7$
+* Since true output is $y = 10$, we have loss $\mathcal{L} = (10-7)^2 = 9$
+* Now, let's **backpropagate** to update $\beta_1$ (on the board!)
+  * (Using learning rate of $0.1$)
+
+## Top Secret Answer Slide
+
+* Weight $\beta_1$ becomes 4.2...
+* New prediction: $\widehat{y} = 1 + 4.2\cdot 2 = 9.4$
+* New loss: $(10-9.4)^2 = 0.36$ 🥳
+
+## Backpropagation Deeper Dive {.smaller}
 
 ![[Backpropagation!](https://youtu.be/tIeHLnjs5U8?si=0CSS66763D5s5UVt) (3Blue1Brown Again!)](images/backprop.jpg){fig-align="center"}
 

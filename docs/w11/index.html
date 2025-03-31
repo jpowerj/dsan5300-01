@@ -301,7 +301,7 @@ window.Quarto = {
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-03-31, 05:29:07 PM</em></p>
+<p><em>Updated 2025-03-31, 06:25:56 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -326,6 +326,9 @@ window.Quarto = {
   </ul></li>
   <li><a href="#ok-but-how-do-we-learn-the-weights" id="toc-ok-but-how-do-we-learn-the-weights" class="nav-link" data-scroll-target="#ok-but-how-do-we-learn-the-weights">Ok But How Do We <em>Learn</em> The Weights?</a>
   <ul class="collapse">
+  <li><a href="#backpropagation-simple-example" id="toc-backpropagation-simple-example" class="nav-link" data-scroll-target="#backpropagation-simple-example">Backpropagation: Simple Example</a></li>
+  <li><a href="#top-secret-answer-slide" id="toc-top-secret-answer-slide" class="nav-link" data-scroll-target="#top-secret-answer-slide">Top Secret Answer Slide</a></li>
+  <li><a href="#backpropagation-deeper-dive" id="toc-backpropagation-deeper-dive" class="nav-link" data-scroll-target="#backpropagation-deeper-dive">Backpropagation Deeper Dive</a></li>
   <li><a href="#simplest-possible-backprop" id="toc-simplest-possible-backprop" class="nav-link" data-scroll-target="#simplest-possible-backprop">Simplest Possible Backprop</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -688,8 +691,35 @@ Neural Network Training Procedure
 </div>
 </section>
 </section>
-<section id="ok-but-how-do-we-learn-the-weights" class="level1 smaller title-11" data-stack-name="Backpropagation">
-<h1 class="smaller title-11" data-stack-name="Backpropagation">Ok But How Do We <em>Learn</em> The Weights?</h1>
+<section id="ok-but-how-do-we-learn-the-weights" class="level1" data-stack-name="Backpropagation">
+<h1 data-stack-name="Backpropagation">Ok But How Do We <em>Learn</em> The Weights?</h1>
+<ul>
+<li>…<strong>Backpropagation!</strong></li>
+</ul>
+<section id="backpropagation-simple-example" class="level2 smaller crunch-title title-11">
+<h2 class="smaller crunch-title title-11 anchored" data-anchor-id="backpropagation-simple-example">Backpropagation: Simple Example</h2>
+<ul>
+<li>Literally just <strong>one</strong> neuron (which is the output layer), <span class="math inline">\(\mathcal{L}(\widehat{y},y) = (\widehat{y} - y)^2\)</span></li>
+<li>Consider a training datapoint <span class="math inline">\((x,y) = (2,10)\)</span></li>
+<li>And say our current parameters are <span class="math inline">\(\beta_0 = 1, \beta_1 = 3\)</span></li>
+<li>Predicted output: <span class="math inline">\(\widehat{y} = \beta_0 + \beta_1 x = 1 + 3\cdot 2 = 7\)</span></li>
+<li>Since true output is <span class="math inline">\(y = 10\)</span>, we have loss <span class="math inline">\(\mathcal{L} = (10-7)^2 = 9\)</span></li>
+<li>Now, let’s <strong>backpropagate</strong> to update <span class="math inline">\(\beta_1\)</span> (on the board!)
+<ul>
+<li>(Using learning rate of <span class="math inline">\(0.1\)</span>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="top-secret-answer-slide" class="level2">
+<h2 class="anchored" data-anchor-id="top-secret-answer-slide">Top Secret Answer Slide</h2>
+<ul>
+<li>Weight <span class="math inline">\(\beta_1\)</span> becomes 4.2…</li>
+<li>New prediction: <span class="math inline">\(\widehat{y} = 1 + 4.2\cdot 2 = 9.4\)</span></li>
+<li>New loss: <span class="math inline">\((10-9.4)^2 = 0.36\)</span> 🥳</li>
+</ul>
+</section>
+<section id="backpropagation-deeper-dive" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="backpropagation-deeper-dive">Backpropagation Deeper Dive</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/backprop.jpg" class="img-fluid figure-img"></p>
@@ -697,6 +727,7 @@ Neural Network Training Procedure
 </figure>
 </div>
 <p><em>(Full NN playlist <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">here</a>)</em></p>
+</section>
 <section id="simplest-possible-backprop" class="level2">
 <h2 class="anchored" data-anchor-id="simplest-possible-backprop">Simplest Possible Backprop</h2>
 <ul>

@@ -3332,14 +3332,14 @@
     "href": "writeups/machine-learning/index.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5675542\n\nget_rss(lin_model)\n\n[1] 0.5450464\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\nx &lt;- seq(from = 0, to = 1, by = 0.1)\nn &lt;- length(x)\neps &lt;- rnorm(n, 0, 0.04)\ny &lt;- x + eps\n# But make one big outlier\nmidpoint &lt;- ceiling((3/4)*n)\ny[midpoint] &lt;- 0\nof_data &lt;- tibble::tibble(x=x, y=y)\n# Linear model\nlin_model &lt;- lm(y ~ x)\n# But now polynomial regression\npoly_model &lt;- lm(y ~ poly(x, degree = 10, raw=TRUE))\n#summary(model)\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  labs(\n    title = \"Training Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  geom_point(size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw=TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  labs(\n    title = \"A Perfect Model?\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\nsummary(lin_model)$r.squared\n\n[1] 0.5617931\n\nget_rss(lin_model)\n\n[1] 0.5550844\n\n\n\nPolynomial Model:\n\n\nsummary(poly_model)$r.squared\n\n[1] 1\n\nget_rss(poly_model)\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/index.html#generalization",
     "href": "writeups/machine-learning/index.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8971702\n\nlin_rss_test\n\n[1] 0.1131597\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.500948\n\npoly_rss_test\n\n[1] 0.5491844"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n# Data setup\nx_test &lt;- seq(from = 0, to = 1, by = 0.1)\nn_test &lt;- length(x_test)\neps_test &lt;- rnorm(n_test, 0, 0.04)\ny_test &lt;- x_test + eps_test\nof_data_test &lt;- tibble::tibble(x=x_test, y=y_test)\nlin_y_pred_test &lt;- predict(lin_model, as.data.frame(x_test))\n#lin_y_pred_test\nlin_resids_test &lt;- y_test - lin_y_pred_test\n#lin_resids_test\nlin_rss_test &lt;- sum(lin_resids_test^2)\n#lin_rss_test\n# Lin R2 = 1 - RSS/TSS\ntss_test &lt;- sum((y_test - mean(y_test))^2)\nlin_r2_test &lt;- 1 - (lin_rss_test / tss_test)\n#lin_r2_test\n# Now the poly model\npoly_y_pred_test &lt;- predict(poly_model, as.data.frame(x_test))\npoly_resids_test &lt;- y_test - poly_y_pred_test\npoly_rss_test &lt;- sum(poly_resids_test^2)\n#poly_rss_test\n# RSS\npoly_r2_test &lt;- 1 - (poly_rss_test / tss_test)\n#poly_r2_test\n\n\nggplot(of_data, aes(x=x, y=y)) +\n  stat_smooth(method = \"lm\",\n              formula = y ~ poly(x, 10, raw = TRUE),\n              se = FALSE, aes(color=\"Polynomial\")) +\n  dsan_theme() +\n  geom_point(data=of_data_test, aes(x=x_test, y=y_test), size=g_pointsize/2) +\n  geom_abline(aes(intercept=0, slope=1, color=\"Linear\"), linewidth=1, show.legend = FALSE) +\n  labs(\n    title = \"Performance on Unseen Test Data\",\n    color = \"Model\"\n  ) +\n  dsan_theme()\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\nlin_r2_test\n\n[1] 0.8801542\n\nlin_rss_test\n\n[1] 0.1280454\n\n\n\nPolynomial Model:\n\n\npoly_r2_test\n\n[1] 0.4076482\n\npoly_rss_test\n\n[1] 0.6328795"
   },
   {
     "objectID": "writeups/machine-learning/index.html#how-to-avoid-overfitting",
@@ -3514,14 +3514,14 @@
     "href": "writeups/machine-learning/slides.html#so-whats-the-issue",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "So What’s the Issue?",
-    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5562137\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5543628\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
+    "text": "So What’s the Issue?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHigher \\(R^2\\) = Better Model? Lower \\(RSS\\)?\nLinear Model:\n\n\n\nCode\nsummary(lin_model)$r.squared\n\n\n[1] 0.5673835\n\n\nCode\nget_rss(lin_model)\n\n\n[1] 0.5329635\n\n\n\nPolynomial Model:\n\n\n\nCode\nsummary(poly_model)$r.squared\n\n\n[1] 1\n\n\nCode\nget_rss(poly_model)\n\n\n[1] 0"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#generalization",
     "href": "writeups/machine-learning/slides.html#generalization",
     "title": "Extra Slides: A Slightly Deeper Dive Into Machine Learning",
     "section": "Generalization",
-    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.888782\n\n\nCode\nlin_rss_test\n\n\n[1] 0.122772\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.4107193\n\n\nCode\npoly_rss_test\n\n\n[1] 0.650499"
+    "text": "Generalization\n\nTraining Accuracy: How well does it fit the data we can see?\nTest Accuracy: How well does it generalize to future data?\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLinear Model:\n\n\n\nCode\nlin_r2_test\n\n\n[1] 0.8437145\n\n\nCode\nlin_rss_test\n\n\n[1] 0.1730103\n\n\n\nPolynomial Model:\n\n\n\nCode\npoly_r2_test\n\n\n[1] 0.3174434\n\n\nCode\npoly_rss_test\n\n\n[1] 0.7556001"
   },
   {
     "objectID": "writeups/machine-learning/slides.html#how-to-avoid-overfitting",
@@ -3670,6 +3670,36 @@
     ]
   },
   {
+    "objectID": "w11/index.html#backpropagation-simple-example",
+    "href": "w11/index.html#backpropagation-simple-example",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Backpropagation: Simple Example",
+    "text": "Backpropagation: Simple Example\n\nLiterally just one neuron (which is the output layer), \\(\\mathcal{L}(\\widehat{y},y) = (\\widehat{y} - y)^2\\)\nConsider a training datapoint \\((x,y) = (2,10)\\)\nAnd say our current parameters are \\(\\beta_0 = 1, \\beta_1 = 3\\)\nPredicted output: \\(\\widehat{y} = \\beta_0 + \\beta_1 x = 1 + 3\\cdot 2 = 7\\)\nSince true output is \\(y = 10\\), we have loss \\(\\mathcal{L} = (10-7)^2 = 9\\)\nNow, let’s backpropagate to update \\(\\beta_1\\) (on the board!)\n\n(Using learning rate of \\(0.1\\))",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w11/index.html#top-secret-answer-slide",
+    "href": "w11/index.html#top-secret-answer-slide",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Top Secret Answer Slide",
+    "text": "Top Secret Answer Slide\n\nWeight \\(\\beta_1\\) becomes 4.2…\nNew prediction: \\(\\widehat{y} = 1 + 4.2\\cdot 2 = 9.4\\)\nNew loss: \\((10-9.4)^2 = 0.36\\) 🥳",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
+    "objectID": "w11/index.html#backpropagation-deeper-dive",
+    "href": "w11/index.html#backpropagation-deeper-dive",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Backpropagation Deeper Dive",
+    "text": "Backpropagation Deeper Dive\n\n\n\nBackpropagation! (3Blue1Brown Again!)\n\n\n(Full NN playlist here)",
+    "crumbs": [
+      "Week 11: {{< var w11.date-md >}}"
+    ]
+  },
+  {
     "objectID": "w11/index.html#simplest-possible-backprop",
     "href": "w11/index.html#simplest-possible-backprop",
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
@@ -3744,6 +3774,27 @@
     "title": "Week 11: How Do Neural Networks Deep-Learn?",
     "section": "It’s Not as Silly as You Think!",
     "text": "It’s Not as Silly as You Think!\n\nIn our example, we know the true digit… But remember the origin of the dataset: postal workers trying to figure out handwritten digits\nMay not know with certainty, but may be able to say, e.g., “It’s either a 1 or a 7”\n\n\nFrom Perceptions of Probability Dataset"
+  },
+  {
+    "objectID": "w11/slides.html#backpropagation-simple-example",
+    "href": "w11/slides.html#backpropagation-simple-example",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Backpropagation: Simple Example",
+    "text": "Backpropagation: Simple Example\n\nLiterally just one neuron (which is the output layer), \\(\\mathcal{L}(\\widehat{y},y) = (\\widehat{y} - y)^2\\)\nConsider a training datapoint \\((x,y) = (2,10)\\)\nAnd say our current parameters are \\(\\beta_0 = 1, \\beta_1 = 3\\)\nPredicted output: \\(\\widehat{y} = \\beta_0 + \\beta_1 x = 1 + 3\\cdot 2 = 7\\)\nSince true output is \\(y = 10\\), we have loss \\(\\mathcal{L} = (10-7)^2 = 9\\)\nNow, let’s backpropagate to update \\(\\beta_1\\) (on the board!)\n\n(Using learning rate of \\(0.1\\))"
+  },
+  {
+    "objectID": "w11/slides.html#top-secret-answer-slide",
+    "href": "w11/slides.html#top-secret-answer-slide",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Top Secret Answer Slide",
+    "text": "Top Secret Answer Slide\n\nWeight \\(\\beta_1\\) becomes 4.2…\nNew prediction: \\(\\widehat{y} = 1 + 4.2\\cdot 2 = 9.4\\)\nNew loss: \\((10-9.4)^2 = 0.36\\) 🥳"
+  },
+  {
+    "objectID": "w11/slides.html#backpropagation-deeper-dive",
+    "href": "w11/slides.html#backpropagation-deeper-dive",
+    "title": "Week 11: How Do Neural Networks Deep-Learn?",
+    "section": "Backpropagation Deeper Dive",
+    "text": "Backpropagation Deeper Dive\n\nBackpropagation! (3Blue1Brown Again!)(Full NN playlist here)"
   },
   {
     "objectID": "w11/slides.html#simplest-possible-backprop",
