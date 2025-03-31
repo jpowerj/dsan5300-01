@@ -50,11 +50,11 @@ w10:
   title: "Deep Learning"
   footer: "Deep Learning"
   date-md: "Mar 24"
-# w11:
-#   weeknum: 11
-#   title: "Fairness vs. Social Welfare"
-#   footer: "Fairness vs. Social Welfare"
-#   date-md: "Mar 26"
+w11:
+  weeknum: 11
+  title: "How Do Neural Networks Deep-Learn?"
+  footer: "Training Neural Networks"
+  date-md: "Mar 31"
 # w12:
 #   weeknum: 12
 #   title: "Project Talk, Causality and Identity Formation"
