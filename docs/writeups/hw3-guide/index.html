@@ -254,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 <div class="quarto-sidebar-footer"><div class="sidebar-footer-item">
-<p><em>Updated 2025-03-31, 06:25:56 PM</em></p>
+<p><em>Updated 2025-04-01, 09:52:53 PM</em></p>
 </div></div></nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -288,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Tuesday, March 18, 2025</p>
+      <p class="date">Tuesday, April 1, 2025</p>
     </div>
   </div>
   
@@ -325,14 +325,21 @@ Update Log
 </section>
 <section id="hw-3.2a" class="level2">
 <h2 class="anchored" data-anchor-id="hw-3.2a">HW-3.2a</h2>
-<p>Here, as a more specific clarification, the way that I know how to specify a regression spline in R, in general, is with a line that looks like the following:</p>
+<p>Here, as a more specific clarification: there are multiple ways to specify a regression spline in R, but the two ways that I have encountered the most are as follows.</p>
+<p>First, using <em>just</em> the <code>gam</code> library in the “default” way it is set up, you should be able to use the <code>s()</code> function to specify spline terms, and then include the optional <code>df</code> argument to specify the <em>degree</em> of each term:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gam)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gam_model <span class="ot">&lt;-</span> <span class="fu">gam</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    dependent <span class="sc">~</span> <span class="fu">s</span>(indep1, <span class="at">k =</span> degree1) <span class="sc">+</span> <span class="fu">s</span>(indep2, <span class="at">k =</span> degree2) <span class="sc">+</span> <span class="fu">s</span>(indep3, <span class="at">k =</span> degree3),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    dependent <span class="sc">~</span> <span class="fu">s</span>(indep1, <span class="at">df =</span> degree1) <span class="sc">+</span> <span class="fu">s</span>(indep2, <span class="at">df =</span> degree2) <span class="sc">+</span> <span class="fu">s</span>(indep3, <span class="at">df =</span> degree3),</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>train_df</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>There <em>are</em> other ways to achieve this kind of degree-<code>k</code> spline, but, this is the most direct way I know of to specify the degree.</p>
-<p>However, <strong>to get this to work, in terms of making sure that the <code>s()</code> function allows the degree argument <code>k</code>, you’ll need to load the <a href="https://www.maths.ed.ac.uk/~swood34/mgcv/"><code>mgcv</code> library</a> in addition to <a href="https://cran.r-project.org/web/packages/gam/gam.pdf"><code>gam</code></a></strong> (which is already loaded for you in a cell near the top of the distributed homework files). In other words, if you just copy-and-paste the previous code, you’ll get an error (at least in my version of R) that looks like</p>
+<p>However, as a second approach which is more or less popular depending on the field (and the time the code was written), you may also see example code that looks like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gam)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gam_model <span class="ot">&lt;-</span> <span class="fu">gam</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    dependent <span class="sc">~</span> <span class="fu">s</span>(indep1, <span class="at">k =</span> degree1) <span class="sc">+</span> <span class="fu">s</span>(indep2, <span class="at">k =</span> degree2) <span class="sc">+</span> <span class="fu">s</span>(indep3, <span class="at">k =</span> degree3),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data=</span>train_df</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>At first this looks suspiciously close to the previous code block, but, the difference is that the <code>k</code> argument used in the second block is <strong>not</strong> one of the arguments included “by default” in the <code>s()</code> function provided by <code>gam</code>. From what I understand, there is a <strong>second</strong> library called <code>mgcv</code> which <em>modifies</em> <code>gam</code>’s <code>s()</code> function to allow this <code>k</code> argument.</p>
+<p>This means, <strong>to get this second approach to work</strong>, in terms of making sure that the <code>s()</code> function allows the degree argument <code>k</code>, you’ll need to load the <a href="https://www.maths.ed.ac.uk/~swood34/mgcv/"><code>mgcv</code> library</a> in addition to <a href="https://cran.r-project.org/web/packages/gam/gam.pdf"><code>gam</code></a>** (which is already loaded for you in a cell near the top of the distributed homework files). In other words, if you just copy-and-paste the previous code, you’ll get an error (at least in my version of R) that looks like</p>
 <pre><code>Error in s(indep1, k = degree1) : unused argument (k = degree1)</code></pre>
 <p>So, here, the <code>mgcv</code> library essentially adds in this new <code>k</code> argument that can be passed to <code>s()</code> (which is from <code>gam</code> itself) to specify the degree parameter.</p>
 
