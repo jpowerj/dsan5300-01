@@ -55,11 +55,11 @@ w11:
   title: "How Do Neural Networks Deep-Learn?"
   footer: "Training Neural Networks"
   date-md: "Mar 31"
-# w12:
-#   weeknum: 12
-#   title: "Project Talk, Causality and Identity Formation"
-#   footer: "Project Talk, Causality and Identity Formation"
-#   date-md: "Apr 2"
+w12:
+  weeknum: 12
+  title: "Survival Analysis"
+  footer: "Survival Analysis"
+  date-md: "Apr 7"
 # w13:
 #   weeknum: 13
 #   title: "Applications: Race, Class, Gender, Sexuality, and Disability (Data Feminism)"
