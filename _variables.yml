@@ -60,11 +60,11 @@ w12:
   title: "Survival Analysis"
   footer: "Survival Analysis"
   date-md: "Apr 7"
-# w13:
-#   weeknum: 13
-#   title: "Applications: Race, Class, Gender, Sexuality, and Disability (Data Feminism)"
-#   footer: "Data Feminism"
-#   date-md: "Apr 9"
+w13:
+  weeknum: 13
+  title: "Machine Learning for Causal Inference"
+  footer: "Machine Learning for Causal Inference"
+  date-md: "Apr 14"
 # w14:
 #   weeknum: 14
 #   title: "Republican Liberty and the Kindly Slavemaster"

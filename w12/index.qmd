@@ -588,6 +588,6 @@ legend(
 :::
 ::::
 
-# Quiz
+# Quiz 3 {data-name="Quiz"}
 
 * Last one! You got this, حَبَائب!
